@@ -16,6 +16,8 @@ urlpatterns = [
     
     # Agents et utilisateurs
     path('agents/', views.agents_list, name='agents_list'),
+    path('agents/creer/', views.create_agent, name='create_agent'),
+    path('agents/editer/<int:agent_id>/', views.edit_agent, name='edit_agent'),
     path('agents/supprimer/<int:user_id>/', views.delete_user, name='delete_user'),
     
     # Associés et investisseurs

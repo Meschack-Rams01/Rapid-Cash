@@ -2,6 +2,26 @@ from django import forms
 from .models import Operation, Caisse
 from core.models import Currency
 
+class CaisseForm(forms.ModelForm):
+    class Meta:
+        model = Caisse
+        fields = ['name', 'currency', 'agent']
+        labels = {
+            'name': 'Nom de la caisse',
+            'currency': 'Devise par défaut',
+            'agent': 'Agent assigné'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'input-dark', 'placeholder': 'Ex: Caisse Principale'}),
+            'currency': forms.Select(attrs={'class': 'input-dark'}),
+            'agent': forms.Select(attrs={'class': 'input-dark'})
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['agent'].required = False
+        self.fields['agent'].empty_label = "--- Aucune assignation (Optionnel) ---"
+
 class OperationForm(forms.ModelForm):
     class Meta:
         model = Operation
@@ -18,10 +38,10 @@ class OperationForm(forms.ModelForm):
             'observation': "Commentaire"
         }
         widgets = {
-            'type': forms.Select(attrs={'class': 'input-dark', 'onchange': 'updateBalanceInfo()'}),
-            'amount_orig': forms.NumberInput(attrs={'class': 'input-dark', 'placeholder': '0.00', 'step': '0.01', 'oninput': 'validateBalance()'}),
-            'currency_orig': forms.Select(attrs={'class': 'input-dark', 'onchange': 'updateBalanceInfo()'}),
-            'observation': forms.Textarea(attrs={'class': 'input-dark', 'rows': 2}),
+            'type': forms.Select(attrs={'class': 'input-dark'}),
+            'amount_orig': forms.NumberInput(attrs={'class': 'input-dark', 'placeholder': '0.00', 'step': '0.01', 'x-model': 'amount', ':class': '!isAmountValid && amount > 0 ? \'!border-accent-danger\' : \'\' '}),
+            'currency_orig': forms.Select(attrs={'class': 'input-dark', 'x-model': 'caisseCurrency'}),
+            'observation': forms.Textarea(attrs={'class': 'input-dark', 'rows': 2, 'x-on:input': 'step = 4'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -67,6 +87,7 @@ class OperationForm(forms.ModelForm):
         # Check currency match - if different, we need to convert
         if agent_caisse.currency != currency:
             # Try to convert the amount to caisse currency
+            from decimal import Decimal
             from core.models import ExchangeRate
             try:
                 # Look for direct rate: selected currency -> caisse currency
@@ -77,12 +98,13 @@ class OperationForm(forms.ModelForm):
                 
                 if rate_obj:
                     # Convert amount
-                    converted_amount = amount * float(rate_obj.rate)
+                    rate_decimal = Decimal(str(rate_obj.rate))
+                    converted_amount = amount * rate_decimal
                     # Store conversion info for the view to use
                     self.converted_amount = converted_amount
                     self.converted_currency = agent_caisse.currency
-                    self.exchange_rate_used = float(rate_obj.rate)
-                    self.add_error(None, f"Conversion automatique: {amount} {currency.code} = {converted_amount:.2f} {agent_caisse.currency.code} (taux: {rate_obj.rate})")
+                    self.exchange_rate_used = rate_decimal
+                    self.add_error(None, f"Conversion automatique: {amount} {currency.code} = {converted_amount:.2f} {agent_caisse.currency.code} (taux: {rate_decimal})")
                 else:
                     # Try inverse rate
                     inverse_rate_obj = ExchangeRate.objects.filter(
@@ -92,11 +114,12 @@ class OperationForm(forms.ModelForm):
                     
                     if inverse_rate_obj:
                         # Convert using inverse rate
-                        converted_amount = amount / float(inverse_rate_obj.rate)
+                        rate_decimal = Decimal(str(inverse_rate_obj.rate))
+                        converted_amount = amount / rate_decimal
                         self.converted_amount = converted_amount
                         self.converted_currency = agent_caisse.currency
-                        self.exchange_rate_used = 1 / float(inverse_rate_obj.rate)
-                        self.add_error(None, f"Conversion automatique: {amount} {currency.code} = {converted_amount:.2f} {agent_caisse.currency.code} (taux: {1/float(inverse_rate_obj.rate):.6f})")
+                        self.exchange_rate_used = Decimal('1') / rate_decimal
+                        self.add_error(None, f"Conversion automatique: {amount} {currency.code} = {converted_amount:.2f} {agent_caisse.currency.code} (taux: {self.exchange_rate_used:.6f})")
                     else:
                         raise forms.ValidationError(
                             f"Pas de taux de change trouvé entre {currency.code} et {agent_caisse.currency.code}. "

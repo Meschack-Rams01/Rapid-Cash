@@ -6,7 +6,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from core.views import dashboard_view
+from core.views_auth import (
+    custom_login, 
+    two_factor_verify, 
+    two_factor_setup, 
+    two_factor_enable, 
+    two_factor_disable
+)
 from django.shortcuts import render
+from django.contrib.auth import views as auth_views
 from operations import views as operations_views
 
 # Reports view
@@ -116,7 +124,22 @@ urlpatterns = [
     path("rapports/journalier/", operations_views.export_daily_report_pdf, name='report_daily'),
     path("rapports/exporter/", operations_views.export_daily_report_pdf, name='report_export'),
     path("parametres/", settings_index, name='settings_index'),
-    path("accounts/", include("django.contrib.auth.urls")),
+    
+    # Custom auth URLs
+    path("login/", custom_login, name="login"),
+    
+    # Password Reset URLs
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path("logout/", lambda r: redirect('login'), name='logout'),
+    
+    # 2FA URLs
+    path('two-factor/verify/', two_factor_verify, name='two_factor_verify'),
+    path('two-factor/setup/', two_factor_setup, name='two_factor_setup'),
+    path('two-factor/enable/', two_factor_enable, name='two_factor_enable'),
+    path('two-factor/disable/', two_factor_disable, name='two_factor_disable'),
     
     # API endpoints
     path("api/core/", include("core.urls_api")),

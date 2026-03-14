@@ -17,7 +17,7 @@ def run_development_server():
     print("📋 Vérification de la configuration...")
     
     # Forcer les settings de développement
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.development')
     
     try:
         import django

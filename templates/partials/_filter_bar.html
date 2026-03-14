@@ -3,9 +3,8 @@
 {# Usage: Include with form parameters #}
 
 <div class="card-dark mb-6">
-    <div class="p-5">
-        <form method="GET" class="flex flex-wrap gap-4 items-end" 
-              {% if hx_get %}hx-get="{{ hx_get }}" hx-target="{{ hx_target|default:'#content' }}" hx-trigger="submit"{% endif %}>
+    <form method="GET" class="flex flex-wrap gap-4 items-end" 
+          {% if hx_get %}hx-get="{{ hx_get }}" hx-target="{{ hx_target|default:'#content' }}" hx-trigger="submit"{% endif %}>
             
             {% if show_type %}
             <div class="flex-1 min-w-[160px]">
@@ -92,6 +91,5 @@
                 <a href="{{ reset_url }}" class="btn-secondary text-sm px-4 py-2.5">Reset</a>
                 {% endif %}
             </div>
-        </form>
-    </div>
+    </form>
 </div>

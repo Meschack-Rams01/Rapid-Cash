@@ -356,7 +356,7 @@ def calculate_financial_summary(start_date=None, end_date=None, agent=None):
     total_commissions = Decimal('0')
     for op in operations:
         if op.agent.commission_rate:
-            commission = (op.fee_calculated * op.agent.commission_rate) / 100
+            commission = (op.fee_calculated * op.agent.commission_rate) / Decimal('100')
             total_commissions += commission
     
     # Get expenses
@@ -415,7 +415,7 @@ def get_agent_performance(agent, start_date=None, end_date=None):
     
     # Calculate commission
     commission_rate = agent.commission_rate or Decimal('0')
-    commission_amount = (total_fees * commission_rate) / 100
+    commission_amount = (total_fees * commission_rate) / Decimal('100')
     
     return {
         'agent': agent,

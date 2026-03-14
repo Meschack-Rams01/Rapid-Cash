@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration 2FA - Rapid Cash</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="{% load static %}{% static 'css/enhanced.css' %}">
+    <style>
+        body {
+            background-color: #07080e;
+            color: #e8eaf6;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .setup-card {
+            background: rgba(13, 14, 24, 0.9);
+            border: 1px solid #252640;
+            border-radius: 1.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-dark {
+            background: #131421;
+            border: 1px solid #252640;
+            color: #e8eaf6;
+            transition: all 0.2s ease;
+        }
+        
+        .input-dark:focus {
+            outline: none;
+            border-color: #4f8ef7;
+            box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4f8ef7, #3a7af5);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+        
+        .backup-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #131421;
+            border: 1px solid #252640;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <div class="max-w-2xl mx-auto fade-in">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center mx-auto mb-4">
+                <span class="text-white font-bold text-2xl">R</span>
+            </div>
+            <h1 class="text-2xl font-bold text-text-main">Configuration 2FA</h1>
+            <p class="text-text-secondary text-sm mt-1">Authentification à deux facteurs</p>
+        </div>
+        
+        {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+            <div class="p-4 rounded-lg text-sm font-medium 
+                {% if message.tags == 'error' %}bg-accent-danger/10 border border-accent-danger/20 text-accent-danger{% endif %}
+                {% if message.tags == 'success' %}bg-accent-success/10 border border-accent-success/20 text-accent-success{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Setup Card -->
+        <div class="setup-card p-8">
+            <h2 class="text-xl font-bold text-text-main mb-6">Configurer l'authentification à deux facteurs</h2>
+            
+            <!-- Step 1: Scan QR Code -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-text-main mb-4">1. Scannez le code QR</h3>
+                <div class="flex justify-center mb-4">
+                    <img src="{{ qr_code }}" alt="QR Code" class="border-4 border-white rounded-lg">
+                </div>
+                <p class="text-text-secondary text-sm text-center mb-4">
+                    Ouvrez votre application d'authentification (Google Authenticator, Authy, Microsoft Authenticator) 
+                    et scannez ce code QR.
+                </p>
+            </div>
+            
+            <!-- Step 2: Enter Code -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-text-main mb-4">2. Vérifiez et activez</h3>
+                <p class="text-text-secondary text-sm mb-4">
+                    Entrez le code à 6 chiffres de votre application pour activer la 2FA :
+                </p>
+                
+                <form method="post" action="{% url 'two_factor_enable' %}" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="text" 
+                           name="otp_code" 
+                           class="input-dark w-full px-4 py-3 rounded-lg text-center text-xl tracking-widest font-mono"
+                           placeholder="000000" 
+                           maxlength="6" 
+                           pattern="[0-9]*"
+                           inputmode="numeric"
+                           required>
+                    <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-semibold">
+                        Activer la 2FA
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Backup Codes -->
+            <div class="mb-8 border-t border-gray-700 pt-6">
+                <h3 class="text-lg font-semibold text-text-main mb-4">Codes de secours</h3>
+                <p class="text-text-secondary text-sm mb-4">
+                    Ces codes vous permettront de accéder à votre compte si vous perdez votre téléphone. 
+                    <strong>Conservez-les en lieu sûr !</strong> Chaque code ne peut être utilisé une seule fois.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    {% for code in backup_codes %}
+                    <span class="backup-code">{{ code }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Back -->
+            <div class="text-center">
+                <a href="{% url 'dashboard' %}" class="text-accent-primary hover:underline">
+                    ← Retour au dashboard
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <p class="text-center text-text-muted text-xs mt-8">
+            2026 Rapid Cash. Système Financier Sécurisé.
+        </p>
+    </div>
+</body>
+
+</html>

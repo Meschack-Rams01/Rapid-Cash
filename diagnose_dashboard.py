@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+pyth#!/usr/bin/env python
 """
 Test et diagnostic du problème de dashboard Django
 """

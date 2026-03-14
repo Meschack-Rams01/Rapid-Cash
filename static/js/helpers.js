@@ -105,32 +105,37 @@ function loadModalContent(url, title) {
 // ============================================
 
 // Fee grid configuration
-const feeGrid = [
-    { min: 0.10, max: 40, fee: 5 },
-    { min: 40.01, max: 100, fee: 8 },
-    { min: 100.01, max: 200, fee: 15 },
-    { min: 200.01, max: 300, fee: 20 },
-    { min: 300.01, max: 400, fee: 26 },
-    { min: 400.01, max: 600, fee: 30 },
-    { min: 600.01, max: 800, fee: 35 },
-    { min: 800.01, max: 1000, fee: 40 },
-    { min: 1000.01, max: 1500, fee: 45 },
-    { min: 1500.01, max: 1800, fee: 64 },
-    { min: 1800.01, max: 2000, fee: 80 }
-];
+let feeGrid = typeof window.SERVER_FEE_GRID !== 'undefined' && window.SERVER_FEE_GRID.length > 0
+    ? window.SERVER_FEE_GRID
+    : [
+        { min: 0.10, max: 40, fee: 5 },
+        { min: 40.01, max: 100, fee: 8 },
+        { min: 100.01, max: 200, fee: 15 },
+        { min: 200.01, max: 300, fee: 20 },
+        { min: 300.01, max: 400, fee: 26 },
+        { min: 400.01, max: 600, fee: 30 },
+        { min: 600.01, max: 800, fee: 35 },
+        { min: 800.01, max: 1000, fee: 40 },
+        { min: 1000.01, max: 1500, fee: 45 },
+        { min: 1500.01, max: 1800, fee: 64 },
+        { min: 1800.01, max: 2000, fee: 80 }
+    ];
 
 function calculateFee(amount) {
-    if (!amount || amount < 0.10) return 0;
+    if (!amount || amount < 0.10 || feeGrid.length === 0) return 0;
 
     for (const tier of feeGrid) {
         if (amount >= tier.min && amount <= tier.max) {
             return tier.fee;
         }
     }
-    // For amounts above 2000, calculate proportionally
+    // For amounts above max tier, calculate proportionally
     const lastTier = feeGrid[feeGrid.length - 1];
-    const excess = amount - lastTier.max;
-    return lastTier.fee + Math.ceil(excess / 100) * 5;
+    if (amount > lastTier.max) {
+        const excess = amount - lastTier.max;
+        return lastTier.fee + Math.ceil(excess / 100) * 5;
+    }
+    return 0;
 }
 
 function updateFeePreview(inputId, previewId) {

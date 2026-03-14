@@ -316,3 +316,45 @@ def delete_operation(request, operation_id):
             messages.error(request, f"Erreur lors de la suppression: {str(e)}")
     
     return redirect('operation_list')
+
+
+@login_required
+def create_caisse(request):
+    """
+    Créer une nouvelle caisse (Admin uniquement)
+    """
+    if request.user.role != 'ADMIN':
+        messages.error(request, "Accès refusé. Réservé aux administrateurs.")
+        return redirect('dashboard')
+        
+    from .forms import CaisseForm
+    
+    if request.method == 'POST':
+        form = CaisseForm(request.POST)
+        if form.is_valid():
+            caisse = form.save()
+            messages.success(request, f"La caisse '{caisse.name}' a été créée avec succès.")
+            
+            # Log action
+            from core.models import AuditLog
+            AuditLog.log_action(
+                user=request.user,
+                action=AuditLog.ActionType.CREATE,
+                model_name='Caisse',
+                object_id=str(caisse.id),
+                object_repr=str(caisse),
+                changes={
+                    'name': caisse.name, 
+                    'currency': caisse.currency.code,
+                    'agent': caisse.agent.username if caisse.agent else None
+                }
+            )
+            return redirect('core:caisses_list')
+    else:
+        form = CaisseForm()
+        
+    context = {
+        'form': form,
+        'request': request,
+    }
+    return render(request, 'operations/create_caisse.html', context)

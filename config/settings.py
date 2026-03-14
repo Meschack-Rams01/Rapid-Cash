@@ -32,9 +32,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = "django-insecure-k-%8me3vjsr=7$nfq=-9f3u@10^t2_yfhc7n@($ld+q6*1dsta"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
 
 
 # Application definition
@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     "django_htmx",
+    "axes",  # Django Axes for rate limiting
+    "django_otp",  # 2FA core
+    "django_otp.plugins.otp_totp",  # TOTP (Time-based OTP)
+    "two_factor",  # Django Two-Factor Auth
     
     # Local apps
     "core",
@@ -65,6 +69,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "axes.middleware.AxesMiddleware",  # Django Axes for rate limiting
+    "django_otp.middleware.OTPMiddleware",  # 2FA middleware
     "django_htmx.middleware.HtmxMiddleware",
     "core.middleware.UTF8Middleware",  # ← Ajout du middleware UTF-8
 ]
@@ -87,6 +93,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.fee_grid_processor",
             ],
         },
     },
@@ -126,15 +133,15 @@ elif db_url.startswith('sqlite'):
         }
     }
 else:
-    # Default: Local PostgreSQL on port 5433
+    # Default: Use environment variables for PostgreSQL
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "rapid_cash",
-            "USER": "postgres",
-            "PASSWORD": "postgres",
-            "HOST": "localhost",
-            "PORT": 5433,
+            "NAME": env("DB_NAME", "rapid_cash"),
+            "USER": env("DB_USER", "postgres"),
+            "PASSWORD": env("DB_PASSWORD", "postgres"),
+            "HOST": env("DB_HOST", "localhost"),
+            "PORT": env.int("DB_PORT", 5433),
         }
     }
 
@@ -215,21 +222,47 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", f"Rapid Cash <{EMAIL_HOST_USER}>")
 
-# Authentication backends
+# Authentication backends - Order matters for 2FA
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'axes.backends.AxesStandaloneBackend',  # Required for rate limiting
 ]
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
-# Security settings for development
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+# Security settings for production
+# Use environment variables - set to True in production!
+SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
+SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
+CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = env.str('SESSION_COOKIE_SAMESITE', 'Lax')
+CSRF_COOKIE_SAMESITE = env.str('CSRF_COOKIE_SAMESITE', 'Lax')
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# ============================================
+# SECURITY IMPROVEMENTS - Rate Limiting (Axes)
+# ============================================
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 5  # Lock after 5 failed attempts
+AXES_LOCK_OUT_DURATION = 15  # Lock for 15 minutes
+AXES_RESET_COOL_DOWN = 15  # Reset after 15 minutes
+AXES_USE_IP_PROXY_LIST = True
+AXES_IP_WHITELIST = []  # Add trusted IPs if needed
+
+# Axes admin
+AXES_VERBOSE = True
+
+# ============================================
+# TWO-FACTOR AUTHENTICATION (2FA) SETTINGS
+# ============================================
+# Using custom 2FA views - no need to reference two_factor namespace
+LOGIN_URL = 'login'  # Custom login view
+TWO_FACTOR_QR_GENERATOR = 'two_factor.qr_code.svgqrcoder'  # QR code generator
+TWO_FACTOR_PATCH_ADMIN = True  # Patch admin for 2FA

@@ -15,41 +15,6 @@
 
     <!-- Tailwind CSS (local build) -->
     <link rel="stylesheet" href="{% load static %}{% static 'css/enhanced.css' %}">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            bg: '#07080e',
-                            surface1: '#0d0e18',
-                            surface2: '#131421',
-                            surface3: '#1a1b2e',
-                            border: '#252640',
-                        },
-                        accent: {
-                            primary: '#4f8ef7',
-                            'primary-hover': '#3a7af5',
-                            success: '#00d68f',
-                            danger: '#ff5c7a',
-                            warning: '#ffb347',
-                            purple: '#a78bfa',
-                        },
-                        text: {
-                            main: '#e8eaf6',
-                            secondary: '#8b8fa8',
-                            muted: '#5a5d7a',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
-
     <style>
         body {
             background-color: #07080e;
@@ -158,6 +123,12 @@
             </div>
             {% endif %}
 
+            {% if error %}
+            <div class="mb-6 p-4 rounded-lg text-sm font-medium bg-accent-danger/10 border border-accent-danger/20 text-accent-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+
             <form method="post" action="{% url 'login' %}" class="space-y-5">
                 {% csrf_token %}
                 {% if next %}
@@ -166,16 +137,22 @@
 
                 <!-- Username -->
                 <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-2">Nom d'utilisateur</label>
-                    <input type="text" name="username" class="input-dark w-full px-4 py-3 rounded-lg"
+                    <label for="id_username" class="block text-sm font-medium text-text-secondary mb-2">Nom d'utilisateur</label>
+                    <input type="text" name="username" id="id_username" class="input-dark w-full px-4 py-3 rounded-lg"
                         placeholder="Entrez votre nom d'utilisateur" required autocomplete="username">
                 </div>
 
                 <!-- Password -->
                 <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-2">Mot de passe</label>
-                    <input type="password" name="password" class="input-dark w-full px-4 py-3 rounded-lg"
+                    <label for="id_password" class="block text-sm font-medium text-text-secondary mb-2">Mot de passe</label>
+                    <input type="password" name="password" id="id_password" class="input-dark w-full px-4 py-3 rounded-lg"
                         placeholder="••••••••" required>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <a href="{% url 'password_reset' %}" class="text-sm text-accent-primary hover:text-accent-primary-hover font-medium">
+                        Mot de passe oublié ?
+                    </a>
                 </div>
 
                 <!-- Submit -->

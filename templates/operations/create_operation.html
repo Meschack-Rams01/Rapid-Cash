@@ -7,45 +7,77 @@
 {% block page_subtitle %}Effectuer une transaction{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="max-w-4xl mx-auto space-y-6"
+     x-data="{ 
+        step: 1, 
+        opType: '{{ form.type.value|default:'' }}',
+        amount: '{{ form.amount_orig.value|default:'' }}',
+        caisseBalance: {{ agent_caisse.balance|stringformat:'f'|default:'0' }},
+        caisseCurrency: '{{ agent_caisse.currency.code|default:'' }}',
+        feeData: {
+            {% for grid in fee_grids %}
+            '{{ grid.min_amount|stringformat:"f" }}_{{ grid.max_amount|stringformat:"f" }}': {{ grid.fee_amount|stringformat:"f"|default:'0' }},
+            {% endfor %}
+        },
+        
+        get fee() {
+            let amt = parseFloat(this.amount) || 0;
+            for (const [range, feeAmount] of Object.entries(this.feeData)) {
+                const [min, max] = range.split('_').map(Number);
+                if (amt >= min && (max === 0 || amt <= max)) {
+                    return feeAmount;
+                }
+            }
+            return 0;
+        },
+        
+        get isAmountValid() {
+            const amt = parseFloat(this.amount) || 0;
+            if (amt <= 0) return false;
+            if (this.opType === 'WITHDRAWAL') {
+                return (amt + this.fee) <= this.caisseBalance;
+            }
+            return true;
+        },
+
+        setStep(n) {
+            if (n > this.step) {
+                // Validation before going forward
+                if (this.step === 1 && !this.opType) return;
+                if (this.step === 2 && !this.isAmountValid) return;
+            }
+            this.step = n;
+        }
+    }">
+
     <!-- Agent Caisse Info -->
     {% if agent_caisse %}
     <div class="card-dark">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-text-main">Votre Caisse Assignée</h3>
-                    <p class="text-sm text-text-muted mt-1">Toutes les opérations utiliseront cette caisse</p>
+        <div class="p-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
                 </div>
-                <div class="text-right">
-                    <div class="text-sm text-text-muted">Solde disponible</div>
-                    <div class="text-2xl font-bold text-accent-success">{{ agent_caisse.balance|floatformat:2 }} {{ agent_caisse.currency.code }}</div>
+                <div>
+                    <h3 class="text-lg font-bold text-text-main">{{ agent_caisse.name }}</h3>
+                    <p class="text-sm text-text-muted">ID: #{{ agent_caisse.id }} | Agent: {{ agent_caisse.agent.username }}</p>
                 </div>
             </div>
-            <div class="mt-4 p-4 rounded-lg bg-dark-surface2 border border-dark-border">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-text-main">{{ agent_caisse.name }}</h4>
-                        <p class="text-sm text-text-muted">Devise: {{ agent_caisse.currency.code }}</p>
-                    </div>
-                </div>
+            <div class="text-right">
+                <p class="text-xs text-text-muted uppercase tracking-wider mb-1">Solde Actuel</p>
+                <p class="text-2xl font-bold text-accent-primary">{{ agent_caisse.balance|floatformat:2 }} {{ agent_caisse.currency.code }}</p>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="card-dark border-l-4 border-accent-danger">
-        <div class="p-6">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-accent-danger/20 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-accent-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
+    <div class="card-dark border-accent-danger/30">
+        <div class="p-8">
+            <div class="flex items-center gap-4 text-accent-danger">
+                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
                 <div>
                     <h3 class="text-lg font-bold text-text-main">Aucune Caisse Assignée</h3>
                     <p class="text-sm text-text-muted">Veuillez contacter l'administrateur pour qu'une caisse vous soit assignée.</p>
@@ -56,27 +88,30 @@
     {% endif %}
 
     <!-- Workflow Progress -->
-    <div class="card-dark">
+    <div class="card-dark overflow-hidden">
         <div class="p-6">
             <div class="flex items-center justify-between">
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-accent-primary text-white flex items-center justify-center font-bold shadow-lg" id="step1">1</div>
-                    <span class="text-xs font-medium mt-2 text-accent-primary">Type</span>
+                <div class="flex flex-col items-center cursor-pointer" @click="setStep(1)">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
+                         :class="step > 1 ? 'bg-accent-success text-white' : (step === 1 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         x-text="step > 1 ? '✓' : '1'"></div>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 1 ? 'text-text-main' : 'text-text-muted'">Type</span>
                 </div>
-                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-300" id="conn1" style="width:0%"></div></div>
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-dark-surface3 text-text-muted flex items-center justify-center font-bold" id="step2">2</div>
-                    <span class="text-xs font-medium mt-2 text-text-muted">Montant</span>
+                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-500" :style="step > 1 ? 'width: 100%' : (step === 1 ? 'width: 50%' : 'width: 0%')"></div></div>
+                
+                <div class="flex flex-col items-center" :class="opType ? 'cursor-pointer' : 'opacity-50'" @click="opType && setStep(2)">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
+                         :class="step > 2 ? 'bg-accent-success text-white' : (step === 2 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         x-text="step > 2 ? '✓' : '2'"></div>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 2 ? 'text-text-main' : 'text-text-muted'">Détails</span>
                 </div>
-                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-300" id="conn2" style="width:0%"></div></div>
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-dark-surface3 text-text-muted flex items-center justify-center font-bold" id="step3">3</div>
-                    <span class="text-xs font-medium mt-2 text-text-muted">Vérif.</span>
-                </div>
-                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-300" id="conn3" style="width:0%"></div></div>
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-dark-surface3 text-text-muted flex items-center justify-center font-bold" id="step4">✓</div>
-                    <span class="text-xs font-medium mt-2 text-text-muted">Confirme</span>
+                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-500" :style="step > 2 ? 'width: 100%' : (step === 2 ? 'width: 50%' : 'width: 0%')"></div></div>
+                
+                <div class="flex flex-col items-center" :class="isAmountValid ? 'cursor-pointer' : 'opacity-50'" @click="isAmountValid && setStep(3)">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
+                         :class="step > 3 ? 'bg-accent-success text-white' : (step === 3 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         x-text="step > 3 ? '✓' : '3'"></div>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 3 ? 'text-text-main' : 'text-text-muted'">Confirme</span>
                 </div>
             </div>
         </div>
@@ -84,7 +119,7 @@
 
     <!-- Main Form -->
     {% if agent_caisse %}
-    <form method="POST" id="opform" class="card-dark">
+    <form method="POST" id="opform" class="card-dark overflow-hidden relative">
         {% csrf_token %}
 
         <!-- Messages -->
@@ -98,361 +133,231 @@
         </div>
         {% endif %}
 
-        <div class="p-8 space-y-8">
+        <div class="p-8">
             <!-- Step 1: Operation Type -->
-            <div id="step1-content">
-                <div class="mb-6">
-                    <h3 class="text-lg font-bold text-text-main mb-2">Type d'Opération</h3>
-                    <p class="text-sm text-text-muted">Sélectionnez le type de transaction à effectuer</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="type" value="TRANSFER" class="peer sr-only" {% if form.type.value == 'TRANSFER' %}checked{% endif %}>
-                        <div class="p-6 border-2 rounded-xl transition-all peer-checked:border-accent-primary peer-checked:bg-accent-primary/5 border-dark-border hover:border-accent-primary/50">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-text-main">Transfert</h4>
-                                    <p class="text-sm text-text-muted">Transférer des fonds</p>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-                    
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="type" value="WITHDRAWAL" class="peer sr-only" {% if form.type.value == 'WITHDRAWAL' %}checked{% endif %}>
-                        <div class="p-6 border-2 rounded-xl transition-all peer-checked:border-accent-primary peer-checked:bg-accent-primary/5 border-dark-border hover:border-accent-primary/50">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-text-main">Retrait</h4>
-                                    <p class="text-sm text-text-muted">Retirer des fonds</p>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Step 2: Amount and Currency -->
-            <div id="step2-content" class="space-y-6">
-                <div>
-                    <h3 class="text-lg font-bold text-text-main mb-2">Montant et Devise</h3>
-                    <p class="text-sm text-text-muted">Entrez le montant et sélectionnez la devise</p>
+            <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-text-main mb-2">Choisir le Type d'Opération</h3>
+                    <p class="text-text-muted">Quelle transaction souhaitez-vous effectuer aujourd'hui ?</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="{{ form.amount_orig.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
-                            {{ form.amount_orig.label }} *
-                        </label>
-                        {{ form.amount_orig }}
-                        {% if form.amount_orig.errors %}
-                        <div class="text-accent-danger text-sm mt-1">
-                            {{ form.amount_orig.errors.0 }}
+                    <label class="relative cursor-pointer group">
+                        <input type="radio" name="type" value="TRANSFER" class="peer sr-only" x-model="opType" @change="setStep(2)">
+                        <div class="p-8 border-2 rounded-2xl transition-all duration-500 border-dark-border h-full flex flex-col items-center text-center
+                                    peer-checked:border-accent-primary peer-checked:bg-accent-primary/5 peer-checked:shadow-[0_0_20px_rgba(79,142,247,0.15)]
+                                    hover:border-accent-primary/40 group-hover:scale-[1.02] bg-dark-surface1">
+                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
+                                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                                </svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-text-main mb-2">Transfert</h4>
+                            <p class="text-sm text-text-muted leading-relaxed">Réception de fonds du client vers la caisse.</p>
+                            
+                            <!-- Checkmark icon for selected state -->
+                            <div class="absolute top-4 right-4 opacity-0 transition-opacity duration-300 peer-checked:opacity-100">
+                                <div class="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
-                        {% endif %}
+                    </label>
+                    
+                    <label class="relative cursor-pointer group">
+                        <input type="radio" name="type" value="WITHDRAWAL" class="peer sr-only" x-model="opType" @change="setStep(2)">
+                        <div class="p-8 border-2 rounded-2xl transition-all duration-500 border-dark-border h-full flex flex-col items-center text-center
+                                    peer-checked:border-accent-success peer-checked:bg-accent-success/5 peer-checked:shadow-[0_0_20px_rgba(16,185,129,0.15)]
+                                    hover:border-accent-success/40 group-hover:scale-[1.02] bg-dark-surface1">
+                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
+                                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-text-main mb-2">Retrait</h4>
+                            <p class="text-sm text-text-muted leading-relaxed">Distribution de fonds de la caisse vers le client.</p>
+                            
+                            <!-- Checkmark icon for selected state -->
+                            <div class="absolute top-4 right-4 opacity-0 transition-opacity duration-300 peer-checked:opacity-100">
+                                <div class="w-6 h-6 rounded-full bg-accent-success flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Step 2: Amount and Details -->
+            <div x-show="step === 2" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-cloak>
+                <div class="mb-8 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-text-main mb-2">Montant et Dévises</h3>
+                        <p class="text-text-muted">Spécifiez le montant de la transaction.</p>
+                    </div>
+                    <button type="button" @click="setStep(1)" class="p-2 text-text-muted hover:text-accent-primary transition-colors">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="space-y-4">
+                        <label class="block text-sm font-semibold text-text-main">Montant de la transaction *</label>
+                        {{ form.amount_orig }}
+                        <div class="flex items-center gap-2 p-3 rounded-lg bg-dark-surface3/50 text-xs text-text-muted">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 01-18 0z"/>
+                            </svg>
+                            <span>Toutes les transactions sont enregistrées en temps réel.</span>
+                        </div>
                     </div>
                     
-                    <div>
-                        <label for="{{ form.currency_orig.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
-                            {{ form.currency_orig.label }} *
-                        </label>
+                    <div class="space-y-4">
+                        <label class="block text-sm font-semibold text-text-main">Devise Utilisée *</label>
                         {{ form.currency_orig }}
-                        {% if form.currency_orig.errors %}
-                        <div class="text-accent-danger text-sm mt-1">
-                            {{ form.currency_orig.errors.0 }}
-                        </div>
-                        {% endif %}
                     </div>
+                </div>
+
+                <!-- Live Calculation Card -->
+                <div class="p-6 rounded-2xl border-2 transition-all duration-300" 
+                     :class="!amount || amount <= 0 ? 'bg-dark-surface2 border-dark-border opacity-50' : (isAmountValid ? 'bg-accent-success/5 border-accent-success/20' : 'bg-accent-danger/5 border-accent-danger/20')">
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-muted">Solde de la caisse :</span>
+                            <span class="font-bold text-text-main" x-text="`${caisseBalance.toFixed(2)} ${caisseCurrency}`"></span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-muted">Frais calculés :</span>
+                            <span class="font-bold text-accent-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
+                        </div>
+
+                        <div class="pt-4 border-t border-dark-border/10 flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-text-muted uppercase tracking-wider mb-1" x-text="opType === 'TRANSFER' ? 'Total à encaisser' : 'Total à décaisser'"></p>
+                                <p class="text-2xl font-black" :class="opType === 'TRANSFER' ? 'text-accent-success' : 'text-accent-danger'" 
+                                   x-text="(parseFloat(amount)||0 + (opType === 'WITHDRAWAL' ? fee : 0)).toFixed(2) + ' ' + caisseCurrency"></p>
+                            </div>
+                            
+                            <div class="text-right">
+                                <p class="text-xs text-text-muted uppercase mb-1">Impact sur Solde</p>
+                                <p class="text-lg font-bold" :class="isAmountValid ? 'text-text-main' : 'text-accent-danger'"
+                                   x-text="(caisseBalance + (opType === 'TRANSFER' ? (parseFloat(amount)||0 + fee) : -(parseFloat(amount)||0 + fee))).toFixed(2) + ' ' + caisseCurrency"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-dark-border/10 flex items-center gap-2 text-sm" x-show="amount > 0">
+                        <template x-if="isAmountValid">
+                            <div class="flex items-center gap-2 text-accent-success">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Solde suffisant pour l'opération.</span>
+                            </div>
+                        </template>
+                        <template x-if="!isAmountValid">
+                            <div class="flex items-center gap-2 text-accent-danger">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Fonds insuffisants dans la caisse.</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="mt-8 flex justify-between">
+                    <button type="button" @click="setStep(1)" class="btn-secondary">Retour</button>
+                    <button type="button" @click="setStep(3)" class="btn-primary" :disabled="!isAmountValid" :class="!isAmountValid && 'opacity-50 cursor-not-allowed'">Suivant</button>
                 </div>
             </div>
 
-            <!-- Step 3: Balance Verification -->
-            <div id="step3-content" class="space-y-6">
-                <div>
-                    <h3 class="text-lg font-bold text-text-main mb-2">Vérification du Solde</h3>
-                    <p class="text-sm text-text-muted">Vérification automatique des fonds disponibles</p>
+            <!-- Step 3: Confirmation -->
+            <div x-show="step === 3" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-cloak>
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-text-main mb-2">Finalisation & Résumé</h3>
+                    <p class="text-text-muted">Vérifiez les détails et ajoutez un commentaire si besoin.</p>
                 </div>
-                
-                <!-- Balance Info -->
-                <div id="balance-info" class="p-4 rounded-lg bg-dark-surface2 border border-dark-border hidden">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-text-muted">Solde disponible:</span>
-                        <span id="balance-amount" class="font-bold text-lg text-text-main">{{ agent_caisse.balance|floatformat:2 }} {{ agent_caisse.currency.code }}</span>
-                    </div>
-                    <div id="fee-info" class="mt-2 pt-2 border-t border-dark-border hidden">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-text-muted">Frais:</span>
-                            <span id="fee-amount" class="font-medium text-accent-warning">0.00</span>
-                        </div>
-                        <div class="flex items-center justify-between mt-1">
-                            <span class="text-sm text-text-muted">Total requis:</span>
-                            <span id="total-amount" class="font-bold text-lg text-accent-danger">0.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Step 4: Observation and Confirmation -->
-            <div id="step4-content" class="space-y-6">
-                <div>
-                    <h3 class="text-lg font-bold text-text-main mb-2">Finalisation</h3>
-                    <p class="text-sm text-text-muted">Ajoutez un commentaire et confirmez l'opération</p>
-                </div>
-                
-                <div>
-                    <label for="{{ form.observation.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
-                        {{ form.observation.label }}
-                    </label>
-                    {{ form.observation }}
-                    {% if form.observation.errors %}
-                    <div class="text-accent-danger text-sm mt-1">
-                        {{ form.observation.errors.0 }}
-                    </div>
-                    {% endif %}
-                </div>
-                
-                <!-- Summary -->
-                <div id="operation-summary" class="p-6 rounded-xl bg-dark-surface2 border border-dark-border hidden">
-                    <h4 class="font-semibold text-text-main mb-4">Résumé de l'Opération</h4>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-text-muted">Type:</span>
-                            <span id="summary-type" class="font-medium text-text-main">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-text-muted">Montant:</span>
-                            <span id="summary-amount" class="font-medium text-text-main">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-text-muted">Caisse:</span>
-                            <span id="summary-caisse" class="font-medium text-text-main">{{ agent_caisse.name }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-text-muted">Frais:</span>
-                            <span id="summary-fee" class="font-medium text-accent-warning">-</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="space-y-6">
+                        <div class="p-6 rounded-2xl bg-dark-surface2 border border-dark-border space-y-4 shadow-xl">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-text-muted">Type :</span>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold" 
+                                      :class="opType === 'TRANSFER' ? 'bg-blue-500/10 text-blue-500' : 'bg-green-500/10 text-green-500'" 
+                                      x-text="opType === 'TRANSFER' ? 'TRANSFERT' : 'RETRAIT'"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-text-muted">Montant client :</span>
+                                <span class="font-bold text-text-main" x-text="`${amount} ${caisseCurrency}`"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-text-muted">Frais :</span>
+                                <span class="font-bold text-accent-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
+                            </div>
+                            <div class="pt-4 border-t border-dark-border flex justify-between items-center">
+                                <span class="font-bold text-text-main">TOTAL :</span>
+                                <span class="text-2xl font-black text-accent-primary" x-text="`${(parseFloat(amount)||0 + (opType === 'WITHDRAWAL' ? fee : 0)).toFixed(2)} ${caisseCurrency}`"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Submit Button -->
-            <div class="flex justify-end gap-4 pt-6 border-t border-dark-border">
-                <a href="{% url 'dashboard' %}" class="btn-secondary">Annuler</a>
-                <button type="submit" class="btn-primary" id="submit-btn">
-                    <svg class="w-4 h-4 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    Confirmer l'Opération
-                </button>
+                    <div class="space-y-4">
+                        <label class="block text-sm font-semibold text-text-main">Commentaire / Observation</label>
+                        {{ form.observation }}
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="mt-8 flex justify-between">
+                    <button type="button" @click="setStep(2)" class="btn-secondary">Modifier</button>
+                    <button type="submit" class="btn-primary px-10">
+                        <svg class="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Confirmer l'Opération
+                    </button>
+                </div>
             </div>
         </div>
     </form>
     {% endif %}
 </div>
 
-<script>
-// Agent caisse data
-const agentCaisse = {
-    'name': '{{ agent_caisse.name|default:"" }}',
-    'balance': {{ agent_caisse.balance|default:"0" }},
-    'currency': '{{ agent_caisse.currency.code|default:"" }}'
-};
-
-// Fee grid data
-const feeData = {
-    {% for grid in fee_grids %}
-    '{{ grid.min_amount }}_{{ grid.max_amount }}': {{ grid.fee_amount|default:"0" }},
-    {% endfor %}
-};
-
-function updateWorkflowStep(step) {
-    // Reset all steps
-    for (let i = 1; i <= 4; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        const connEl = document.getElementById(`conn${i}`);
-        
-        if (i < step) {
-            stepEl.className = 'w-10 h-10 rounded-full bg-accent-success text-white flex items-center justify-center font-bold shadow-lg';
-            stepEl.innerHTML = '✓';
-            if (connEl) connEl.style.width = '100%';
-        } else if (i === step) {
-            stepEl.className = 'w-10 h-10 rounded-full bg-accent-primary text-white flex items-center justify-center font-bold shadow-lg';
-            stepEl.innerHTML = i;
-            if (connEl) connEl.style.width = '50%';
-        } else {
-            stepEl.className = 'w-10 h-10 rounded-full bg-dark-surface3 text-text-muted flex items-center justify-center font-bold';
-            stepEl.innerHTML = i;
-            if (connEl) connEl.style.width = '0%';
-        }
-    }
-}
-
-function calculateFee(amount) {
-    for (const [range, fee] of Object.entries(feeData)) {
-        const [min, max] = range.split('_').map(Number);
-        if (amount >= min && (max === 0 || amount <= max)) {
-            return fee;
-        }
-    }
-    return 0;
-}
-
-function updateBalanceInfo() {
-    const amount = parseFloat(document.querySelector('[name="amount_orig"]').value) || 0;
-    const opType = document.querySelector('[name="type"]:checked')?.value;
-    
-    if (agentCaisse.name && amount > 0) {
-        const balanceInfo = document.getElementById('balance-info');
-        const balanceAmount = document.getElementById('balance-amount');
-        const feeInfo = document.getElementById('fee-info');
-        const feeAmount = document.getElementById('fee-amount');
-        const totalAmount = document.getElementById('total-amount');
-        const balanceAfter = document.getElementById('balance-after');
-        
-        const fee = calculateFee(amount);
-        
-        balanceAmount.textContent = `${agentCaisse.balance.toFixed(2)} ${agentCaisse.currency}`;
-        
-        if (opType === 'WITHDRAWAL') {
-            // RETRAIT: L'agent donne de l'argent au client (solde diminue)
-            const total = amount + fee;
-            const newBalance = agentCaisse.balance - total;
-            
-            feeAmount.textContent = `${fee.toFixed(2)} ${agentCaisse.currency}`;
-            totalAmount.textContent = `-${total.toFixed(2)} ${agentCaisse.currency}`;
-            totalAmount.className = 'font-bold text-lg text-accent-danger';
-            if (balanceAfter) {
-                balanceAfter.textContent = `Nouveau solde: ${newBalance.toFixed(2)} ${agentCaisse.currency}`;
-            }
-            feeInfo.classList.remove('hidden');
-            
-            // Vérifier si solde suffisant
-            if (total > agentCaisse.balance) {
-                balanceInfo.className = 'p-4 rounded-lg bg-accent-danger/10 border border-accent-danger/20';
-                balanceAmount.className = 'font-bold text-lg text-accent-danger';
-            } else {
-                balanceInfo.className = 'p-4 rounded-lg bg-accent-success/10 border border-accent-success/20';
-                balanceAmount.className = 'font-bold text-lg text-accent-success';
-            }
-        } else if (opType === 'TRANSFER') {
-            // TRANSFERT: L'agent reçoit l'argent du client + frais (solde augmente)
-            const received = amount + fee;
-            const newBalance = agentCaisse.balance + received;
-            
-            feeAmount.textContent = `${fee.toFixed(2)} ${agentCaisse.currency}`;
-            totalAmount.textContent = `+${received.toFixed(2)} ${agentCaisse.currency}`;
-            totalAmount.className = 'font-bold text-lg text-accent-success';
-            if (balanceAfter) {
-                balanceAfter.textContent = `Nouveau solde: ${newBalance.toFixed(2)} ${agentCaisse.currency}`;
-            }
-            feeInfo.classList.remove('hidden');
-            
-            // Pas de vérification de solde pour les transferts (l'agent reçoit de l'argent)
-            balanceInfo.className = 'p-4 rounded-lg bg-accent-success/10 border border-accent-success/20';
-            balanceAmount.className = 'font-bold text-lg text-accent-success';
-        }
-        
-        balanceInfo.classList.remove('hidden');
-        updateSummary();
-    }
-}
-
-function validateBalance() {
-    const amount = parseFloat(document.querySelector('[name="amount_orig"]').value) || 0;
-    const opType = document.querySelector('[name="type"]:checked')?.value;
-    
-    if (!agentCaisse.name || amount <= 0) {
-        return true; // No validation needed
-    }
-    
-    let requiredAmount = amount;
-    if (opType === 'WITHDRAWAL') {
-        const fee = calculateFee(amount);
-        requiredAmount = amount + fee;
-    }
-    
-    if (requiredAmount > agentCaisse.balance) {
-        return false; // Insufficient balance
-    }
-    
-    return true; // Sufficient balance
-}
-
-function updateSummary() {
-    const type = document.querySelector('[name="type"]:checked')?.value;
-    const amount = document.querySelector('[name="amount_orig"]').value;
-    
-    if (type && amount && agentCaisse.name) {
-        document.getElementById('operation-summary').classList.remove('hidden');
-        document.getElementById('summary-type').textContent = type === 'TRANSFER' ? 'Transfert' : 'Retrait';
-        document.getElementById('summary-amount').textContent = `${amount} ${agentCaisse.currency}`;
-        
-        if (type === 'WITHDRAWAL') {
-            const fee = calculateFee(parseFloat(amount));
-            document.getElementById('summary-fee').textContent = `${fee.toFixed(2)} ${agentCaisse.currency}`;
-        } else {
-            document.getElementById('summary-fee').textContent = '0.00';
-        }
-    }
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Update workflow on input
-    document.querySelector('[name="type"]')?.addEventListener('change', function() {
-        updateWorkflowStep(2);
-        updateBalanceInfo();
-    });
-    
-    document.querySelector('[name="amount_orig"]')?.addEventListener('input', function() {
-        updateWorkflowStep(2);
-        updateBalanceInfo();
-    });
-    
-    document.querySelector('[name="currency_orig"]')?.addEventListener('change', function() {
-        updateWorkflowStep(2);
-        updateBalanceInfo();
-    });
-    
-    document.querySelector('[name="observation"]')?.addEventListener('input', function() {
-        updateWorkflowStep(4);
-    });
-    
-    // Initialize
-    updateWorkflowStep(1);
-});
-</script>
-
 <style>
+/* Smooth transitions and custom input styling */
+[x-cloak] { display: none !important; }
+
 .input-dark {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1.25rem;
     background: #1a1b2e;
-    border: 1px solid #252640;
-    border-radius: 0.5rem;
+    border: 2px solid #252640;
+    border-radius: 1rem;
     color: #e8eaf6;
-    transition: all 0.2s ease;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-dark:focus {
     outline: none;
     border-color: #4f8ef7;
-    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+    background: #1f2038;
+    box-shadow: 0 0 0 4px rgba(79, 142, 247, 0.1);
 }
 
-.input-dark::placeholder {
-    color: #64748b;
+.btn-primary {
+    @apply bg-accent-primary hover:bg-accent-primary/90 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-accent-primary/20 flex items-center justify-center;
+}
+
+.btn-secondary {
+    @apply bg-dark-surface3 hover:bg-dark-surface3/80 text-text-main font-bold py-3 px-6 rounded-xl transition-all duration-300 border border-dark-border flex items-center justify-center;
 }
 </style>
 {% endblock %}

@@ -14,9 +14,12 @@ class OperationServiceTest(TestCase):
         self.usd = Currency.objects.create(code='USD', name='US Dollar', is_reference=True)
         self.eur = Currency.objects.create(code='EUR', name='Euro')
         
-        # Create fee grid
+        # Create fee grids
         FeeGrid.objects.create(
-            min_amount=0.10, max_amount=40.00, fee_amount=5.00, currency=self.usd
+            min_amount=Decimal('0.10'), max_amount=Decimal('40.00'), fee_amount=Decimal('5.00'), currency=self.usd
+        )
+        FeeGrid.objects.create(
+            min_amount=Decimal('40.10'), max_amount=Decimal('100.00'), fee_amount=Decimal('8.00'), currency=self.usd
         )
         
         # Create admin user
@@ -38,21 +41,22 @@ class OperationServiceTest(TestCase):
         """Test successful operation creation"""
         operation = OperationService.create_operation(
             agent=self.agent,
-            op_type='TRANSFER',
+            op_type='WITHDRAWAL',
             caisse_id=self.caisse.id,
             amount_orig=Decimal('100.00'),
             currency_orig_id=self.usd.id,
             observation='Test operation'
         )
         
-        self.assertEqual(operation.type, 'TRANSFER')
+        self.assertEqual(operation.type, 'WITHDRAWAL')
         self.assertEqual(operation.amount_orig, Decimal('100.00'))
         self.assertEqual(operation.agent, self.agent)
         self.assertEqual(operation.status, 'COMPLETED')
         
-        # Check caisse balance updated
+        # Check caisse balance updated (money goes out)
         self.caisse.refresh_from_db()
-        self.assertEqual(self.caisse.balance, Decimal('900.00'))
+        # For withdrawal: balance = 1000 - 100 - 8(fee) = 892
+        self.assertEqual(self.caisse.balance, Decimal('892.00'))
 
     def test_create_operation_insufficient_funds(self):
         """Test operation creation with insufficient funds"""
@@ -65,7 +69,7 @@ class OperationServiceTest(TestCase):
                 currency_orig_id=self.usd.id,
             )
         
-        self.assertIn('Insufficient funds', str(context.exception))
+        self.assertIn('Fonds insuffisants', str(context.exception))
 
     def test_fee_calculation(self):
         """Test automatic fee calculation"""
@@ -99,12 +103,12 @@ class OperationViewTest(TestCase):
 
     def test_agents_list_admin_only(self):
         """Test agents list is accessible only to admin"""
-        response = self.client.get(reverse('agents_list'))
+        response = self.client.get(reverse('core:agents_list'))
         self.assertEqual(response.status_code, 200)
         
         # Logout admin and login as agent
         self.client.logout()
         self.client.login(username='agent', password='test123')
         
-        response = self.client.get(reverse('agents_list'))
+        response = self.client.get(reverse('core:agents_list'))
         self.assertEqual(response.status_code, 302)  # Redirect to dashboard

@@ -11,7 +11,7 @@
 
 <!-- Expenses Table -->
 <div class="card-dark" id="expenses-table">
-    <div class="flex items-center justify-between p-5 border-b border-dark-border">
+    <div class="flex items-center justify-between mb-6">
         <h3 class="font-bold text-text-main">
             Registre des Dépenses
             <span class="text-text-muted font-normal">({{ expenses.count }} résultats)</span>
@@ -26,61 +26,8 @@
         {% endif %}
     </div>
     
-    <div class="overflow-x-auto">
-        {% if expenses %}
-        <table class="table-dark">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Motif</th>
-                    <th>Catégorie</th>
-                    <th>Destination</th>
-                    <th class="text-right">Montant</th>
-                    <th>Administrateur</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for exp in expenses %}
-                <tr class="hover:bg-dark-surface2/50 transition-colors cursor-pointer"
-                    hx-get="{% url 'expense_detail' exp.id %}"
-                    hx-target="#modal-container"
-                    hx-swap="innerHTML">
-                    <td class="font-mono text-text-secondary text-sm">
-                        {{ exp.date|date:"d/m/Y" }}
-                    </td>
-                    <td>
-                        <p class="font-medium text-text-main">{{ exp.reason }}</p>
-                        {% if exp.comment %}
-                        <p class="text-xs text-text-muted mt-0.5">{{ exp.comment|truncatechars:50 }}</p>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="badge badge-warning">
-                            {{ exp.category|default:"Non classé" }}
-                        </span>
-                    </td>
-                    <td class="text-text-secondary">
-                        {{ exp.destination|default:"—" }}
-                    </td>
-                    <td class="text-right">
-                        <span class="font-mono font-medium text-accent-danger">-${{ exp.amount|floatformat:2 }}</span>
-                        <span class="text-text-muted text-xs ml-1">{{ exp.currency.symbol }}</span>
-                    </td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-xs font-medium">
-                                {{ exp.admin.username|first|upper }}
-                            </div>
-                            <span class="text-text-secondary text-sm">{{ exp.admin.username }}</span>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        {% include 'partials/_empty_state.html' with icon='currency' title='Aucune dépense enregistrée' message='Les sorties de fonds apparaîtront ici après validation' action_url='create_expense' action_text='Nouvelle Dépense' %}
-        {% endif %}
+    <div class="overflow-x-auto" id="expense-table-container">
+        {% include 'finance/partials/expense_table.html' %}
     </div>
 </div>
 {% endblock %}

@@ -28,9 +28,59 @@ class User(AbstractUser):
         help_text="Pourcentage des frais générés reversé à l'agent"
     )
     is_active = models.BooleanField("Actif", default=True)
+    
+    # Two-Factor Authentication fields
+    totp_secret = models.CharField(
+        "Secret TOTP",
+        max_length=32,
+        blank=True,
+        null=True,
+        help_text="Secret pour l'authentification à deux facteurs"
+    )
+    is_2fa_enabled = models.BooleanField(
+        "2FA activé",
+        default=False,
+        help_text="L'authentification à deux facteurs est-elle activée"
+    )
+    backup_codes = models.JSONField(
+        "Codes de secours",
+        blank=True,
+        default=list,
+        help_text="Codes de secours pour la récupération de compte"
+    )
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
+    
+    def generate_totp_secret(self):
+        """Generate a new TOTP secret for the user"""
+        import secrets
+        self.totp_secret = secrets.token_hex(16)
+        return self.totp_secret
+    
+    def generate_backup_codes(self):
+        """Generate backup codes for 2FA recovery"""
+        import secrets
+        codes = [secrets.token_hex(4).upper() for _ in range(10)]
+        self.backup_codes = codes
+        return codes
+    
+    def verify_totp(self, code):
+        """Verify a TOTP code"""
+        import pyotp
+        if not self.totp_secret:
+            return False
+        totp = pyotp.TOTP(self.totp_secret)
+        return totp.verify(code)
+    
+    def verify_backup_code(self, code):
+        """Verify and consume a backup code"""
+        code = code.upper()
+        if code in self.backup_codes:
+            self.backup_codes.remove(code)
+            self.save(update_fields=['backup_codes'])
+            return True
+        return False
 
 
 class Currency(models.Model):

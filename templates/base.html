@@ -16,45 +16,26 @@
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            bg: '#07080e',
-                            surface1: '#0d0e18',
-                            surface2: '#131421',
-                            surface3: '#1a1b2e',
-                            border: '#252640',
-                        },
-                        accent: {
-                            primary: '#4f8ef7',
-                            'primary-hover': '#3a7af5',
-                            success: '#00d68f',
-                            danger: '#ff5c7a',
-                            warning: '#ffb347',
-                            purple: '#a78bfa',
-                        },
-                        text: {
-                            main: '#e8eaf6',
-                            secondary: '#8b8fa8',
-                            muted: '#5a5d7a',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (Compiled) -->
+    <link rel="stylesheet" href="{% static 'css/enhanced.css' %}">
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Context Data -->
+    {{ fee_grid_json|json_script:"fee-grid-data" }}
+    <script>
+        // Sync FeeGrid from backend DB safely
+        try {
+            window.SERVER_FEE_GRID = JSON.parse(document.getElementById('fee-grid-data').textContent);
+        } catch (e) {
+            console.error("Could not parse fee grid data", e);
+            window.SERVER_FEE_GRID = {};
+        }
+    </script>
 
     <!-- App JS -->
     <script src="{% static 'js/helpers.js' %}"></script>
@@ -62,8 +43,8 @@
     <style>
         /* Base Styles */
         body {
-            background-color: #07080e;
-            color: #e8eaf6;
+            background-color: #0A0A0B; /* Muted Slate Background */
+            color: #E2E2E2;
             font-family: 'Inter', system-ui, sans-serif;
         }
 
@@ -74,48 +55,48 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0d0e18;
+            background: #0A0A0B;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #252640;
+            background: #27272A;
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #3a3a5a;
+            background: #3F3F46;
         }
 
         /* Custom Utilities */
         .glass {
-            background: rgba(13, 14, 24, 0.8);
+            background: rgba(10, 10, 11, 0.85);
             backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .glow-primary {
-            box-shadow: 0 0 20px rgba(79, 142, 247, 0.3);
-        }
-
-        .glow-success {
-            box-shadow: 0 0 20px rgba(0, 214, 143, 0.3);
+        .glow-primary, .glow-success {
+            /* Deprecated: Replaced by subtle modern shadows */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         /* Form Inputs */
         .input-dark {
-            background: #131421;
-            border: 1px solid #252640;
-            color: #e8eaf6;
-            transition: all 0.2s ease;
+            background: #121214;
+            border: 1px solid #27272A;
+            color: #E2E2E2;
+            border-radius: 0.5rem;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         .input-dark:focus {
             outline: none;
-            border-color: #4f8ef7;
-            box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.2);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
         }
 
         .input-dark::placeholder {
-            color: #5a5d7a;
+            color: #71717A;
         }
 
         /* Sidebar Link */
@@ -123,28 +104,33 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            color: #8b8fa8;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            color: #A1A1AA;
+            font-size: 0.875rem;
+            font-weight: 500;
             transition: all 0.15s ease;
         }
 
         .sidebar-link:hover {
-            background: rgba(79, 142, 247, 0.1);
-            color: #e8eaf6;
+            background: #18181B;
+            color: #E2E2E2;
         }
 
         .sidebar-link.active {
-            background: linear-gradient(135deg, rgba(79, 142, 247, 0.2), rgba(79, 142, 247, 0.1));
-            color: #4f8ef7;
-            border: 1px solid rgba(79, 142, 247, 0.3);
+            background: #18181B;
+            color: #F8FAFC;
+            position: relative;
+            box-shadow: inset 2px 0 0 0 #3b82f6;
         }
 
         /* Cards */
         .card-dark {
-            background: #0d0e18;
-            border: 1px solid #252640;
-            border-radius: 1rem;
+            background: #121214;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 24px;
         }
 
         .card-dark-hover {
@@ -152,67 +138,71 @@
         }
 
         .card-dark-hover:hover {
-            border-color: #3a3a5a;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border-color: #3F3F46;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         /* Buttons */
         .btn-primary {
-            background: linear-gradient(135deg, #4f8ef7, #3a7af5);
-            color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.5rem;
+            background: #ECECF1;
+            color: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(79, 142, 247, 0.4);
+            background: #FFFFFF;
         }
 
         .btn-secondary {
-            background: #1a1b2e;
-            color: #e8eaf6;
-            border: 1px solid #252640;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.5rem;
+            background: transparent;
+            color: #E2E2E2;
+            border: 1px solid #3F3F46;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
 
         .btn-secondary:hover {
-            background: #252640;
-            border-color: #3a3a5a;
+            background: #27272A;
+            border-color: #52525B;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #00d68f, #00b87a);
+            background: #10B981;
             color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
         }
 
         .btn-success:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0, 214, 143, 0.4);
+            background: #059669;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ff5c7a, #e84560);
+            background: #EF4444;
             color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
         }
 
         .btn-danger:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255, 92, 122, 0.4);
+            background: #DC2626;
         }
 
         /* Tables */
@@ -220,24 +210,33 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
+            font-size: 0.875rem;
         }
 
         .table-dark th {
-            background: #131421;
-            color: #8b8fa8;
-            font-weight: 600;
+            background: transparent;
+            color: #A1A1AA;
+            font-weight: 500;
             text-align: left;
             padding: 0.75rem 1rem;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid #252640;
+            border-bottom: 1px solid #27272A;
         }
 
         .table-dark td {
-            padding: 1rem;
-            border-bottom: 1px solid #1a1b2e;
-            color: #e8eaf6;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #18181B;
+            color: #E2E2E2;
+            vertical-align: middle;
+        }
+
+        /* Number alignment in tables */
+        .table-dark td.text-right, 
+        .table-dark th.text-right {
+            font-variant-numeric: tabular-nums;
+            text-align: right;
         }
 
         .table-dark tbody tr {
@@ -245,54 +244,61 @@
         }
 
         .table-dark tbody tr:hover {
-            background: rgba(79, 142, 247, 0.05);
+            background: #18181B;
         }
 
         /* Badges */
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.25rem 0.625rem;
+            padding: 0.125rem 0.625rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 500;
+            border: 1px solid transparent;
         }
 
         .badge-success {
-            background: rgba(0, 214, 143, 0.15);
-            color: #00d68f;
+            background: rgba(16, 185, 129, 0.1);
+            color: #34D399;
+            border-color: rgba(16, 185, 129, 0.2);
         }
 
         .badge-danger {
-            background: rgba(255, 92, 122, 0.15);
-            color: #ff5c7a;
+            background: rgba(239, 68, 68, 0.1);
+            color: #F87171;
+            border-color: rgba(239, 68, 68, 0.2);
         }
 
         .badge-warning {
-            background: rgba(255, 179, 71, 0.15);
-            color: #ffb347;
+            background: rgba(245, 158, 11, 0.1);
+            color: #FBBF24;
+            border-color: rgba(245, 158, 11, 0.2);
         }
 
         .badge-info {
-            background: rgba(79, 142, 247, 0.15);
-            color: #4f8ef7;
+            background: rgba(59, 130, 246, 0.1);
+            color: #60A5FA;
+            border-color: rgba(59, 130, 246, 0.2);
         }
 
         .badge-purple {
-            background: rgba(167, 139, 250, 0.15);
-            color: #a78bfa;
+            background: rgba(139, 92, 246, 0.1);
+            color: #A78BFA;
+            border-color: rgba(139, 92, 246, 0.2);
         }
 
         /* Modal */
         .modal-overlay {
-            background: rgba(7, 8, 14, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
         }
 
         .modal-content {
-            background: #0d0e18;
-            border: 1px solid #252640;
-            border-radius: 1rem;
+            background: #121214;
+            border: 1px solid #27272A;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
         }
 
         /* Animations */

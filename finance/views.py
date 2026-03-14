@@ -14,11 +14,29 @@ def expense_list(request):
     expenses = Expense.objects.select_related('admin', 'currency').order_by('-date')
     expense_categories = Expense.objects.values_list('category', flat=True).distinct()
     
-    return render(request, 'finance/expense_list.html', {
+    
+    category_filter = request.GET.get('category')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    
+    if category_filter:
+        expenses = expenses.filter(category=category_filter)
+    
+    if date_from:
+        expenses = expenses.filter(date__gte=date_from)
+    if date_to:
+        expenses = expenses.filter(date__lte=date_to)
+
+    context = {
         'expenses': expenses,
         'expense_categories': expense_categories,
-        'request': request,  # Add request object for template access
-    })
+        'request': request,
+    }
+    
+    if request.headers.get('HX-Request'):
+        return render(request, 'finance/partials/expense_table.html', context)
+        
+    return render(request, 'finance/expense_list.html', context)
 
 @login_required
 def create_expense(request):
@@ -59,6 +77,7 @@ def commissions_list(request):
     from django.db.models import F
     from django.utils import timezone
     from datetime import timedelta
+    from decimal import Decimal
     
     User = get_user_model()
     
@@ -83,7 +102,7 @@ def commissions_list(request):
     
     for op in operations:
         if op.agent and op.agent.commission_rate:
-            comm_amount = float(op.fee_calculated) * float(op.agent.commission_rate) / 100
+            comm_amount = (op.fee_calculated * (op.agent.commission_rate or Decimal('0'))) / Decimal('100')
             if comm_amount > 0:
                 commissions.append({
                     'date': op.date_time,
@@ -101,10 +120,10 @@ def commissions_list(request):
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     monthly_ops = Operation.objects.filter(date_time__gte=month_start)
     monthly_commissions = sum(
-        float(op.fee_calculated) * float(op.agent.commission_rate or 0) / 100
+        (op.fee_calculated * (op.agent.commission_rate or Decimal('0'))) / Decimal('100')
         for op in monthly_ops.select_related('agent')
         if op.agent and op.agent.commission_rate
-    )
+    ) or Decimal('0')
     
     context = {
         'commissions': commissions,
@@ -112,7 +131,7 @@ def commissions_list(request):
         'total_commissions': total_commissions,
         'monthly_commissions': monthly_commissions,
         'active_agents': agents.filter(is_active=True).count(),
-        'average_rate': sum(float(a.commission_rate or 0) for a in agents) / max(agents.count(), 1),
+        'average_rate': sum((a.commission_rate or Decimal('0')) for a in agents) / max(agents.count(), 1) if agents.exists() else Decimal('0'),
         'total_period': total_commissions,
         'request': request,  # Add request object for template access
     }

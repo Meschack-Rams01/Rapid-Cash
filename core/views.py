@@ -170,6 +170,94 @@ def delete_user(request, user_id):
 
 
 @login_required
+def create_agent(request):
+    """
+    Créer un nouvel agent (Admin uniquement)
+    """
+    if request.user.role != 'ADMIN':
+        return redirect('core:dashboard')
+        
+    from .forms import AgentCreationForm
+    
+    if request.method == 'POST':
+        form = AgentCreationForm(request.POST)
+        if form.is_valid():
+            agent = form.save()
+            messages.success(request, f"L'agent {agent.username} a été créé avec succès.")
+            
+            # Log action
+            from core.models import AuditLog
+            AuditLog.log_action(
+                user=request.user,
+                action=AuditLog.ActionType.CREATE,
+                model_name='User',
+                object_id=str(agent.id),
+                object_repr=str(agent),
+                changes={'username': agent.username, 'role': 'AGENT', 'commission': str(agent.commission_rate)}
+            )
+            return redirect('core:agents_list')
+    else:
+        form = AgentCreationForm()
+        
+    context = {
+        'form': form,
+        'request': request,
+    }
+    return render(request, 'core/create_agent.html', context)
+
+
+@login_required
+def edit_agent(request, agent_id):
+    """
+    Éditer un agent existant (Admin uniquement)
+    """
+    if request.user.role != 'ADMIN':
+        return redirect('core:dashboard')
+        
+    from django.contrib.auth import get_user_model
+    from .forms import AgentEditForm
+    User = get_user_model()
+    
+    try:
+        agent = User.objects.get(id=agent_id, role='AGENT')
+    except User.DoesNotExist:
+        messages.error(request, "Agent introuvable.")
+        return redirect('core:agents_list')
+        
+    if request.method == 'POST':
+        form = AgentEditForm(request.POST, instance=agent)
+        if form.is_valid():
+            old_commission = agent.commission_rate
+            agent = form.save()
+            messages.success(request, f"Les informations de {agent.username} ont été mises à jour.")
+            
+            # Log action
+            from core.models import AuditLog
+            AuditLog.log_action(
+                user=request.user,
+                action=AuditLog.ActionType.UPDATE,
+                model_name='User',
+                object_id=str(agent.id),
+                object_repr=str(agent),
+                changes={
+                    'username': agent.username, 
+                    'commission_rate': [str(old_commission), str(agent.commission_rate)],
+                    'is_active': agent.is_active
+                }
+            )
+            return redirect('core:agents_list')
+    else:
+        form = AgentEditForm(instance=agent)
+        
+    context = {
+        'form': form,
+        'agent': agent,
+        'request': request,
+    }
+    return render(request, 'core/edit_agent.html', context)
+
+
+@login_required
 def caisses_list(request):
     if request.user.role != 'ADMIN':
         return redirect('core:dashboard')
@@ -200,13 +288,14 @@ def associates_list(request):
     
     associates = User.objects.filter(role='ASSOCIATE').select_related('contract')
     
+    from decimal import Decimal
     # Calculate totals
     total_engaged = sum(
-        float(c.amount_engaged) for c in PartnerContract.objects.filter(type='ASSOCIATE')
-    )
+        (c.amount_engaged or Decimal('0')) for c in PartnerContract.objects.filter(type='ASSOCIATE')
+    ) or Decimal('0')
     total_expected_return = sum(
-        float(c.expected_return_percent) for c in PartnerContract.objects.filter(type='ASSOCIATE')
-    ) / max(PartnerContract.objects.filter(type='ASSOCIATE').count(), 1)
+        (c.expected_return_percent or Decimal('0')) for c in PartnerContract.objects.filter(type='ASSOCIATE')
+    ) / max(PartnerContract.objects.filter(type='ASSOCIATE').count(), 1) if PartnerContract.objects.filter(type='ASSOCIATE').exists() else Decimal('0')
     
     context = {
         'associates': associates,
@@ -232,17 +321,18 @@ def investors_list(request):
     
     investors = User.objects.filter(role='INVESTOR').select_related('contract')
     
+    from decimal import Decimal
     # Calculate totals
     contracts = PartnerContract.objects.filter(type='INVESTOR')
-    total_invested = sum(float(c.amount_engaged) for c in contracts)
+    total_invested = sum((c.amount_engaged or Decimal('0')) for c in contracts) or Decimal('0')
     
     # Calculate total returns from payments
     total_returns = sum(
-        float(payment['total'] or 0) 
+        (payment['total'] or Decimal('0')) 
         for payment in contracts.annotate(
             total=Coalesce(Sum('payments__amount'), 0, output_field=DecimalField())
         ).values('total')
-    )
+    ) or Decimal('0')
     
     pending_payments = total_invested - total_returns
     
@@ -272,7 +362,7 @@ def create_associate(request):
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': True, 'message': 'Associé créé avec succès'})
                 messages.success(request, "Associé créé avec succès.")
-                return redirect('associates_list')
+                return redirect('core:associates_list')
             except Exception as e:
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'error': str(e)})
@@ -304,7 +394,7 @@ def create_investor(request):
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': True, 'message': 'Investisseur créé avec succès'})
                 messages.success(request, "Investisseur créé avec succès.")
-                return redirect('investors_list')
+                return redirect('core:investors_list')
             except Exception as e:
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'error': str(e)})
@@ -340,7 +430,8 @@ def exchange_rates(request):
             try:
                 base_currency = Currency.objects.get(id=base_id)
                 target_currency = Currency.objects.get(id=target_id)
-                rate = float(rate_value)
+                from decimal import Decimal
+                rate = Decimal(str(rate_value))
                 
                 if rate <= 0:
                     messages.error(request, "Le taux doit être positif.")
@@ -388,8 +479,9 @@ def exchange_rates(request):
             
             try:
                 exchange_rate = ExchangeRate.objects.get(id=rate_id)
-                old_rate = float(exchange_rate.rate)
-                new_rate_float = float(new_rate)
+                from decimal import Decimal
+                old_rate = exchange_rate.rate
+                new_rate_float = Decimal(str(new_rate))
                 
                 if new_rate_float <= 0:
                     messages.error(request, "Le taux doit être positif.")
@@ -409,7 +501,7 @@ def exchange_rates(request):
                         model_name='ExchangeRate',
                         object_id=str(rate_id),
                         object_repr=str(exchange_rate),
-                        changes={'rate': [old_rate, new_rate_float]}
+                        changes={'rate': [str(old_rate), str(new_rate_float)]}
                     )
                     
             except ExchangeRate.DoesNotExist:
@@ -479,7 +571,7 @@ def user_profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profil mis à jour avec succès!")
-            return redirect('user_profile')
+            return redirect('core:user_profile')
     else:
         form = UserProfileForm(instance=request.user)
     
@@ -553,7 +645,7 @@ def payroll_dashboard(request):
     ).first()
     
     if not current_period:
-        return redirect('capital_management')
+        return redirect('core:capital_management')
     
     # Salaires du mois
     salaries = MonthlySalary.objects.filter(
@@ -610,7 +702,7 @@ def calculate_salaries(request):
     
     if not current_period:
         messages.error(request, "Aucune période de paie trouvée pour ce mois.")
-        return redirect('capital_management')
+        return redirect('core:capital_management')
     
     # Recalculer les financiers de la période
     current_period.calculate_financials()
@@ -654,7 +746,8 @@ def pay_salary(request, salary_id):
         notes = request.POST.get('notes', 'Payé en espèces')
         
         try:
-            payment_amount = float(payment_amount)
+            from decimal import Decimal
+            payment_amount = Decimal(str(payment_amount))
             if payment_amount <= 0:
                 raise ValueError("Le montant doit être positif")
             
@@ -698,7 +791,8 @@ def add_bonus(request, salary_id):
         notes = request.POST.get('notes', 'Bonus exceptionnel')
         
         try:
-            bonus_amount = float(bonus_amount)
+            from decimal import Decimal
+            bonus_amount = Decimal(str(bonus_amount))
             if bonus_amount <= 0:
                 raise ValueError("Le bonus doit être positif")
             

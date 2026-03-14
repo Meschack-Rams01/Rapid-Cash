@@ -17,7 +17,7 @@
             </p>
         </div>
         {% if user.role == 'ADMIN' %}
-        <a href="/admin/operations/caisse/add/" class="btn-primary text-sm">
+        <a href="{% url 'create_caisse' %}" class="btn-primary text-sm">
             <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
@@ -80,7 +80,7 @@
             </div>
         </div>
         {% empty %}
-        {% include 'partials/_empty_state.html' with icon='wallet' title='Aucune caisse' message='Créez votre première caisse pour commencer' action_url="/admin/operations/caisse/add/" action_text="Nouvelle Caisse" %}
+        {% include 'partials/_empty_state.html' with icon='wallet' title='Aucune caisse' message='Créez votre première caisse pour commencer' action_url="create_caisse" action_text="Nouvelle Caisse" is_url_name=True %}
         {% endfor %}
     </div>
 </div>
