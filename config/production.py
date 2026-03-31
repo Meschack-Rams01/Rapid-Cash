@@ -3,6 +3,7 @@ Production settings for Rapid Cash
 """
 from .settings import *
 import os
+import sys
 
 # SECURITY SETTINGS FOR PRODUCTION
 DEBUG = False
@@ -26,10 +27,23 @@ X_FRAME_OPTIONS = 'DENY'
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Check if running collectstatic (build phase)
+IS_COLLECTSTATIC = 'collectstatic' in sys.argv
+
 # Database configuration for production
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+if IS_COLLECTSTATIC:
+    # Use dummy SQLite for collectstatic during build (no DB needed)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+else:
+    # Real PostgreSQL config for runtime
+    import dj_database_url
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
 
 # Redis Cache configuration (Fly.io Redis or Upstash)
 REDIS_URL = os.environ.get('REDIS_URL', os.environ.get('FLY_REDIS_CACHE_URL', 'redis://localhost:6379/1'))

@@ -1,13 +1,18 @@
 import json
+import sys
 from django.db import OperationalError, ProgrammingError
-from operations.models import FeeGrid
 
 def fee_grid_processor(request):
     """
     Context processor to inject the DB-driven FeeGrid into templates.
-    This allows the frontend JavaScript to stay in sync with the backend.
+    Returns empty array if DB is not available (e.g., during collectstatic).
     """
+    # Skip DB queries during collectstatic
+    if 'collectstatic' in sys.argv:
+        return {'fee_grid_json': '[]'}
+    
     try:
+        from operations.models import FeeGrid
         # We only need the reference currency grid (USD) for the UI calculations
         grids = FeeGrid.objects.filter(currency__code='USD').order_by('min_amount')
         
@@ -29,5 +34,5 @@ def fee_grid_processor(request):
         # DB not ready or table doesn't exist yet
         return {'fee_grid_json': '[]'}
     except Exception:
-        # Any other error, return empty to fallback on JS
+        # Any other error (including import errors), return empty
         return {'fee_grid_json': '[]'}
