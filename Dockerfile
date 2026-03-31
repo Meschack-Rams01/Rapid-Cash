@@ -32,9 +32,6 @@ COPY . /app/
 # Create necessary directories
 RUN mkdir -p /app/staticfiles /app/media /app/data /app/logs
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Make start script executable
 RUN chmod +x /app/start.sh
 
