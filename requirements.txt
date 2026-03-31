@@ -13,5 +13,6 @@ dj-database-url==2.1.0
 django-cors-headers==4.4.0
 django-axes==6.5.1
 django-two-factor-auth==1.16.0
+phonenumbers==8.13.35
 pyotp==2.9.0
 qrcode==7.4.2
