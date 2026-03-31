@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Allocations Agents - Rapid Cash{% endblock %}
+
+{% block page_title %}Allocations aux Agents{% endblock %}
+{% block page_subtitle %}Suivi des fonds remis aux agents{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="card-dark mb-6">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Agent</label>
+            <select name="agent" class="input-dark w-full">
+                <option value="">Tous les agents</option>
+                {% for agent in agents %}
+                <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"i" %}selected{% endif %}>
+                    {{ agent.username }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Du</label>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="input-dark w-full">
+        </div>
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Au</label>
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="input-dark w-full">
+        </div>
+        <div>
+            <button type="submit" class="btn-secondary w-full">Filtrer</button>
+        </div>
+    </form>
+</div>
+
+<!-- Allocations Table -->
+<div class="card-dark">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="font-bold text-fg">
+            Historique des Allocations
+            <span class="text-muted-fg font-normal">({{ allocations.count }} résultats)</span>
+        </h3>
+        {% if user.role == 'ADMIN' %}
+        <a href="{% url 'create_allocation' %}" class="btn-primary text-sm">
+            <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Nouvelle Allocation
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="overflow-x-auto">
+        {% if allocations %}
+        <table class="table-dark">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Agent</th>
+                    <th class="text-right">Montant Alloué</th>
+                    <th>Motif</th>
+                    <th>Administrateur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alloc in allocations %}
+                <tr class="hover:bg-muted/50 transition-colors">
+                    <td class="font-mono text-muted-fg text-sm">
+                        {{ alloc.date_time|date:"d/m/Y H:i" }}
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 text-xs font-medium">
+                                {{ alloc.agent.username|first|upper }}
+                            </div>
+                            <span class="font-medium text-fg">{{ alloc.agent.username }}</span>
+                        </div>
+                    </td>
+                    <td class="text-right text-fg">
+                        <span class="font-mono font-medium text-brand-400">
+                            +{{ alloc.amount|floatformat:2 }}
+                        </span>
+                        <span class="text-muted-fg text-xs ml-1">{{ alloc.currency.symbol|default:alloc.currency.code }}</span>
+                    </td>
+                    <td>
+                        <p class="text-sm text-muted-fg">{{ alloc.note|default:"—" }}</p>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span class="text-muted-fg text-sm">{{ alloc.admin.username }}</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        {% include 'partials/_empty_state.html' with icon='cash' title='Aucune allocation' message='Remettez des fonds aux agents pour voir l\'historique.' action_url='create_allocation' action_text='Nouvelle Allocation' %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

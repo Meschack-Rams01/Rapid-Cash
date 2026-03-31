@@ -1,72 +1,111 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Expense
-from .forms import ExpenseForm
+from django.views.generic import ListView, CreateView, DetailView, TemplateView
+from django.urls import reverse_lazy
+
+from .models import Expense, CapitalTransaction, ProfitWithdrawal
+from .forms import ExpenseForm, CapitalTransactionForm, ProfitWithdrawalForm
+from core.mixins import AdminRequiredMixin, DateFilterMixin, AdminCreateMixin
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 
-@login_required
-def expense_list(request):
-    if request.user.role != 'ADMIN':
-        return redirect('dashboard')
-    
-    expenses = Expense.objects.select_related('admin', 'currency').order_by('-date')
-    expense_categories = Expense.objects.values_list('category', flat=True).distinct()
-    
-    
-    category_filter = request.GET.get('category')
-    date_from = request.GET.get('date_from')
-    date_to = request.GET.get('date_to')
-    
-    if category_filter:
-        expenses = expenses.filter(category=category_filter)
-    
-    if date_from:
-        expenses = expenses.filter(date__gte=date_from)
-    if date_to:
-        expenses = expenses.filter(date__lte=date_to)
+# --- EXPENSES ---
 
-    context = {
-        'expenses': expenses,
-        'expense_categories': expense_categories,
-        'request': request,
-    }
-    
-    if request.headers.get('HX-Request'):
-        return render(request, 'finance/partials/expense_table.html', context)
-        
-    return render(request, 'finance/expense_list.html', context)
+class ExpenseListView(AdminRequiredMixin, DateFilterMixin, ListView):
+    model = Expense
+    template_name = 'finance/expense_list.html'
+    context_object_name = 'expenses'
+    date_filter_field = 'date'
 
-@login_required
-def create_expense(request):
-    if request.user.role != 'ADMIN':
-        return redirect('dashboard')
-    
-    if request.method == 'POST':
-        form = ExpenseForm(request.POST)
-        if form.is_valid():
-            expense = form.save(commit=False)
-            expense.admin = request.user
-            expense.save()
-            messages.success(request, "Dépense enregistrée avec succès.")
-            return redirect('expense_list')
-    else:
-        form = ExpenseForm()
-    
-    return render(request, 'finance/create_expense.html', {'form': form})
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('admin', 'currency').order_by('-date')
+        category_filter = self.request.GET.get('category')
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+        return queryset
 
-@login_required
-def expense_detail(request, expense_id):
-    if request.user.role != 'ADMIN':
-        return redirect('dashboard')
-    
-    try:
-        expense = Expense.objects.select_related('admin', 'currency').get(id=expense_id)
-        return render(request, 'finance/expense_detail.html', {'expense': expense})
-    except Expense.DoesNotExist:
-        messages.error(request, "Dépense non trouvée.")
-        return redirect('expense_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['expense_categories'] = Expense.objects.values_list('category', flat=True).distinct()
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get('HX-Request'):
+            return render(self.request, 'finance/partials/expense_table.html', context)
+        return super().render_to_response(context, **response_kwargs)
+
+
+class ExpenseCreateView(AdminRequiredMixin, AdminCreateMixin, CreateView):
+    model = Expense
+    form_class = ExpenseForm
+    template_name = 'finance/create_expense.html'
+    success_url = reverse_lazy('expense_list')
+    success_message = "Dépense enregistrée avec succès."
+
+
+class ExpenseDetailView(AdminRequiredMixin, DetailView):
+    model = Expense
+    template_name = 'finance/expense_detail.html'
+    context_object_name = 'expense'
+    pk_url_kwarg = 'expense_id'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('admin', 'currency')
+
+
+# --- CAPITAL TRANSACTIONS ---
+
+class CapitalTransactionListView(AdminRequiredMixin, DateFilterMixin, ListView):
+    model = CapitalTransaction
+    template_name = 'finance/capital_list.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('admin', 'currency').order_by('-date_time')
+        txn_type = self.request.GET.get('type')
+        if txn_type:
+            queryset = queryset.filter(type=txn_type)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['types'] = CapitalTransaction.Type.choices
+        return context
+
+
+class CapitalTransactionCreateView(AdminRequiredMixin, AdminCreateMixin, CreateView):
+    model = CapitalTransaction
+    form_class = CapitalTransactionForm
+    template_name = 'finance/create_capital_transaction.html'
+    # Use standard success_url or lazy reverse based on namespace behavior
+    success_url = reverse_lazy('capital_list')  # Will fix namespace if required in urls.py
+
+    def form_valid(self, form):
+        self.success_message = f"Transaction de capital ({form.instance.get_type_display()}) enregistrée avec succès."
+        return super().form_valid(form)
+
+
+# --- PROFIT WITHDRAWALS ---
+
+class ProfitWithdrawalListView(AdminRequiredMixin, DateFilterMixin, ListView):
+    model = ProfitWithdrawal
+    template_name = 'finance/profit_withdrawal_list.html'
+    context_object_name = 'withdrawals'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('admin', 'currency').order_by('-date_time')
+
+
+class ProfitWithdrawalCreateView(AdminRequiredMixin, AdminCreateMixin, CreateView):
+    model = ProfitWithdrawal
+    form_class = ProfitWithdrawalForm
+    template_name = 'finance/create_profit_withdrawal.html'
+    success_url = reverse_lazy('profit_withdrawal_list')
+    success_message = "Le retrait de bénéfices a été enregistré avec succès."
+
+
+# --- COMMISSIONS (Left as FBV or manual TemplateView due to complex non-ORM logic) ---
 
 @login_required
 def commissions_list(request):
@@ -74,19 +113,14 @@ def commissions_list(request):
         return redirect('dashboard')
     
     from operations.models import Operation
-    from django.db.models import F
-    from django.utils import timezone
-    from datetime import timedelta
     from decimal import Decimal
-    
+    from django.utils import timezone
     User = get_user_model()
     
-    # Get date filters
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
     selected_agent = request.GET.get('agent')
     
-    # Base query
     operations = Operation.objects.select_related('agent', 'caisse').order_by('-date_time')
     
     if date_from:
@@ -96,7 +130,6 @@ def commissions_list(request):
     if selected_agent:
         operations = operations.filter(agent_id=selected_agent)
     
-    # Calculate commissions from operations
     commissions = []
     total_commissions = 0
     
@@ -112,10 +145,7 @@ def commissions_list(request):
                 })
                 total_commissions += comm_amount
     
-    # Get all agents for filter
     agents = User.objects.filter(role='AGENT')
-    
-    # Calculate totals
     now = timezone.now()
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     monthly_ops = Operation.objects.filter(date_time__gte=month_start)
@@ -133,6 +163,5 @@ def commissions_list(request):
         'active_agents': agents.filter(is_active=True).count(),
         'average_rate': sum((a.commission_rate or Decimal('0')) for a in agents) / max(agents.count(), 1) if agents.exists() else Decimal('0'),
         'total_period': total_commissions,
-        'request': request,  # Add request object for template access
     }
     return render(request, 'finance/commissions_list.html', context)

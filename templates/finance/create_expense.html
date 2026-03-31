@@ -2,109 +2,11 @@
 
 {% block title %}Nouvelle Dépense - Rapid Cash{% endblock %}
 
-{% block header_title %}Enregistrer une Dépense{% endblock %}
+{% block page_title %}Enregistrer une Dépense{% endblock %}
+{% block page_subtitle %}Justification et enregistrement d'une sortie de caisse{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <!-- Header -->
-        <div class="px-8 py-6 border-b border-slate-100">
-            <h3 class="text-xl font-bold text-slate-900">Audit Financier</h3>
-            <p class="text-sm text-slate-500 mt-1">Justification et enregistrement d'une sortie de caisse</p>
-        </div>
-
-        <div class="p-8">
-            <form method="POST" class="space-y-6">
-                {% csrf_token %}
-
-                {% if messages %}
-                <div class="space-y-3">
-                    {% for message in messages %}
-                    <div class="p-4 rounded-xl text-sm font-medium flex items-center text-emerald-600 bg-emerald-50 border border-emerald-100">
-                        <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <!-- Reason & Category -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Motif / Raison</label>
-                        {{ form.reason }}
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Classification analytique</label>
-                        {{ form.category }}
-                    </div>
-                </div>
-
-                <!-- Amount Section -->
-                <div class="bg-rose-50 rounded-2xl p-6 border border-rose-100">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-rose-700 uppercase tracking-wide">Montant décaissé</label>
-                            {{ form.amount }}
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-rose-700 uppercase tracking-wide">Devise de paiement</label>
-                            {{ form.currency }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Destination & Comment -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Bénéficiaire final</label>
-                        {{ form.destination }}
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Note complémentaire</label>
-                        {{ form.comment }}
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
-                    <a href="{% url 'expense_list' %}" class="text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
-                        ← Retour au registre
-                    </a>
-                    <button type="submit" class="btn btn-danger">
-                        Signer et valider
-                        <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="max-w-2xl mx-auto">
+    {% include 'partials/_generic_form_card.html' with form=form cancel_url='/finance/depenses/' submit_text='Signer et valider' %}
 </div>
-
-<style>
-    select, input, textarea {
-        width: 100%;
-        padding: 0.875rem 1.25rem;
-        background-color: var(--slate-50);
-        border: 2px solid var(--slate-100);
-        border-radius: 0.75rem;
-        font-size: 0.9375rem;
-        font-weight: 500;
-        color: var(--slate-900);
-        transition: all 0.2s ease;
-    }
-
-    select:focus, input:focus, textarea:focus {
-        outline: none;
-        background-color: white;
-        border-color: var(--brand-500);
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-    }
-
-    select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 3rem; }
-</style>
 {% endblock %}

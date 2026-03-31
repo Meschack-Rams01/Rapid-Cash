@@ -3,28 +3,28 @@
 {# Used for paginated/filtered table updates #}
 
 {% for op in operations %}
-<tr class="hover:bg-dark-surface2/50 transition-colors" 
+<tr class="hover:bg-muted/50 transition-colors" 
     hx-get="{% url 'operation_detail' op.id %}"
     hx-target="#modal-container"
     hx-swap="innerHTML"
     hx-push-url="false">
     <td class="py-3.5 px-4">
-        <span class="font-mono text-accent-primary text-sm font-medium">{{ op.transaction_number }}</span>
+        <span class="font-mono text-accent text-sm font-medium">{{ op.transaction_number }}</span>
     </td>
-    <td class="py-3.5 px-4 text-text-secondary text-sm">
-        {{ op.date_time|date:"d/m/Y" }} <span class="text-text-muted">{{ op.date_time|time:"H:i" }}</span>
+    <td class="py-3.5 px-4 text-muted-fg text-sm">
+        {{ op.date_time|date:"d/m/Y" }} <span class="text-muted-fg">{{ op.date_time|time:"H:i" }}</span>
     </td>
     {% if show_agent %}
     <td class="py-3.5 px-4">
         <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-xs font-medium">
+            <div class="w-7 h-7 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-xs font-medium">
                 {{ op.agent.username|first|upper }}
             </div>
-            <span class="text-text-main text-sm">{{ op.agent.username }}</span>
+            <span class="text-fg text-sm">{{ op.agent.username }}</span>
         </div>
     </td>
     {% endif %}
-    <td class="py-3.5 px-4 text-text-secondary text-sm">
+    <td class="py-3.5 px-4 text-muted-fg text-sm">
         {{ op.caisse.name }}
     </td>
     <td class="py-3.5 px-4">
@@ -35,11 +35,11 @@
         {% endif %}
     </td>
     <td class="py-3.5 px-4 text-right">
-        <span class="font-mono font-medium text-text-main">{{ op.amount_orig|floatformat:2 }}</span>
-        <span class="text-text-muted text-xs ml-1">{{ op.currency_orig.symbol }}</span>
+        <span class="font-mono font-medium text-fg">{{ op.amount_orig|floatformat:2 }}</span>
+        <span class="text-muted-fg text-xs ml-1">{{ op.currency_orig.symbol }}</span>
     </td>
     <td class="py-3.5 px-4 text-right">
-        <span class="font-mono text-accent-success">+${{ op.fee_calculated|floatformat:2 }}</span>
+        <span class="font-mono text-status-success">+${{ op.fee_calculated|floatformat:2 }}</span>
     </td>
     <td class="py-3.5 px-4">
         {% if op.status == 'COMPLETED' %}
@@ -55,10 +55,10 @@
 <tr>
     <td colspan="{{ colspan|default:8 }}" class="py-12 text-center">
         <div class="flex flex-col items-center">
-            <svg class="w-12 h-12 text-text-muted mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-12 h-12 text-muted-fg mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
-            <p class="text-text-muted">Aucune opération trouvée</p>
+            <p class="text-muted-fg">Aucune opération trouvée</p>
         </div>
     </td>
 </tr>

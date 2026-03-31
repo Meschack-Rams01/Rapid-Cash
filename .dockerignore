@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+
+# Django
+.env
+.env.local
+.env.production
+db.sqlite3
+*.log
+local_settings.py
+media/
+staticfiles/
+logs/
+
+# Git
+.git/
+.gitignore
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# Node
+node_modules/
+
+# Fly.io (local config)
+fly.toml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.md
+!README.md
+tailwindcss.exe
+*.bat
+*.ps1
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

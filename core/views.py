@@ -581,49 +581,10 @@ def user_profile(request):
     })
 
 
-# ====== GESTION DU CAPITAL ET PAIE ======
 
-@login_required
-def capital_management(request):
-    """
-    Gestion du capital du business
-    """
-    if request.user.role != 'ADMIN':
-        return redirect('core:dashboard')
-    
-    from .models import PayPeriod
-    from operations.models import Caisse
-    from django.db.models import Sum
-    
-    # Statistiques du capital
-    total_caisses = Caisse.objects.aggregate(
-        total=Sum('balance')
-    )['total'] or 0
-    
-    # Période actuelle
-    current_date = timezone.now()
-    current_period, created = PayPeriod.objects.get_or_create(
-        month=current_date.month,
-        year=current_date.year,
-        defaults={
-            'start_date': current_date.replace(day=1),
-            'end_date': current_date.replace(day=calendar.monthrange(current_date.year, current_date.month)[1]),
-            'status': 'OPEN'
-        }
-    )
-    
-    # Calculer les financiers de la période
-    if created or current_period.total_fees == 0:
-        current_period.calculate_financials()
-    
-    context = {
-        'total_caisses': total_caisses,
-        'current_period': current_period,
-        'request': request,
-    }
-    
-    return render(request, 'core/capital_management.html', context)
 
+
+# ====== GESTION DE LA PAIE ======
 
 @login_required
 def payroll_dashboard(request):
@@ -635,17 +596,24 @@ def payroll_dashboard(request):
     
     from .models import PayPeriod, MonthlySalary
     from django.db.models import Sum
+    import calendar
     
     current_date = timezone.now()
     
     # Période actuelle
-    current_period = PayPeriod.objects.filter(
+    current_period, created = PayPeriod.objects.get_or_create(
         month=current_date.month,
-        year=current_date.year
-    ).first()
+        year=current_date.year,
+        defaults={
+            'start_date': current_date.replace(day=1),
+            'end_date': current_date.replace(day=calendar.monthrange(current_date.year, current_date.month)[1]),
+            'status': 'OPEN'
+        }
+    )
     
-    if not current_period:
-        return redirect('core:capital_management')
+    # Calculer les financiers de la période (bénéfices nets, réserves, etc)
+    if created or current_period.total_fees == 0:
+        current_period.calculate_financials()
     
     # Salaires du mois
     salaries = MonthlySalary.objects.filter(
@@ -695,14 +663,10 @@ def calculate_salaries(request):
     from django.contrib.auth import get_user_model
     
     current_date = timezone.now()
-    current_period = PayPeriod.objects.filter(
+    current_period, _ = PayPeriod.objects.get_or_create(
         month=current_date.month,
         year=current_date.year
-    ).first()
-    
-    if not current_period:
-        messages.error(request, "Aucune période de paie trouvée pour ce mois.")
-        return redirect('core:capital_management')
+    )
     
     # Recalculer les financiers de la période
     current_period.calculate_financials()

@@ -1,0 +1,40 @@
+<div class="card-dark">
+    <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="p-4 bg-status-danger/10 border border-status-danger/20 text-status-danger text-sm">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="space-y-4">
+            {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="label block mb-1">
+                    {{ field.label }}
+                </label>
+                <div class="relative">
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                    <p class="mt-1 text-sm text-status-danger">{{ field.errors.0 }}</p>
+                {% endif %}
+                {% if field.help_text %}
+                    <p class="mt-1 text-xs text-muted-fg">{{ field.help_text }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pt-4 border-t border-border flex justify-end gap-3">
+            <a href="{{ cancel_url|default:request.META.HTTP_REFERER|default:'/' }}" class="btn-secondary">Annuler</a>
+            <button type="submit" class="btn-primary">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                {{ submit_text|default:"Enregistrer" }}
+            </button>
+        </div>
+    </form>
+</div>

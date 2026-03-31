@@ -3,10 +3,10 @@
 {# Usage: {% include 'partials/_pagination.html' with page_obj=operations %} #}
 
 {% if page_obj.has_other_pages %}
-<div class="flex items-center justify-between px-4 py-3 border-t border-dark-border" id="pagination-container">
-    <div class="text-sm text-text-muted">
-        Page <span class="text-text-main font-medium">{{ page_obj.number }}</span> 
-        sur <span class="text-text-main font-medium">{{ page_obj.paginator.num_pages }}</span>
+<div class="flex items-center justify-between px-4 py-3 border-t border-border" id="pagination-container">
+    <div class="text-sm text-muted-fg font-mono">
+        Page <span class="text-fg font-medium">{{ page_obj.number }}</span> 
+        sur <span class="text-fg font-medium">{{ page_obj.paginator.num_pages }}</span>
         <span class="ml-2">({{ page_obj.paginator.count }} résultats)</span>
     </div>
     
@@ -18,10 +18,10 @@
            hx-target="closest #pagination-container"
            hx-swap="outerHTML"
            hx-select="#pagination-container"
-           class="p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors"
+           class="p-2 text-muted-fg hover:text-fg hover:bg-muted transition-colors"
            title="Première page">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
             </svg>
         </a>
         <a href="?page={{ page_obj.previous_page_number }}" 
@@ -29,16 +29,16 @@
            hx-target="closest #pagination-container"
            hx-swap="outerHTML"
            hx-select="#pagination-container"
-           class="p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors"
+           class="p-2 text-muted-fg hover:text-fg hover:bg-muted transition-colors"
            title="Page précédente">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
             </svg>
         </a>
         {% else %}
-        <span class="p-2 rounded-lg text-text-muted opacity-50 cursor-not-allowed">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+        <span class="p-2 text-muted-fg opacity-50 cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
             </svg>
         </span>
         {% endif %}
@@ -46,7 +46,7 @@
         {# Page Numbers #}
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
-            <span class="w-8 h-8 rounded-lg bg-accent-primary text-white flex items-center justify-center text-sm font-medium">
+            <span class="w-8 h-8 bg-accent text-accent-fg flex items-center justify-center text-sm font-semibold font-mono">
                 {{ num }}
             </span>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
@@ -55,7 +55,7 @@
                hx-target="closest #pagination-container"
                hx-swap="outerHTML"
                hx-select="#pagination-container"
-               class="w-8 h-8 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-surface2 flex items-center justify-center text-sm transition-colors">
+               class="w-8 h-8 text-muted-fg hover:text-fg hover:bg-muted flex items-center justify-center text-sm transition-colors font-mono">
                 {{ num }}
             </a>
             {% endif %}
@@ -68,10 +68,10 @@
            hx-target="closest #pagination-container"
            hx-swap="outerHTML"
            hx-select="#pagination-container"
-           class="p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors"
+           class="p-2 text-muted-fg hover:text-fg hover:bg-muted transition-colors"
            title="Page suivante">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
             </svg>
         </a>
         <a href="?page={{ page_obj.paginator.num_pages }}" 
@@ -79,16 +79,16 @@
            hx-target="closest #pagination-container"
            hx-swap="outerHTML"
            hx-select="#pagination-container"
-           class="p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors"
+           class="p-2 text-muted-fg hover:text-fg hover:bg-muted transition-colors"
            title="Dernière page">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
             </svg>
         </a>
         {% else %}
-        <span class="p-2 rounded-lg text-text-muted opacity-50 cursor-not-allowed">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7M5 5l7 7-7 7"/>
+        <span class="p-2 text-muted-fg opacity-50 cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7M5 5l7 7-7 7"/>
             </svg>
         </span>
         {% endif %}

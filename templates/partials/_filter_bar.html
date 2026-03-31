@@ -8,8 +8,8 @@
             
             {% if show_type %}
             <div class="flex-1 min-w-[160px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Type</label>
-                <select name="type" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Type</label>
+                <select name="type" class="input-dark w-full px-3 py-2.5 text-sm">
                     <option value="">Tous les types</option>
                     {% if type_options %}
                         {% for value, label in type_options %}
@@ -25,8 +25,8 @@
             
             {% if show_agent and agents %}
             <div class="flex-1 min-w-[160px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Agent</label>
-                <select name="agent" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Agent</label>
+                <select name="agent" class="input-dark w-full px-3 py-2.5 text-sm">
                     <option value="">Tous les agents</option>
                     {% for agent in agents %}
                     <option value="{{ agent.id }}" {% if selected_agent == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.username }}</option>
@@ -37,8 +37,8 @@
             
             {% if show_status %}
             <div class="flex-1 min-w-[160px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Statut</label>
-                <select name="status" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Statut</label>
+                <select name="status" class="input-dark w-full px-3 py-2.5 text-sm">
                     <option value="">Tous les statuts</option>
                     <option value="COMPLETED" {% if selected_status == 'COMPLETED' %}selected{% endif %}>Complété</option>
                     <option value="PENDING" {% if selected_status == 'PENDING' %}selected{% endif %}>En attente</option>
@@ -49,8 +49,8 @@
             
             {% if show_category and categories %}
             <div class="flex-1 min-w-[160px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Catégorie</label>
-                <select name="category" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Catégorie</label>
+                <select name="category" class="input-dark w-full px-3 py-2.5 text-sm">
                     <option value="">Toutes les catégories</option>
                     {% for cat in categories %}
                     <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
@@ -61,29 +61,29 @@
             
             {% if show_date %}
             <div class="flex-1 min-w-[140px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Du</label>
-                <input type="date" name="date_from" value="{{ selected_date_from }}" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Du</label>
+                <input type="date" name="date_from" value="{{ selected_date_from }}" class="input-dark w-full px-3 py-2.5 text-sm">
             </div>
             
             <div class="flex-1 min-w-[140px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Au</label>
-                <input type="date" name="date_to" value="{{ selected_date_to }}" class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                <label class="label block mb-2">Au</label>
+                <input type="date" name="date_to" value="{{ selected_date_to }}" class="input-dark w-full px-3 py-2.5 text-sm">
             </div>
             {% endif %}
             
             {% if show_search %}
             <div class="flex-1 min-w-[180px]">
-                <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Recherche</label>
+                <label class="label block mb-2">Recherche</label>
                 <input type="text" name="q" value="{{ search_query|default:'' }}" 
                        placeholder="Rechercher..." 
-                       class="input-dark w-full px-3 py-2.5 rounded-lg text-sm">
+                       class="input-dark w-full px-3 py-2.5 text-sm">
             </div>
             {% endif %}
             
             <div class="flex gap-2">
-                <button type="submit" class="btn-primary text-sm px-4 py-2.5">
-                    <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                <button type="submit" class="btn-accent text-sm px-4 py-2.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                     </svg>
                     Filtrer
                 </button>

@@ -10,20 +10,20 @@
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Total Commissions</p>
-            <p class="text-2xl font-bold text-accent-success mt-1 font-mono">${{ total_commissions|default:"0.00" }}</p>
+            <p class="text-muted-fg text-sm font-medium">Total Commissions</p>
+            <p class="text-2xl font-bold text-status-success mt-1 font-mono">${{ total_commissions|default:"0.00" }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Ce Mois</p>
-            <p class="text-2xl font-bold text-text-main mt-1 font-mono">${{ monthly_commissions|default:"0.00" }}</p>
+            <p class="text-muted-fg text-sm font-medium">Ce Mois</p>
+            <p class="text-2xl font-bold text-fg mt-1 font-mono">${{ monthly_commissions|default:"0.00" }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Agents Actifs</p>
-            <p class="text-2xl font-bold text-accent-primary mt-1">{{ active_agents|default:0 }}</p>
+            <p class="text-muted-fg text-sm font-medium">Agents Actifs</p>
+            <p class="text-2xl font-bold text-accent mt-1">{{ active_agents|default:0 }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Taux Moyen</p>
-            <p class="text-2xl font-bold text-accent-purple mt-1">{{ average_rate|default:0 }}%</p>
+            <p class="text-muted-fg text-sm font-medium">Taux Moyen</p>
+            <p class="text-2xl font-bold text-status-purple mt-1">{{ average_rate|default:0 }}%</p>
         </div>
     </div>
 
@@ -32,10 +32,10 @@
 
     <!-- Commissions Table -->
     <div class="card-dark">
-        <div class="flex items-center justify-between p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">
+        <div class="flex items-center justify-between p-5 border-b border-border">
+            <h3 class="font-bold text-fg">
                 Historique des Commissions
-                <span class="text-text-muted font-normal">({{ commissions|length }} résultats)</span>
+                <span class="text-muted-fg font-normal">({{ commissions|length }} résultats)</span>
             </h3>
             {% if user.role == 'ADMIN' %}
             <button class="btn-secondary text-sm">
@@ -63,28 +63,28 @@
                 </thead>
                 <tbody>
                     {% for comm in commissions %}
-                    <tr class="hover:bg-dark-surface2/50 transition-colors">
-                        <td class="font-mono text-text-secondary text-sm">
+                    <tr class="hover:bg-muted/50 transition-colors">
+                        <td class="font-mono text-muted-fg text-sm">
                             {{ comm.date|date:"d/m/Y" }}
                         </td>
                         <td>
                             <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-sm font-medium">
+                                <div class="w-8 h-8 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-sm font-medium">
                                     {{ comm.agent.username|first|upper }}
                                 </div>
-                                <span class="font-medium text-text-main">{{ comm.agent.username }}</span>
+                                <span class="font-medium text-fg">{{ comm.agent.username }}</span>
                             </div>
                         </td>
-                        <td class="font-mono text-accent-primary text-sm">
+                        <td class="font-mono text-accent text-sm">
                             {{ comm.operation.transaction_number }}
                         </td>
-                        <td class="text-right font-mono text-text-main">
+                        <td class="text-right font-mono text-fg">
                             ${{ comm.operation.amount_orig|floatformat:2 }}
                         </td>
-                        <td class="text-right font-mono text-accent-success">
+                        <td class="text-right font-mono text-status-success">
                             ${{ comm.operation.fee_calculated|floatformat:2 }}
                         </td>
-                        <td class="text-right font-mono font-bold text-accent-success">
+                        <td class="text-right font-mono font-bold text-status-success">
                             +${{ comm.amount|floatformat:2 }}
                         </td>
                         <td>
@@ -93,10 +93,10 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-                <tfoot class="bg-dark-surface2">
+                <tfoot class="bg-muted">
                     <tr>
-                        <td colspan="5" class="text-right font-medium text-text-main py-3 px-4">Total</td>
-                        <td class="text-right font-mono font-bold text-accent-success py-3 px-4">
+                        <td colspan="5" class="text-right font-medium text-fg py-3 px-4">Total</td>
+                        <td class="text-right font-mono font-bold text-status-success py-3 px-4">
                             ${{ total_period|default:"0.00" }}
                         </td>
                         <td></td>

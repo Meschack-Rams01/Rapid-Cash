@@ -9,9 +9,9 @@
 <div class="max-w-4xl mx-auto space-y-6">
     <!-- Expense Details Card -->
     <div class="card-dark">
-        <div class="p-6 border-b border-dark-border">
+        <div class="p-6 border-b border-border">
             <div class="flex items-center justify-between">
-                <h3 class="text-xl font-bold text-text-main">Informations de la Dépense</h3>
+                <h3 class="text-xl font-bold text-fg">Informations de la Dépense</h3>
                 <div class="flex gap-2">
                     <button class="btn-secondary text-sm" onclick="history.back()">
                         <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,16 +33,16 @@
         
         <div class="p-6 space-y-6">
             <!-- Amount Section -->
-            <div class="bg-dark-surface2 rounded-xl p-6">
+            <div class="bg-muted  p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-text-muted text-sm">Montant Total</p>
-                        <p class="text-3xl font-bold text-accent-danger mt-1">
+                        <p class="text-muted-fg text-sm">Montant Total</p>
+                        <p class="text-3xl font-bold text-status-danger mt-1">
                             -{{ expense.amount|floatformat:2 }} {{ expense.currency.symbol }}
                         </p>
                     </div>
-                    <div class="w-16 h-16 rounded-full bg-accent-danger/20 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-accent-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="w-16 h-16 rounded-full bg-status-danger/20 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-status-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
@@ -54,17 +54,17 @@
                 <!-- Left Column -->
                 <div class="space-y-4">
                     <div>
-                        <label class="text-text-muted text-sm">Date</label>
-                        <p class="text-text-main font-medium">{{ expense.date|date:"d/m/Y" }}</p>
+                        <label class="text-muted-fg text-sm">Date</label>
+                        <p class="text-fg font-medium">{{ expense.date|date:"d/m/Y" }}</p>
                     </div>
                     
                     <div>
-                        <label class="text-text-muted text-sm">Motif</label>
-                        <p class="text-text-main font-medium">{{ expense.reason }}</p>
+                        <label class="text-muted-fg text-sm">Motif</label>
+                        <p class="text-fg font-medium">{{ expense.reason }}</p>
                     </div>
                     
                     <div>
-                        <label class="text-text-muted text-sm">Catégorie</label>
+                        <label class="text-muted-fg text-sm">Catégorie</label>
                         <p>
                             <span class="badge badge-warning">
                                 {{ expense.category|default:"Non classé" }}
@@ -76,22 +76,22 @@
                 <!-- Right Column -->
                 <div class="space-y-4">
                     <div>
-                        <label class="text-text-muted text-sm">Destination</label>
-                        <p class="text-text-main font-medium">{{ expense.destination|default:"—" }}</p>
+                        <label class="text-muted-fg text-sm">Destination</label>
+                        <p class="text-fg font-medium">{{ expense.destination|default:"—" }}</p>
                     </div>
                     
                     <div>
-                        <label class="text-text-muted text-sm">Devise</label>
-                        <p class="text-text-main font-medium">{{ expense.currency.code }} - {{ expense.currency.name }}</p>
+                        <label class="text-muted-fg text-sm">Devise</label>
+                        <p class="text-fg font-medium">{{ expense.currency.code }} - {{ expense.currency.name }}</p>
                     </div>
                     
                     <div>
-                        <label class="text-text-muted text-sm">Enregistré par</label>
+                        <label class="text-muted-fg text-sm">Enregistré par</label>
                         <div class="flex items-center gap-2 mt-1">
-                            <div class="w-7 h-7 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-xs font-medium">
+                            <div class="w-7 h-7 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-xs font-medium">
                                 {{ expense.admin.username|first|upper }}
                             </div>
-                            <span class="text-text-main font-medium">{{ expense.admin.username }}</span>
+                            <span class="text-fg font-medium">{{ expense.admin.username }}</span>
                         </div>
                     </div>
                 </div>
@@ -100,9 +100,9 @@
             <!-- Comment Section -->
             {% if expense.comment %}
             <div>
-                <label class="text-text-muted text-sm">Commentaire</label>
-                <div class="bg-dark-surface2 rounded-lg p-4 mt-2">
-                    <p class="text-text-main">{{ expense.comment|linebreaks }}</p>
+                <label class="text-muted-fg text-sm">Commentaire</label>
+                <div class="bg-muted p-4 mt-2">
+                    <p class="text-fg">{{ expense.comment|linebreaks }}</p>
                 </div>
             </div>
             {% endif %}

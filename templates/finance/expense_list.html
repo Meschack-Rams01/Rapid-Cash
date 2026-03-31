@@ -12,9 +12,9 @@
 <!-- Expenses Table -->
 <div class="card-dark" id="expenses-table">
     <div class="flex items-center justify-between mb-6">
-        <h3 class="font-bold text-text-main">
+        <h3 class="font-bold text-fg">
             Registre des Dépenses
-            <span class="text-text-muted font-normal">({{ expenses.count }} résultats)</span>
+            <span class="text-muted-fg font-normal">({{ expenses.count }} résultats)</span>
         </h3>
         {% if user.role == 'ADMIN' %}
         <a href="{% url 'create_expense' %}" class="btn-primary text-sm">

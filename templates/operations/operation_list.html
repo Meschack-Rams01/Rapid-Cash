@@ -11,8 +11,8 @@
     <div class="p-6">
         <form method="GET" class="flex flex-wrap gap-4 items-end">
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-sm font-medium text-text-secondary mb-2">Type</label>
-                <select name="type" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                <label class="block text-sm font-medium text-muted-fg mb-2">Type</label>
+                <select name="type" class="input-dark w-full px-4 py-2.5">
                     <option value="">Tous les types</option>
                     <option value="TRANSFER" {% if request.GET.type == 'TRANSFER' %}selected{% endif %}>Transfert</option>
                     <option value="WITHDRAWAL" {% if request.GET.type == 'WITHDRAWAL' %}selected{% endif %}>Retrait</option>
@@ -21,8 +21,8 @@
             
             {% if user.role == 'ADMIN' and agents %}
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-sm font-medium text-text-secondary mb-2">Agent</label>
-                <select name="agent" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                <label class="block text-sm font-medium text-muted-fg mb-2">Agent</label>
+                <select name="agent" class="input-dark w-full px-4 py-2.5">
                     <option value="">Tous les agents</option>
                     {% for agent in agents %}
                     <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.username }}</option>
@@ -32,13 +32,13 @@
             {% endif %}
             
             <div class="flex-1 min-w-[150px]">
-                <label class="block text-sm font-medium text-text-secondary mb-2">Du</label>
-                <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                <label class="block text-sm font-medium text-muted-fg mb-2">Du</label>
+                <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="input-dark w-full px-4 py-2.5">
             </div>
             
             <div class="flex-1 min-w-[150px]">
-                <label class="block text-sm font-medium text-text-secondary mb-2">Au</label>
-                <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                <label class="block text-sm font-medium text-muted-fg mb-2">Au</label>
+                <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="input-dark w-full px-4 py-2.5">
             </div>
             
             <div class="flex gap-2">
@@ -66,20 +66,20 @@
         this.isModalOpen = true;
     }
 }">
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-dark-border gap-4">
-        <h3 class="font-bold text-text-main flex-shrink-0">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-border gap-4">
+        <h3 class="font-bold text-fg flex-shrink-0">
             {% if user.role == 'ADMIN' %}
             Toutes les Opérations
             {% else %}
             Mes Opérations
             {% endif %}
-            <span class="text-text-muted font-normal">({{ operations.count }} résultats)</span>
+            <span class="text-muted-fg font-normal">({{ operations.count }} résultats)</span>
         </h3>
         <div class="flex items-center gap-4 w-full md:w-auto">
             <div class="relative w-full md:w-64">
                 <input type="text" x-model="search" placeholder="Rechercher (référence, type, status)..." 
-                       class="bg-dark-surface2 border border-dark-border rounded-lg px-4 py-2 text-sm text-text-main focus:outline-none focus:border-accent-primary w-full transition-colors">
-                <svg class="w-4 h-4 text-text-muted absolute right-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       class="bg-muted border border-border px-4 py-2 text-sm text-fg focus:outline-none focus:border-accent w-full transition-colors">
+                <svg class="w-4 h-4 text-muted-fg absolute right-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
@@ -115,26 +115,26 @@
                     x-transition:enter-start="opacity-0 -translate-y-2"
                     x-transition:enter-end="opacity-100 translate-y-0">
                     <td>
-                        <span class="font-mono text-accent-primary font-medium">{{ op.transaction_number }}</span>
+                        <span class="font-mono text-accent font-medium">{{ op.transaction_number }}</span>
                     </td>
-                    <td class="text-text-secondary">
+                    <td class="text-muted-fg">
                         {{ op.date_time|date:"d/m/Y H:i" }}
                     </td>
                     {% if user.role == 'ADMIN' %}
                     <td>
                         <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-sm font-medium">
+                            <div class="w-8 h-8 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-sm font-medium">
                                 {{ op.agent.username|make_list|first|upper }}
                             </div>
                             {{ op.agent.username }}
                         </div>
                     </td>
                     {% endif %}
-                    <td class="text-text-secondary">
+                    <td class="text-muted-fg">
                         {% if op.caisse %}
                             {{ op.caisse.name }}
                         {% else %}
-                            <span class="text-text-muted">-</span>
+                            <span class="text-muted-fg">-</span>
                         {% endif %}
                     </td>
                     <td>
@@ -142,10 +142,10 @@
                             {% if op.type == 'TRANSFER' %}Transfert{% else %}Retrait{% endif %}
                         </span>
                     </td>
-                    <td class="text-right font-medium text-text-main">
+                    <td class="text-right font-medium text-fg">
                         {{ op.amount_orig|floatformat:2 }} {% if op.currency_orig %}{{ op.currency_orig.symbol }}{% else %}USD{% endif %}
                     </td>
-                    <td class="text-right text-accent-success">
+                    <td class="text-right text-status-success">
                         +{% if op.currency_orig %}{{ op.currency_orig.symbol }}{% else %}${% endif %}{{ op.fee_calculated|floatformat:2 }}
                     </td>
                     <td>
@@ -153,7 +153,7 @@
                     </td>
                     {% if user.role == 'ADMIN' %}
                     <td class="text-center">
-                        <button type="button" @click="openDeleteModal('{{ op.transaction_number }}', '{% url 'delete_operation' op.id %}')" class="text-accent-danger hover:text-accent-danger-hover transition-colors" title="Supprimer">
+                        <button type="button" @click="openDeleteModal('{{ op.transaction_number }}', '{% url 'delete_operation' op.id %}')" class="text-status-danger hover:text-status-danger-hover transition-colors" title="Supprimer">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                             </svg>
@@ -163,7 +163,7 @@
                 </tr>
                 {% endfor %}
                 <tr x-show="!document.querySelector('tbody tr[style=\'display: table-row;\']') && search !== ''" x-cloak>
-                    <td colspan="{% if user.role == 'ADMIN' %}9{% else %}7{% endif %}" class="text-center py-8 text-text-muted">Aucune opération ne correspond à la recherche "<strong class="text-text-main" x-text="search"></strong>"</td>
+                    <td colspan="{% if user.role == 'ADMIN' %}9{% else %}7{% endif %}" class="text-center py-8 text-muted-fg">Aucune opération ne correspond à la recherche "<strong class="text-fg" x-text="search"></strong>"</td>
                 </tr>
             </tbody>
         </table>
@@ -171,14 +171,14 @@
         <!-- Agent without caisse message -->
         {% if user.role != 'ADMIN' and not agent_has_caisse %}
         <div class="text-center py-12">
-            <div class="w-16 h-16 rounded-xl bg-accent-danger/20 flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-accent-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-16 h-16  bg-status-danger/20 flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-status-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-text-main mb-2">Aucune Caisse Assignée</h3>
-            <p class="text-text-muted text-lg mb-4">Vous n'avez pas encore de caisse assignée pour effectuer des opérations.</p>
-            <p class="text-text-muted text-sm mb-6">Votre administrateur doit d'abord vous attribuer une caisse avant toute opération.</p>
+            <h3 class="text-xl font-bold text-fg mb-2">Aucune Caisse Assignée</h3>
+            <p class="text-muted-fg text-lg mb-4">Vous n'avez pas encore de caisse assignée pour effectuer des opérations.</p>
+            <p class="text-muted-fg text-sm mb-6">Votre administrateur doit d'abord vous attribuer une caisse avant toute opération.</p>
             <div class="flex justify-center gap-4">
                 <a href="{% url 'dashboard' %}" class="btn-secondary">
                     <svg class="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -198,12 +198,12 @@
         <!-- Agent with caisse but no operations -->
         {% if user.role != 'ADMIN' %}
         <div class="text-center py-12">
-            <svg class="w-16 h-16 text-text-muted mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-16 h-16 text-muted-fg mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
-            <h3 class="text-xl font-bold text-text-main mb-2">Aucune Opération Enregistrée</h3>
-            <p class="text-text-muted text-lg mb-4">Vous n'avez encore effectué aucune opération.</p>
-            <p class="text-text-muted text-sm mb-6">Les opérations apparaîtront ici après votre première transaction.</p>
+            <h3 class="text-xl font-bold text-fg mb-2">Aucune Opération Enregistrée</h3>
+            <p class="text-muted-fg text-lg mb-4">Vous n'avez encore effectué aucune opération.</p>
+            <p class="text-muted-fg text-sm mb-6">Les opérations apparaîtront ici après votre première transaction.</p>
             <div class="flex justify-center gap-4">
                 <a href="{% url 'create_operation' %}" class="btn-primary inline-flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,11 +222,11 @@
         {% else %}
         <!-- Admin no operations message -->
         <div class="text-center py-12">
-            <svg class="w-16 h-16 text-text-muted mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-16 h-16 text-muted-fg mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
-            <p class="text-text-muted text-lg mb-2">Aucune opération trouvée</p>
-            <p class="text-text-muted text-sm mb-6">Commencez par créer votre première opération</p>
+            <p class="text-muted-fg text-lg mb-2">Aucune opération trouvée</p>
+            <p class="text-muted-fg text-sm mb-6">Commencez par créer votre première opération</p>
             <a href="{% url 'create_operation' %}" class="btn-primary inline-flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -267,32 +267,32 @@
                          x-transition:leave="ease-in duration-200"
                          x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                          x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                         class="relative transform overflow-hidden rounded-2xl bg-[#131421] border border-dark-border text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                         class="relative transform overflow-hidden  bg-[#131421] border border-border text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                         
                         <div class="px-6 py-6 sm:p-8">
                             <div class="sm:flex sm:items-start">
-                                <div class="mx-auto flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-accent-danger/10 sm:mx-0 sm:h-12 sm:w-12">
-                                    <svg class="h-6 w-6 text-accent-danger" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                <div class="mx-auto flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-status-danger/10 sm:mx-0 sm:h-12 sm:w-12">
+                                    <svg class="h-6 w-6 text-status-danger" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
                                 </div>
                                 <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                    <h3 class="text-xl font-bold leading-6 text-text-main" id="modal-title">Supprimer l'opération</h3>
-                                    <div class="mt-3 text-sm text-text-muted space-y-2">
-                                        <p>Etes-vous sûr de vouloir supprimer l'opération n°<strong class="font-mono text-accent-primary" x-text="operationToDelete"></strong> ?</p>
-                                        <p class="text-accent-danger px-3 py-2 bg-accent-danger/5 rounded-lg border border-accent-danger/10">Cette action est irréversible. Le solde de la caisse concernée sera recalculé automatiquement pour refléter cette suppression.</p>
+                                    <h3 class="text-xl font-bold leading-6 text-fg" id="modal-title">Supprimer l'opération</h3>
+                                    <div class="mt-3 text-sm text-muted-fg space-y-2">
+                                        <p>Etes-vous sûr de vouloir supprimer l'opération n°<strong class="font-mono text-accent" x-text="operationToDelete"></strong> ?</p>
+                                        <p class="text-status-danger px-3 py-2 bg-status-danger/5 border border-status-danger/10">Cette action est irréversible. Le solde de la caisse concernée sera recalculé automatiquement pour refléter cette suppression.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-[#0f101a] px-6 py-4 border-t border-dark-border sm:flex sm:flex-row-reverse sm:px-8 gap-3">
+                        <div class="bg-[#0f101a] px-6 py-4 border-t border-border sm:flex sm:flex-row-reverse sm:px-8 gap-3">
                             <form method="post" :action="deleteUrl">
                                 {% csrf_token %}
-                                <button type="submit" class="w-full inline-flex justify-center rounded-xl bg-accent-danger px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-accent-danger/90 sm:w-auto transition-colors">
+                                <button type="submit" class="w-full inline-flex justify-center  bg-status-danger px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-status-danger/90 sm:w-auto transition-colors">
                                     Confirmer la suppression
                                 </button>
                             </form>
-                            <button type="button" @click="isModalOpen = false" class="mt-3 inline-flex w-full justify-center rounded-xl bg-dark-surface2 px-4 py-2.5 text-sm font-bold text-text-main shadow-sm ring-1 ring-inset ring-dark-border hover:bg-dark-surface3 sm:mt-0 sm:w-auto transition-colors">
+                            <button type="button" @click="isModalOpen = false" class="mt-3 inline-flex w-full justify-center  bg-muted px-4 py-2.5 text-sm font-bold text-fg shadow-sm ring-1 ring-inset ring-border hover:bg-muted sm:mt-0 sm:w-auto transition-colors">
                                 Annuler
                             </button>
                         </div>

@@ -7,8 +7,7 @@ urlpatterns = [
     path('', views.dashboard_view, name='home'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     
-    # Gestion du capital et paie
-    path('capital/', views.capital_management, name='capital_management'),
+    # Gestion de la paie
     path('paie/', views.payroll_dashboard, name='payroll_dashboard'),
     path('paie/calculer/', views.calculate_salaries, name='calculate_salaries'),
     path('paie/payer/<int:salary_id>/', views.pay_salary, name='pay_salary'),

@@ -79,26 +79,26 @@
     <div class="w-full max-w-md p-8 fade-in">
         <!-- Logo -->
         <div class="text-center mb-8">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16  bg-gradient-to-br from-accent to-status-purple flex items-center justify-center mx-auto mb-4">
                 <span class="text-white font-bold text-2xl">R</span>
             </div>
-            <h1 class="text-2xl font-bold text-text-main">Rapid Cash</h1>
-            <p class="text-text-secondary text-sm mt-1">Vérification en deux étapes</p>
+            <h1 class="text-2xl font-bold text-fg">Rapid Cash</h1>
+            <p class="text-muted-fg text-sm mt-1">Vérification en deux étapes</p>
         </div>
         
         <!-- 2FA Verify Card -->
         <div class="verify-card p-8">
-            <h2 class="text-xl font-bold text-text-main mb-2 text-center">Authentification à deux facteurs</h2>
-            <p class="text-text-secondary text-sm text-center mb-6">
+            <h2 class="text-xl font-bold text-fg mb-2 text-center">Authentification à deux facteurs</h2>
+            <p class="text-muted-fg text-sm text-center mb-6">
                 Bonjour <strong>{{ username }}</strong>, Veuillez entrer votre code à 6 chiffres
             </p>
             
             {% if messages %}
             <div class="mb-6">
                 {% for message in messages %}
-                <div class="p-4 rounded-lg text-sm font-medium 
-                    {% if message.tags == 'error' %}bg-accent-danger/10 border border-accent-danger/20 text-accent-danger{% endif %}
-                    {% if message.tags == 'success' %}bg-accent-success/10 border border-accent-success/20 text-accent-success{% endif %}
+                <div class="p-4 text-sm font-medium 
+                    {% if message.tags == 'error' %}bg-status-danger/10 border border-status-danger/20 text-status-danger{% endif %}
+                    {% if message.tags == 'success' %}bg-status-success/10 border border-status-success/20 text-status-success{% endif %}
                     {% if message.tags == 'warning' %}bg-yellow-500/10 border border-yellow-500/20 text-yellow-400{% endif %}">
                     {{ message }}
                 </div>
@@ -107,7 +107,7 @@
             {% endif %}
             
             {% if error %}
-            <div class="mb-6 p-4 rounded-lg text-sm font-medium bg-accent-danger/10 border border-accent-danger/20 text-accent-danger">
+            <div class="mb-6 p-4 text-sm font-medium bg-status-danger/10 border border-status-danger/20 text-status-danger">
                 {{ error }}
             </div>
             {% endif %}
@@ -117,40 +117,40 @@
                 
                 <!-- OTP Code -->
                 <div>
-                    <label for="id_otp_code" class="block text-sm font-medium text-text-secondary mb-2">
+                    <label for="id_otp_code" class="block text-sm font-medium text-muted-fg mb-2">
                         Code de vérification
                     </label>
                     <input type="text" 
                            name="otp_code" 
                            id="id_otp_code" 
-                           class="input-dark w-full px-4 py-3 rounded-lg text-center text-2xl tracking-widest font-mono"
+                           class="input-dark w-full px-4 py-3 text-center text-2xl tracking-widest font-mono"
                            placeholder="000000" 
                            maxlength="6" 
                            pattern="[0-9]*"
                            inputmode="numeric"
                            required 
                            autocomplete="one-time-code">
-                    <p class="text-text-muted text-xs mt-2">
+                    <p class="text-muted-fg text-xs mt-2">
                         Utilisez votre application d'authentification (Google Authenticator, Authy, etc.)
                     </p>
                 </div>
                 
                 <!-- Submit -->
-                <button type="submit" class="btn-verify w-full py-3 rounded-lg text-white font-semibold">
+                <button type="submit" class="btn-verify w-full py-3 text-white font-semibold">
                     Vérifier
                 </button>
             </form>
             
             <!-- Back to login -->
             <div class="mt-6 text-center">
-                <a href="{% url 'logout' %}" class="text-text-muted text-sm hover:text-accent-primary">
+                <a href="{% url 'logout' %}" class="text-muted-fg text-sm hover:text-accent">
                     Annuler et se déconnecter
                 </a>
             </div>
         </div>
         
         <!-- Footer -->
-        <p class="text-center text-text-muted text-xs mt-8">
+        <p class="text-center text-muted-fg text-xs mt-8">
             2026 Rapid Cash. Système Financier Sécurisé.
         </p>
     </div>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Operation, Caisse
+from .models import Operation, Caisse, FondAllocation
 from core.models import Currency
 
 class CaisseForm(forms.ModelForm):
@@ -128,7 +128,7 @@ class OperationForm(forms.ModelForm):
             except Exception as e:
                 raise forms.ValidationError(f"Erreur de conversion: {str(e)}")
         
-        # Check balance (using converted amount if applicable)
+        # Check balance (using converted amount if applicable) - RETIRÉ (Les agents ne sont plus bloqués)
         check_amount = getattr(self, 'converted_amount', amount)
         
         if op_type == 'WITHDRAWAL' and check_amount:
@@ -137,10 +137,44 @@ class OperationForm(forms.ModelForm):
             fee = OperationService._calculate_fee(check_amount, agent_caisse.currency)
             required_amount = check_amount + fee
             
-            if agent_caisse.balance < required_amount:
-                raise forms.ValidationError(f"Fonds insuffisants. Solde disponible: {agent_caisse.balance} {agent_caisse.currency.code}, Requis: {required_amount:.2f} {agent_caisse.currency.code}")
+            # The balance check has been removed to allow agents to work continuously
+            # if agent_caisse.balance < required_amount:
+            #     raise forms.ValidationError(...)
         elif op_type == 'TRANSFER' and check_amount:
-            if agent_caisse.balance < check_amount:
-                raise forms.ValidationError(f"Fonds insuffisants. Solde disponible: {agent_caisse.balance} {agent_caisse.currency.code}, Requis: {check_amount:.2f} {agent_caisse.currency.code}")
+            # The balance check has been removed
+            # if agent_caisse.balance < check_amount:
+            #     raise forms.ValidationError(...)
+            pass
         
         return cleaned_data
+
+class FondAllocationForm(forms.ModelForm):
+    class Meta:
+        model = FondAllocation
+        fields = ['agent', 'amount', 'currency', 'note']
+        labels = {
+            'agent': "Agent bénéficiaire",
+            'amount': "Montant alloué",
+            'currency': "Devise",
+            'note': "Note ou motif"
+        }
+        widgets = {
+            'agent': forms.Select(attrs={'class': 'input-dark'}),
+            'amount': forms.NumberInput(attrs={'class': 'input-dark', 'placeholder': '0.00', 'step': '0.01'}),
+            'currency': forms.Select(attrs={'class': 'input-dark'}),
+            'note': forms.Textarea(attrs={'class': 'input-dark', 'rows': 2, 'placeholder': 'Ex: Fonds de démarrage Lundi'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # S'assurer que seul les agents sont listés
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        self.fields['agent'].queryset = User.objects.filter(role='AGENT', is_active=True)
+        self.fields['amount'].validators.append(self.validate_amount)
+        
+    def validate_amount(self, value):
+        from django import forms
+        if value <= 0:
+            raise forms.ValidationError("Le montant doit être supérieur à 0")
+        return value

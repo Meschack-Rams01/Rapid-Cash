@@ -11,6 +11,10 @@ from .models import Operation, Caisse
 from .services import OperationService
 from core.utils.pdf import generate_pdf
 from django.contrib.auth import get_user_model
+from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy
+from core.mixins import AdminRequiredMixin, DateFilterMixin, AdminCreateMixin
+
 User = get_user_model()
 
 @login_required
@@ -318,43 +322,71 @@ def delete_operation(request, operation_id):
     return redirect('operation_list')
 
 
-@login_required
-def create_caisse(request):
+class CaisseCreateView(AdminRequiredMixin, CreateView):
     """
     Créer une nouvelle caisse (Admin uniquement)
     """
-    if request.user.role != 'ADMIN':
-        messages.error(request, "Accès refusé. Réservé aux administrateurs.")
-        return redirect('dashboard')
-        
     from .forms import CaisseForm
-    
-    if request.method == 'POST':
-        form = CaisseForm(request.POST)
-        if form.is_valid():
-            caisse = form.save()
-            messages.success(request, f"La caisse '{caisse.name}' a été créée avec succès.")
-            
-            # Log action
-            from core.models import AuditLog
-            AuditLog.log_action(
-                user=request.user,
-                action=AuditLog.ActionType.CREATE,
-                model_name='Caisse',
-                object_id=str(caisse.id),
-                object_repr=str(caisse),
-                changes={
-                    'name': caisse.name, 
-                    'currency': caisse.currency.code,
-                    'agent': caisse.agent.username if caisse.agent else None
-                }
-            )
-            return redirect('core:caisses_list')
-    else:
-        form = CaisseForm()
+    model = Caisse
+    template_name = 'operations/create_caisse.html'
+    form_class = CaisseForm
+    success_url = reverse_lazy('core:caisses_list')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        caisse = self.object
+        from django.contrib import messages
+        messages.success(self.request, f"La caisse '{caisse.name}' a été créée avec succès.")
         
-    context = {
-        'form': form,
-        'request': request,
-    }
-    return render(request, 'operations/create_caisse.html', context)
+        from core.models import AuditLog
+        AuditLog.log_action(
+            user=self.request.user,
+            action=AuditLog.ActionType.CREATE,
+            model_name='Caisse',
+            object_id=str(caisse.id),
+            object_repr=str(caisse),
+            changes={
+                'name': caisse.name, 
+                'currency': caisse.currency.code,
+                'agent': caisse.agent.username if caisse.agent else None
+            }
+        )
+        return response
+
+class FondAllocationListView(AdminRequiredMixin, DateFilterMixin, ListView):
+    """
+    List of fund allocations (Admin only)
+    """
+    from .models import FondAllocation
+    model = FondAllocation
+    template_name = 'operations/allocation_list.html'
+    context_object_name = 'allocations'
+
+    def get_queryset(self):
+        from .models import FondAllocation
+        queryset = super().get_queryset().select_related('admin', 'agent', 'currency').order_by('-date_time')
+        agent_id = self.request.GET.get('agent')
+        if agent_id:
+            queryset = queryset.filter(agent_id=agent_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['agents'] = User.objects.filter(role='AGENT')
+        return context
+
+
+class FondAllocationCreateView(AdminRequiredMixin, AdminCreateMixin, CreateView):
+    """
+    Create a fund allocation (Admin only)
+    """
+    from .models import FondAllocation
+    from .forms import FondAllocationForm
+    model = FondAllocation
+    form_class = FondAllocationForm
+    template_name = 'operations/create_allocation.html'
+    success_url = reverse_lazy('allocation_list')
+
+    def form_valid(self, form):
+        self.success_message = f"L'allocation a été enregistrée avec succès pour l'agent {form.instance.agent.username}."
+        return super().form_valid(form)

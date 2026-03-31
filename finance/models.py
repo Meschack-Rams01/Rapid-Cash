@@ -62,3 +62,43 @@ class PartnerPayment(models.Model):
 
     def __str__(self):
         return f"Paiement {self.amount} {self.currency.code} à {self.contract.partner.username}"
+
+class CapitalTransaction(models.Model):
+    class Type(models.TextChoices):
+        INJECTION = 'INJECTION', 'Injection de capital (Apport)'
+        RETRAIT = 'RETRAIT', 'Retrait de capital'
+
+    type = models.CharField("Type", max_length=20, choices=Type.choices)
+    amount = models.DecimalField("Montant", max_digits=20, decimal_places=2)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Devise")
+    date_time = models.DateTimeField("Date & Heure", auto_now_add=True)
+    reason = models.CharField("Motif", max_length=255)
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name="Administrateur", related_name="capital_transactions")
+    
+    class Meta:
+        verbose_name = "Transaction sur Capital"
+        verbose_name_plural = "Transactions sur Capital"
+        indexes = [
+            models.Index(fields=['type']),
+            models.Index(fields=['date_time']),
+        ]
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.amount} {self.currency.code} ({self.date_time.strftime('%Y-%m-%d')})"
+
+class ProfitWithdrawal(models.Model):
+    amount = models.DecimalField("Montant retiré", max_digits=20, decimal_places=2)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Devise")
+    date_time = models.DateTimeField("Date & Heure", auto_now_add=True)
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name="Administrateur", related_name="profit_withdrawals")
+    note = models.TextField("Note", blank=True)
+
+    class Meta:
+        verbose_name = "Retrait de Bénéfice"
+        verbose_name_plural = "Retraits de Bénéfices"
+        indexes = [
+            models.Index(fields=['date_time']),
+        ]
+
+    def __str__(self):
+        return f"Retrait Bénéfice - {self.amount} {self.currency.code} ({self.date_time.strftime('%Y-%m-%d')})"

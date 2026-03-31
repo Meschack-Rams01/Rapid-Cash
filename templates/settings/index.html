@@ -8,17 +8,17 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Settings Tabs -->
-    <div class="flex gap-2 border-b border-dark-border pb-4">
-        <a href="#general" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent-primary/10 text-accent-primary">
+    <div class="flex gap-2 border-b border-border pb-4">
+        <a href="#general" class="px-4 py-2 text-sm font-medium bg-accent/10 text-accent">
             Général
         </a>
-        <a href="#fees" class="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors">
+        <a href="#fees" class="px-4 py-2 text-sm font-medium text-muted-fg hover:text-fg hover:bg-muted transition-colors">
             Grille de Frais
         </a>
-        <a href="#security" class="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors">
+        <a href="#security" class="px-4 py-2 text-sm font-medium text-muted-fg hover:text-fg hover:bg-muted transition-colors">
             Sécurité
         </a>
-        <a href="#notifications" class="px-4 py-2 rounded-lg text-sm font-medium text-text-muted hover:text-text-main hover:bg-dark-surface2 transition-colors">
+        <a href="#notifications" class="px-4 py-2 text-sm font-medium text-muted-fg hover:text-fg hover:bg-muted transition-colors">
             Notifications
         </a>
     </div>
@@ -27,27 +27,27 @@
     <form id="settings-form" class="space-y-6">
         <!-- General Settings -->
         <div class="card-dark" id="general">
-            <div class="p-5 border-b border-dark-border">
-                <h3 class="font-bold text-text-main">Paramètres Généraux</h3>
-                <p class="text-sm text-text-muted mt-1">Configuration de base du système</p>
+            <div class="p-5 border-b border-border">
+                <h3 class="font-bold text-fg">Paramètres Généraux</h3>
+                <p class="text-sm text-muted-fg mt-1">Configuration de base du système</p>
             </div>
             <div class="p-5 space-y-6">
                 <!-- Company Name -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="font-medium text-text-main">Nom de l'Entreprise</p>
-                        <p class="text-sm text-text-muted">Nom affiché dans l'en-tête</p>
+                        <p class="font-medium text-fg">Nom de l'Entreprise</p>
+                        <p class="text-sm text-muted-fg">Nom affiché dans l'en-tête</p>
                     </div>
-                    <input type="text" name="company_name" value="Rapid Cash" class="input-dark w-64 px-4 py-2 rounded-lg text-right">
+                    <input type="text" name="company_name" value="Rapid Cash" class="input-dark w-64 px-4 py-2 text-right">
                 </div>
                 
                 <!-- Currency -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="font-medium text-text-main">Devise de Référence</p>
-                        <p class="text-sm text-text-muted">Devise principale pour les rapports</p>
+                        <p class="font-medium text-fg">Devise de Référence</p>
+                        <p class="text-sm text-muted-fg">Devise principale pour les rapports</p>
                     </div>
-                    <select name="reference_currency" class="input-dark w-64 px-4 py-2 rounded-lg">
+                    <select name="reference_currency" class="input-dark w-64 px-4 py-2">
                         <option>USD - Dollar US</option>
                         <option>EUR - Euro</option>
                     <option>CDF - Franc Congolais</option>
@@ -57,10 +57,10 @@
             <!-- Timezone -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Fuseau Horaire</p>
-                    <p class="text-sm text-text-muted">Pour les timestamps</p>
+                    <p class="font-medium text-fg">Fuseau Horaire</p>
+                    <p class="text-sm text-muted-fg">Pour les timestamps</p>
                 </div>
-                <select class="input-dark w-64 px-4 py-2 rounded-lg">
+                <select class="input-dark w-64 px-4 py-2">
                     <option>Africa/Kinshasa</option>
                     <option>UTC</option>
                     <option>Europe/Paris</option>
@@ -70,27 +70,27 @@
             <!-- Language -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Langue</p>
-                    <p class="text-sm text-text-muted">Langue de l'interface</p>
+                    <p class="font-medium text-fg">Langue</p>
+                    <p class="text-sm text-muted-fg">Langue de l'interface</p>
                 </div>
-                <select class="input-dark w-64 px-4 py-2 rounded-lg">
+                <select class="input-dark w-64 px-4 py-2">
                     <option>Français</option>
                     <option>Anglais</option>
                 </select>
             </div>
         </div>
-        <div class="p-5 border-t border-dark-border flex justify-end">
+        <div class="p-5 border-t border-border flex justify-end">
             <button class="btn-primary">Enregistrer</button>
         </div>
     </div>
 
     <!-- Fee Grid -->
     <div class="card-dark" id="fees">
-        <div class="p-5 border-b border-dark-border">
+        <div class="p-5 border-b border-border">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="font-bold text-text-main">Grille des Frais</h3>
-                    <p class="text-sm text-text-muted mt-1">Configuration des frais par tranche de montant</p>
+                    <h3 class="font-bold text-fg">Grille des Frais</h3>
+                    <p class="text-sm text-muted-fg mt-1">Configuration des frais par tranche de montant</p>
                 </div>
                 <a href="/admin/operations/feegrid/add/" class="btn-secondary text-sm">
                     <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,15 +116,15 @@
                     <tr>
                         <td class="font-mono">${{ fee.min_amount }}</td>
                         <td class="font-mono">${{ fee.max_amount }}</td>
-                        <td class="font-mono text-accent-success">${{ fee.fee_amount }}</td>
+                        <td class="font-mono text-status-success">${{ fee.fee_amount }}</td>
                         <td>{{ fee.currency.code }}</td>
                         <td class="text-right">
-                            <a href="/admin/operations/feegrid/{{ fee.id }}/change/" class="text-accent-primary hover:underline text-sm">Éditer</a>
+                            <a href="/admin/operations/feegrid/{{ fee.id }}/change/" class="text-accent hover:underline text-sm">Éditer</a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center py-8 text-text-muted">
+                        <td colspan="5" class="text-center py-8 text-muted-fg">
                             Configurez la grille des frais
                         </td>
                     </tr>
@@ -136,30 +136,30 @@
 
     <!-- Security Settings -->
     <div class="card-dark" id="security">
-        <div class="p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Sécurité</h3>
-            <p class="text-sm text-text-muted mt-1">Options de sécurité du compte</p>
+        <div class="p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Sécurité</h3>
+            <p class="text-sm text-muted-fg mt-1">Options de sécurité du compte</p>
         </div>
         <div class="p-5 space-y-6">
             <!-- 2FA -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Authentification à Deux Facteurs</p>
-                    <p class="text-sm text-text-muted">Exiger 2FA pour tous les admins</p>
+                    <p class="font-medium text-fg">Authentification à Deux Facteurs</p>
+                    <p class="text-sm text-muted-fg">Exiger 2FA pour tous les admins</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" class="sr-only peer">
-                    <div class="w-11 h-6 bg-dark-surface3 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-primary"></div>
+                    <div class="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                 </label>
             </div>
             
             <!-- Session Timeout -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Délai d'Expiration de Session</p>
-                    <p class="text-sm text-text-muted">Temps d'inactivité avant déconnexion</p>
+                    <p class="font-medium text-fg">Délai d'Expiration de Session</p>
+                    <p class="text-sm text-muted-fg">Temps d'inactivité avant déconnexion</p>
                 </div>
-                <select class="input-dark w-64 px-4 py-2 rounded-lg">
+                <select class="input-dark w-64 px-4 py-2">
                     <option>15 minutes</option>
                     <option>30 minutes</option>
                     <option selected>1 heure</option>
@@ -170,65 +170,65 @@
             <!-- Password Requirements -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Exigences de Mot de Passe</p>
-                    <p class="text-sm text-text-muted">Longueur et complexité minimales</p>
+                    <p class="font-medium text-fg">Exigences de Mot de Passe</p>
+                    <p class="text-sm text-muted-fg">Longueur et complexité minimales</p>
                 </div>
-                <select class="input-dark w-64 px-4 py-2 rounded-lg">
+                <select class="input-dark w-64 px-4 py-2">
                     <option>8 caractères minimum</option>
                     <option selected>12 caractères minimum</option>
                     <option>16 caractères minimum</option>
                 </select>
             </div>
         </div>
-        <div class="p-5 border-t border-dark-border flex justify-end">
+        <div class="p-5 border-t border-border flex justify-end">
             <button class="btn-primary">Enregistrer</button>
         </div>
     </div>
 
     <!-- Notifications -->
     <div class="card-dark" id="notifications">
-        <div class="p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Notifications</h3>
-            <p class="text-sm text-text-muted mt-1">Préférences de notifications</p>
+        <div class="p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Notifications</h3>
+            <p class="text-sm text-muted-fg mt-1">Préférences de notifications</p>
         </div>
         <div class="p-5 space-y-6">
             <!-- Email Notifications -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Notifications par Email</p>
-                    <p class="text-sm text-text-muted">Recevoir les alertes par email</p>
+                    <p class="font-medium text-fg">Notifications par Email</p>
+                    <p class="text-sm text-muted-fg">Recevoir les alertes par email</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" class="sr-only peer" checked>
-                    <div class="w-11 h-6 bg-dark-surface3 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-primary"></div>
+                    <div class="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                 </label>
             </div>
             
             <!-- Low Balance Alert -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Alerte Solde Faible</p>
-                    <p class="text-sm text-text-muted">Notifier quand une caisse est faible</p>
+                    <p class="font-medium text-fg">Alerte Solde Faible</p>
+                    <p class="text-sm text-muted-fg">Notifier quand une caisse est faible</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" class="sr-only peer" checked>
-                    <div class="w-11 h-6 bg-dark-surface3 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-primary"></div>
+                    <div class="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                 </label>
             </div>
             
             <!-- Daily Report -->
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Rapport Journalier Automatique</p>
-                    <p class="text-sm text-text-muted">Envoyer le rapport chaque jour</p>
+                    <p class="font-medium text-fg">Rapport Journalier Automatique</p>
+                    <p class="text-sm text-muted-fg">Envoyer le rapport chaque jour</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" class="sr-only peer">
-                    <div class="w-11 h-6 bg-dark-surface3 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-primary"></div>
+                    <div class="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                 </label>
             </div>
         </div>
-        <div class="p-5 border-t border-dark-border flex justify-end">
+        <div class="p-5 border-t border-border flex justify-end">
             <button type="submit" class="btn-primary">Enregistrer</button>
         </div>
     </div>

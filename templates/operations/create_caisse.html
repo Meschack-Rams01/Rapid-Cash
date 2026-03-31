@@ -1,79 +1,12 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Créer une Caisse - Rapid Cash{% endblock %}
+{% block title %}Nouvelle Caisse - Rapid Cash{% endblock %}
+
+{% block page_title %}Nouvelle Caisse{% endblock %}
+{% block page_subtitle %}Créer un nouveau tiroir-caisse pour un agent{% endblock %}
 
 {% block content %}
-<div class="mb-8 flex items-center justify-between">
-    <div>
-        <h1 class="text-3xl font-bold text-text-main tracking-tight">Créer une Caisse</h1>
-        <p class="text-text-secondary mt-1">Ajouter une nouvelle caisse et l'assigner à un agent optionnellement.</p>
-    </div>
-    <a href="{% url 'core:caisses_list' %}" class="px-4 py-2 border border-dark-border rounded-lg text-text-secondary hover:text-white hover:border-text-secondary transition-colors text-sm font-medium">
-        Retour à la liste
-    </a>
+<div class="max-w-2xl mx-auto">
+    {% include 'partials/_generic_form_card.html' with form=form cancel_url='/core/caisses/' submit_text='Créer la caisse' %}
 </div>
-
-<div class="max-w-2xl bg-dark-surface rounded-xl border border-dark-border p-6 shadow-sm">
-    <form method="post" class="space-y-6">
-        {% csrf_token %}
-        
-        {% if form.errors %}
-        <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-lg text-sm mb-6">
-            <ul class="list-disc list-inside">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ field.label }}: {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-
-        <div class="space-y-6">
-            <div>
-                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.name.label }}</label>
-                {{ form.name }}
-            </div>
-            
-            <div>
-                <label for="{{ form.currency.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.currency.label }}</label>
-                {{ form.currency }}
-                <p class="text-xs text-text-muted mt-2">La devise principale de cette caisse. Les opérations dans d'autres devises seront converties automatiquement.</p>
-            </div>
-            
-            <div class="border-t border-dark-border pt-6 mt-6">
-                <label for="{{ form.agent.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.agent.label }}</label>
-                {{ form.agent }}
-                <p class="text-xs text-text-muted mt-2">Si laissée vide, la caisse pourra servir aux administrateurs ou être assignée plus tard.</p>
-            </div>
-        </div>
-
-        <div class="flex justify-end pt-4">
-            <button type="submit" class="px-6 py-2.5 bg-accent-primary hover:bg-accent-primary-hover text-white rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(79,142,247,0.3)]">
-                Créer la caisse
-            </button>
-        </div>
-    </form>
-</div>
-
-<style>
-    /* Styling for generated inputs */
-    .input-dark {
-        background-color: #131421 !important;
-        border: 1px solid #252640 !important;
-        color: #e8eaf6 !important;
-        width: 100%;
-        padding: 0.625rem 1rem;
-        border-radius: 0.5rem;
-        transition: all 0.2s ease;
-    }
-    .input-dark:focus {
-        outline: none;
-        border-color: #4f8ef7 !important;
-        box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.2);
-    }
-</style>
 {% endblock %}

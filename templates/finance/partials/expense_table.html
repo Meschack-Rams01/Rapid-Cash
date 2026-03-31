@@ -12,17 +12,17 @@
     </thead>
     <tbody>
         {% for exp in expenses %}
-        <tr class="hover:bg-dark-surface2/50 transition-colors cursor-pointer"
+        <tr class="hover:bg-muted/50 transition-colors cursor-pointer"
             hx-get="{% url 'expense_detail' exp.id %}"
             hx-target="#modal-container"
             hx-swap="innerHTML">
-            <td class="font-mono text-text-secondary text-sm">
+            <td class="font-mono text-muted-fg text-sm">
                 {{ exp.date|date:"d/m/Y" }}
             </td>
             <td>
-                <p class="font-medium text-text-main">{{ exp.reason }}</p>
+                <p class="font-medium text-fg">{{ exp.reason }}</p>
                 {% if exp.comment %}
-                <p class="text-xs text-text-muted mt-0.5">{{ exp.comment|truncatechars:50 }}</p>
+                <p class="text-xs text-muted-fg mt-0.5">{{ exp.comment|truncatechars:50 }}</p>
                 {% endif %}
             </td>
             <td>
@@ -30,19 +30,19 @@
                     {{ exp.category|default:"Non classé" }}
                 </span>
             </td>
-            <td class="text-text-secondary">
+            <td class="text-muted-fg">
                 {{ exp.destination|default:"—" }}
             </td>
-            <td class="text-right text-text-main">
-                <span class="font-mono font-medium text-accent-danger">-${{ exp.amount|floatformat:2 }}</span>
-                <span class="text-text-muted text-xs ml-1">{{ exp.currency.symbol }}</span>
+            <td class="text-right text-fg">
+                <span class="font-mono font-medium text-status-danger">-${{ exp.amount|floatformat:2 }}</span>
+                <span class="text-muted-fg text-xs ml-1">{{ exp.currency.symbol }}</span>
             </td>
             <td>
                 <div class="flex items-center gap-2">
-                    <div class="w-7 h-7 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-xs font-medium">
+                    <div class="w-7 h-7 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-xs font-medium">
                         {{ exp.admin.username|first|upper }}
                     </div>
-                    <span class="text-text-secondary text-sm">{{ exp.admin.username }}</span>
+                    <span class="text-muted-fg text-sm">{{ exp.admin.username }}</span>
                 </div>
             </td>
         </tr>

@@ -4,8 +4,8 @@
 
 <div class="card-dark p-5 card-dark-hover group">
     <div class="flex items-start justify-between mb-5">
-        <div class="w-12 h-12 rounded-xl bg-accent-warning/10 flex items-center justify-center">
-            <svg class="w-6 h-6 text-accent-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="w-12 h-12  bg-status-warning/10 flex items-center justify-center">
+            <svg class="w-6 h-6 text-status-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
             </svg>
         </div>
@@ -13,27 +13,27 @@
     </div>
     
     <div class="mb-4">
-        <p class="text-text-muted text-xs font-medium uppercase tracking-wide mb-1">Solde Disponible</p>
-        <p class="text-2xl font-bold text-text-main font-mono tracking-tight">
+        <p class="text-muted-fg text-xs font-medium uppercase tracking-wide mb-1">Solde Disponible</p>
+        <p class="text-2xl font-bold text-fg font-mono tracking-tight">
             {{ caisse.balance|floatformat:2 }}
         </p>
     </div>
     
     <div class="space-y-2 mb-5">
-        <div class="flex justify-between items-center py-1.5 border-b border-dark-border">
-            <span class="text-xs text-text-muted">Caisse</span>
-            <span class="text-sm font-medium text-text-main">{{ caisse.name }}</span>
+        <div class="flex justify-between items-center py-1.5 border-b border-border">
+            <span class="text-xs text-muted-fg">Caisse</span>
+            <span class="text-sm font-medium text-fg">{{ caisse.name }}</span>
         </div>
         <div class="flex justify-between items-center py-1.5">
-            <span class="text-xs text-text-muted">Responsable</span>
+            <span class="text-xs text-muted-fg">Responsable</span>
             <div class="flex items-center gap-2">
                 {% if caisse.agent %}
-                <div class="w-5 h-5 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple text-xs font-medium">
+                <div class="w-5 h-5 rounded-full bg-status-purple/20 flex items-center justify-center text-status-purple text-xs font-medium">
                     {{ caisse.agent.username|first|upper }}
                 </div>
-                <span class="text-sm font-medium text-text-main">{{ caisse.agent.username }}</span>
+                <span class="text-sm font-medium text-fg">{{ caisse.agent.username }}</span>
                 {% else %}
-                <span class="text-sm text-text-muted">Non assigné</span>
+                <span class="text-sm text-muted-fg">Non assigné</span>
                 {% endif %}
             </div>
         </div>
@@ -41,12 +41,12 @@
     
     <div class="flex gap-2">
         {% if edit_url %}
-        <a href="{{ edit_url }}" class="flex-1 text-center py-2.5 rounded-lg bg-dark-surface2 hover:bg-dark-surface3 text-text-secondary text-sm font-medium transition-colors">
+        <a href="{{ edit_url }}" class="flex-1 text-center py-2.5 bg-muted hover:bg-muted text-muted-fg text-sm font-medium transition-colors">
             Ajuster
         </a>
         {% endif %}
         {% if history_url %}
-        <a href="{{ history_url }}" class="flex-1 text-center py-2.5 rounded-lg bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary text-sm font-medium transition-colors">
+        <a href="{{ history_url }}" class="flex-1 text-center py-2.5 bg-accent/10 hover:bg-accent/20 text-accent text-sm font-medium transition-colors">
             Journal
         </a>
         {% endif %}

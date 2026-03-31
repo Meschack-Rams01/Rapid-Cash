@@ -2,21 +2,21 @@
 {# User Card Component #}
 {# Usage: {% include 'partials/_user_card.html' with user=object show_role=True show_caisse=True %} #}
 
-<div class="flex items-center gap-3 p-3 rounded-xl bg-dark-surface2 hover:bg-dark-surface3 transition-colors cursor-pointer">
-    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center text-white font-semibold text-sm">
+<div class="flex items-center gap-3 p-3 bg-muted hover:bg-input transition-colors cursor-pointer">
+    <div class="w-10 h-10 bg-accent flex items-center justify-center text-accent-fg font-semibold text-sm font-display">
         {{ user.username|make_list|first|upper }}
     </div>
     <div class="flex-1 min-w-0">
-        <p class="font-medium text-text-main text-sm truncate">{{ user.username }}</p>
+        <p class="font-medium text-fg text-sm truncate">{{ user.username }}</p>
         {% if show_role %}
-        <p class="text-xs text-text-muted">{{ user.get_role_display }}</p>
+        <p class="text-xs text-muted-fg tracking-wider uppercase font-mono">{{ user.get_role_display }}</p>
         {% elif user.role == 'AGENT' and user.commission_rate %}
-        <p class="text-xs text-accent-success">{{ user.commission_rate }}% commission</p>
+        <p class="text-xs text-status-success">{{ user.commission_rate }}% commission</p>
         {% endif %}
     </div>
     {% if show_status %}
     <div class="flex items-center">
-        <span class="w-2 h-2 rounded-full {% if user.is_active %}bg-accent-success{% else %}bg-accent-danger{% endif %}"></span>
+        <span class="w-2 h-2 {% if user.is_active %}bg-status-success{% else %}bg-status-danger{% endif %}"></span>
     </div>
     {% endif %}
 </div>

@@ -8,14 +8,14 @@
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center mb-2">
-            <a href="{% url 'core:payroll_dashboard' %}" class="text-text-secondary hover:text-text-main transition-colors mr-3">
+            <a href="{% url 'core:payroll_dashboard' %}" class="text-muted-fg hover:text-fg transition-colors mr-3">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
             </a>
-            <h1 class="text-3xl font-bold text-text-main">💵 Payer Salaire</h1>
+            <h1 class="text-3xl font-bold text-fg">💵 Payer Salaire</h1>
         </div>
-        <p class="text-text-secondary">
+        <p class="text-muted-fg">
             Paiement du salaire de {{ salary.agent.username }} - {{ salary.pay_period.month|stringformat:"02d" }}/{{ salary.pay_period.year }}
         </p>
     </div>
@@ -24,10 +24,10 @@
     {% if messages %}
     <div class="mb-6">
         {% for message in messages %}
-        <div class="p-4 rounded-lg text-sm font-medium 
-            {% if message.tags == 'success' %}bg-accent-success/10 border border-accent-success/20 text-accent-success
-            {% elif message.tags == 'error' %}bg-accent-danger/10 border border-accent-danger/20 text-accent-danger
-            {% else %}bg-accent-warning/10 border border-accent-warning/20 text-accent-warning{% endif %}">
+        <div class="p-4 text-sm font-medium 
+            {% if message.tags == 'success' %}bg-status-success/10 border border-status-success/20 text-status-success
+            {% elif message.tags == 'error' %}bg-status-danger/10 border border-status-danger/20 text-status-danger
+            {% else %}bg-status-warning/10 border border-status-warning/20 text-status-warning{% endif %}">
             {{ message }}
         </div>
         {% endfor %}
@@ -37,85 +37,85 @@
     <!-- Informations du salaire -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Détails du salaire -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
-            <h2 class="text-xl font-bold text-text-main mb-6 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="bg-card border border-border  p-6">
+            <h2 class="text-xl font-bold text-fg mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7v-2a3 3 0 00-5.356-1.857M7 20v-2a3 3 0 015.356-1.857m0 0a5.002 5.002 0 019.288 1.857M17 16.143V7a2 2 0 00-2-2H7a2 2 0 00-2 2v9.143m0 0a5.002 5.002 0 019.288 0M9 9h6m-6 4h6"/>
                 </svg>
                 Détails du Salaire
             </h2>
             
             <div class="space-y-4">
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Agent</span>
-                    <span class="text-text-main font-medium">{{ salary.agent.username }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Agent</span>
+                    <span class="text-fg font-medium">{{ salary.agent.username }}</span>
                 </div>
                 
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Période</span>
-                    <span class="text-text-main font-medium">{{ salary.pay_period.month|stringformat:"02d" }}/{{ salary.pay_period.year }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Période</span>
+                    <span class="text-fg font-medium">{{ salary.pay_period.month|stringformat:"02d" }}/{{ salary.pay_period.year }}</span>
                 </div>
                 
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Commission</span>
-                    <span class="text-text-main font-medium">{{ salary.commission_percentage }}%</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Commission</span>
+                    <span class="text-fg font-medium">{{ salary.commission_percentage }}%</span>
                 </div>
                 
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Salaire de base</span>
-                    <span class="text-accent-primary font-medium">${{ salary.base_salary|floatformat:2 }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Salaire de base</span>
+                    <span class="text-accent font-medium">${{ salary.base_salary|floatformat:2 }}</span>
                 </div>
                 
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Bonus</span>
-                    <span class="text-accent-purple font-medium">${{ salary.bonus_amount|floatformat:2 }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Bonus</span>
+                    <span class="text-status-purple font-medium">${{ salary.bonus_amount|floatformat:2 }}</span>
                 </div>
                 
                 <div class="flex justify-between items-center py-3">
-                    <span class="text-text-secondary font-medium">Salaire Total</span>
-                    <span class="text-accent-success font-bold text-lg">${{ salary.total_salary|floatformat:2 }}</span>
+                    <span class="text-muted-fg font-medium">Salaire Total</span>
+                    <span class="text-status-success font-bold text-lg">${{ salary.total_salary|floatformat:2 }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Statut de paiement -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
-            <h2 class="text-xl font-bold text-text-main mb-6 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-accent-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="bg-card border border-border  p-6">
+            <h2 class="text-xl font-bold text-fg mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 Statut de Paiement
             </h2>
             
             <div class="space-y-4">
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Montant Total</span>
-                    <span class="text-text-main font-medium">${{ salary.total_salary|floatformat:2 }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Montant Total</span>
+                    <span class="text-fg font-medium">${{ salary.total_salary|floatformat:2 }}</span>
                 </div>
                 
-                <div class="flex justify-between items-center py-3 border-b border-dark-border">
-                    <span class="text-text-secondary">Déjà Payé</span>
-                    <span class="text-accent-success font-medium">${{ salary.paid_amount|floatformat:2 }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-border">
+                    <span class="text-muted-fg">Déjà Payé</span>
+                    <span class="text-status-success font-medium">${{ salary.paid_amount|floatformat:2 }}</span>
                 </div>
                 
                 <div class="flex justify-between items-center py-3">
-                    <span class="text-text-secondary font-medium">Restant à Payer</span>
-                    <span class="text-accent-warning font-bold text-lg">${{ remaining_amount|floatformat:2 }}</span>
+                    <span class="text-muted-fg font-medium">Restant à Payer</span>
+                    <span class="text-status-warning font-bold text-lg">${{ remaining_amount|floatformat:2 }}</span>
                 </div>
                 
                 <!-- Statut -->
-                <div class="mt-6 p-4 rounded-lg {% if salary.status == 'PAID' %}bg-accent-success/10 border border-accent-success/20{% elif salary.status == 'PARTIAL' %}bg-accent-warning/10 border border-accent-warning/20{% else %}bg-accent-danger/10 border border-accent-danger/20{% endif %}">
+                <div class="mt-6 p-4 {% if salary.status == 'PAID' %}bg-status-success/10 border border-status-success/20{% elif salary.status == 'PARTIAL' %}bg-status-warning/10 border border-status-warning/20{% else %}bg-status-danger/10 border border-status-danger/20{% endif %}">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-2 
-                            {% if salary.status == 'PAID' %}text-accent-success
-                            {% elif salary.status == 'PARTIAL' %}text-accent-warning
-                            {% else %}text-accent-danger{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            {% if salary.status == 'PAID' %}text-status-success
+                            {% elif salary.status == 'PARTIAL' %}text-status-warning
+                            {% else %}text-status-danger{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <span class="font-medium 
-                            {% if salary.status == 'PAID' %}text-accent-success
-                            {% elif salary.status == 'PARTIAL' %}text-accent-warning
-                            {% else %}text-accent-danger{% endif %}">
+                            {% if salary.status == 'PAID' %}text-status-success
+                            {% elif salary.status == 'PARTIAL' %}text-status-warning
+                            {% else %}text-status-danger{% endif %}">
                             {{ salary.get_status_display }}
                         </span>
                     </div>
@@ -126,9 +126,9 @@
 
     <!-- Formulaire de paiement -->
     {% if remaining_amount > 0 %}
-    <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
-        <h2 class="text-xl font-bold text-text-main mb-6 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="bg-card border border-border  p-6">
+        <h2 class="text-xl font-bold text-fg mb-6 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
             Payer en Espèces
@@ -139,41 +139,41 @@
             
             <!-- Montant à payer -->
             <div>
-                <label class="block text-sm font-medium text-text-secondary mb-2">Montant à payer</label>
+                <label class="block text-sm font-medium text-muted-fg mb-2">Montant à payer</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-text-muted">$</span>
+                        <span class="text-muted-fg">$</span>
                     </div>
                     <input type="number" 
                            name="payment_amount" 
-                           class="input-dark w-full pl-8 pr-4 py-3 rounded-lg"
+                           class="input-dark w-full pl-8 pr-4 py-3"
                            step="0.01" 
                            min="0.01" 
                            max="{{ remaining_amount }}"
                            value="{{ remaining_amount }}"
                            required>
                 </div>
-                <p class="text-xs text-text-muted mt-1">Maximum: ${{ remaining_amount|floatformat:2 }}</p>
+                <p class="text-xs text-muted-fg mt-1">Maximum: ${{ remaining_amount|floatformat:2 }}</p>
             </div>
 
             <!-- Notes -->
             <div>
-                <label class="block text-sm font-medium text-text-secondary mb-2">Notes de paiement</label>
+                <label class="block text-sm font-medium text-muted-fg mb-2">Notes de paiement</label>
                 <textarea name="notes" 
                           rows="3" 
-                          class="input-dark w-full px-4 py-3 rounded-lg"
+                          class="input-dark w-full px-4 py-3"
                           placeholder="Notes sur le paiement (ex: payé en espèces, date, etc.)">Payé en espèces</textarea>
             </div>
 
             <!-- Boutons -->
             <div class="flex space-x-4">
-                <button type="submit" class="btn-login flex-1 py-3 rounded-lg text-white font-semibold">
+                <button type="submit" class="btn-login flex-1 py-3 text-white font-semibold">
                     <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Payer
                 </button>
-                <a href="{% url 'core:payroll_dashboard' %}" class="flex-1 px-6 py-3 bg-dark-surface3 hover:bg-dark-border text-text-secondary rounded-lg transition-colors text-center font-medium">
+                <a href="{% url 'core:payroll_dashboard' %}" class="flex-1 px-6 py-3 bg-muted hover:bg-border text-muted-fg transition-colors text-center font-medium">
                     Annuler
                 </a>
             </div>
@@ -181,24 +181,24 @@
     </div>
     {% else %}
     <!-- Déjà payé -->
-    <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent-success/10 mb-4">
-            <svg class="w-8 h-8 text-accent-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="bg-card border border-border  p-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-status-success/10 mb-4">
+            <svg class="w-8 h-8 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
         </div>
-        <h3 class="text-xl font-bold text-text-main mb-2">Salaire Déjà Payé</h3>
-        <p class="text-text-secondary mb-4">Ce salaire a été complètement payé.</p>
+        <h3 class="text-xl font-bold text-fg mb-2">Salaire Déjà Payé</h3>
+        <p class="text-muted-fg mb-4">Ce salaire a été complètement payé.</p>
         
         {% if salary.payment_notes %}
-        <div class="bg-dark-surface2 border border-dark-border rounded-lg p-4 text-left">
-            <h4 class="font-medium text-text-main mb-2">Notes de paiement:</h4>
-            <p class="text-text-secondary whitespace-pre-wrap">{{ salary.payment_notes }}</p>
+        <div class="bg-muted border border-border p-4 text-left">
+            <h4 class="font-medium text-fg mb-2">Notes de paiement:</h4>
+            <p class="text-muted-fg whitespace-pre-wrap">{{ salary.payment_notes }}</p>
         </div>
         {% endif %}
         
         <div class="mt-6">
-            <a href="{% url 'core:payroll_dashboard' %}" class="inline-flex items-center px-6 py-3 bg-accent-primary hover:bg-accent-primary-hover text-white rounded-lg transition-colors font-medium">
+            <a href="{% url 'core:payroll_dashboard' %}" class="inline-flex items-center px-6 py-3 bg-accent hover:bg-accent-hover text-white transition-colors font-medium">
                 Retour à la Paie
             </a>
         </div>

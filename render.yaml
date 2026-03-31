@@ -1,0 +1,61 @@
+services:
+  - type: web
+    name: rapid-cash
+    runtime: python
+    plan: starter
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rapid-cash-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: rapid-cash-redis
+          property: connectionString
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: "rapid-cash.onrender.com,localhost"
+
+  - type: worker
+    name: rapid-cash-celery
+    runtime: python
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A config worker --loglevel=info"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rapid-cash-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: rapid-cash-redis
+          property: connectionString
+
+databases:
+  - name: rapid-cash-db
+    databaseName: rapid_cash
+    plan: starter
+    user: rapid_cash
+
+redis:
+  - name: rapid-cash-redis
+    plan: starter
+    ipAllowList: []

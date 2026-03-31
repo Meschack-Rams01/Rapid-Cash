@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion du Capital - Rapid Cash{% endblock %}
+
+{% block page_title %}Registre du Capital{% endblock %}
+{% block page_subtitle %}Traçabilité des apports et retraits de capital business{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="card-dark mb-6">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Type</label>
+            <select name="type" class="input-dark w-full">
+                <option value="">Tous les types</option>
+                {% for type_val, type_name in types %}
+                <option value="{{ type_val }}" {% if request.GET.type == type_val %}selected{% endif %}>
+                    {{ type_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Du</label>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="input-dark w-full">
+        </div>
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Au</label>
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="input-dark w-full">
+        </div>
+        <div>
+            <button type="submit" class="btn-secondary w-full">Filtrer</button>
+        </div>
+    </form>
+</div>
+
+<!-- Table -->
+<div class="card-dark">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="font-bold text-fg">
+            Transactions sur le capital
+            <span class="text-muted-fg font-normal">({{ transactions.count }} résultats)</span>
+        </h3>
+        {% if user.role == 'ADMIN' %}
+        <a href="{% url 'create_capital_transaction' %}" class="btn-primary text-sm">
+            <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Nouvelle Opération
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="overflow-x-auto">
+        {% if transactions %}
+        <table class="table-dark">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th class="text-right">Montant</th>
+                    <th>Motif</th>
+                    <th>Enregistré par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in transactions %}
+                <tr class="hover:bg-muted/50 transition-colors">
+                    <td class="font-mono text-muted-fg text-sm">
+                        {{ txn.date_time|date:"d/m/Y H:i" }}
+                    </td>
+                    <td>
+                        {% if txn.type == 'INJECTION' %}
+                        <span class="badge badge-success">Injection</span>
+                        {% else %}
+                        <span class="badge badge-warning">Retrait</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-right text-fg">
+                        <span class="font-mono font-medium {% if txn.type == 'INJECTION' %}text-brand-400{% else %}text-status-danger{% endif %}">
+                            {% if txn.type == 'INJECTION' %}+{% else %}-{% endif %}{{ txn.amount|floatformat:2 }}
+                        </span>
+                        <span class="text-muted-fg text-xs ml-1">{{ txn.currency.symbol|default:txn.currency.code }}</span>
+                    </td>
+                    <td>
+                        <p class="font-medium text-fg">{{ txn.reason }}</p>
+                    </td>
+                    <td>
+                        <span class="text-muted-fg text-sm">{{ txn.admin.username }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        {% include 'partials/_empty_state.html' with icon='cash' title='Aucune transaction' message='Les mouvements de capital apparaîtront ici.' action_url='create_capital_transaction' action_text='Enregistrer un mouvement' %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

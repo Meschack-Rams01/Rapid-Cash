@@ -10,16 +10,16 @@
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Devises Actives</p>
-            <p class="text-2xl font-bold text-text-main mt-1">{{ currencies|length }}</p>
+            <p class="text-muted-fg text-sm font-medium">Devises Actives</p>
+            <p class="text-2xl font-bold text-fg mt-1">{{ currencies|length }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Paires de Change</p>
-            <p class="text-2xl font-bold text-accent-primary mt-1">{{ exchange_rates|length }}</p>
+            <p class="text-muted-fg text-sm font-medium">Paires de Change</p>
+            <p class="text-2xl font-bold text-accent mt-1">{{ exchange_rates|length }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Dernière Mise à Jour</p>
-            <p class="text-lg font-bold text-text-main mt-1">
+            <p class="text-muted-fg text-sm font-medium">Dernière Mise à Jour</p>
+            <p class="text-lg font-bold text-fg mt-1">
                 {% if last_update %}
                 {{ last_update|date:"d/m H:i" }}
                 {% else %}
@@ -45,16 +45,16 @@
 
     <!-- Currencies Grid -->
     <div class="card-dark">
-        <div class="flex items-center justify-between p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Devises Disponibles</h3>
+        <div class="flex items-center justify-between p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Devises Disponibles</h3>
         </div>
         <div class="p-5">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {% for currency in currencies %}
-                <div class="p-4 rounded-xl bg-dark-surface2 text-center">
-                    <p class="text-lg font-bold text-accent-primary">{{ currency.symbol }}</p>
-                    <p class="text-sm font-medium text-text-main">{{ currency.code }}</p>
-                    <p class="text-xs text-text-muted mt-1">{{ currency.name }}</p>
+                <div class="p-4  bg-muted text-center">
+                    <p class="text-lg font-bold text-accent">{{ currency.symbol }}</p>
+                    <p class="text-sm font-medium text-fg">{{ currency.code }}</p>
+                    <p class="text-xs text-muted-fg mt-1">{{ currency.name }}</p>
                     {% if currency.is_reference %}
                     <span class="inline-block mt-2 badge badge-success text-xs">Référence</span>
                     {% endif %}
@@ -66,8 +66,8 @@
 
     <!-- Exchange Rates Table -->
     <div class="card-dark">
-        <div class="flex items-center justify-between p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Taux de Conversion</h3>
+        <div class="flex items-center justify-between p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Taux de Conversion</h3>
             {% if user.role == 'ADMIN' %}
             <button onclick="document.getElementById('add-rate-modal').classList.remove('hidden')" class="btn-secondary text-sm">
                 <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,31 +92,31 @@
                 </thead>
                 <tbody>
                     {% for rate in exchange_rates %}
-                    <tr class="hover:bg-dark-surface2/50 transition-colors">
+                    <tr class="hover:bg-muted/50 transition-colors">
                         <td>
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-accent-primary">{{ rate.base_currency.symbol }}</span>
-                                <span class="font-medium text-text-main">{{ rate.base_currency.code }}</span>
+                                <span class="font-bold text-accent">{{ rate.base_currency.symbol }}</span>
+                                <span class="font-medium text-fg">{{ rate.base_currency.code }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="w-4 h-4 text-muted-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                                 </svg>
-                                <span class="font-bold text-accent-success">{{ rate.target_currency.symbol }}</span>
-                                <span class="font-medium text-text-main">{{ rate.target_currency.code }}</span>
+                                <span class="font-bold text-status-success">{{ rate.target_currency.symbol }}</span>
+                                <span class="font-medium text-fg">{{ rate.target_currency.code }}</span>
                             </div>
                         </td>
                         <td class="text-right">
-                            <span class="font-mono font-bold text-text-main text-lg">{{ rate.rate|floatformat:6 }}</span>
+                            <span class="font-mono font-bold text-fg text-lg">{{ rate.rate|floatformat:6 }}</span>
                         </td>
-                        <td class="text-text-secondary text-sm">
+                        <td class="text-muted-fg text-sm">
                             {{ rate.date_updated|date:"d/m/Y H:i" }}
                         </td>
                         <td class="text-right">
                             {% if user.role == 'ADMIN' %}
-                            <button onclick="openEditModal('{{ rate.id }}', '{{ rate.base_currency.code }}', '{{ rate.target_currency.code }}', {{ rate.rate }})" class="text-accent-primary hover:underline text-sm font-medium">
+                            <button onclick="openEditModal('{{ rate.id }}', '{{ rate.base_currency.code }}', '{{ rate.target_currency.code }}', {{ rate.rate }})" class="text-accent hover:underline text-sm font-medium">
                                 Éditer
                             </button>
                             {% endif %}
@@ -134,15 +134,15 @@
 
 <!-- Modal: Add New Rate -->
 <div id="add-rate-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-    <div class="bg-dark-surface rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
-        <h3 class="text-xl font-bold text-text-main mb-4">Nouveau Taux de Change</h3>
+    <div class="bg-card  p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-xl font-bold text-fg mb-4">Nouveau Taux de Change</h3>
         <form method="post" action="{% url 'core:exchange_rates' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="add">
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-2">Devise Source</label>
+                    <label class="block text-sm font-medium text-muted-fg mb-2">Devise Source</label>
                     <select name="base_currency" class="input-dark w-full" required>
                         <option value="">Choisir...</option>
                         {% for currency in currencies %}
@@ -152,7 +152,7 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-2">Devise Cible</label>
+                    <label class="block text-sm font-medium text-muted-fg mb-2">Devise Cible</label>
                     <select name="target_currency" class="input-dark w-full" required>
                         <option value="">Choisir...</option>
                         {% for currency in currencies %}
@@ -162,9 +162,9 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-2">Taux</label>
+                    <label class="block text-sm font-medium text-muted-fg mb-2">Taux</label>
                     <input type="number" name="rate" step="0.000001" min="0.000001" class="input-dark w-full" placeholder="Ex: 1.085000" required>
-                    <p class="text-xs text-text-muted mt-1">1 unité source = ? unités cible</p>
+                    <p class="text-xs text-muted-fg mt-1">1 unité source = ? unités cible</p>
                 </div>
             </div>
             
@@ -182,16 +182,16 @@
 
 <!-- Modal: Edit Rate -->
 <div id="edit-rate-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-    <div class="bg-dark-surface rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
-        <h3 class="text-xl font-bold text-text-main mb-4">Modifier Taux</h3>
-        <p class="text-text-muted mb-4" id="edit-rate-pair"></p>
+    <div class="bg-card  p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-xl font-bold text-fg mb-4">Modifier Taux</h3>
+        <p class="text-muted-fg mb-4" id="edit-rate-pair"></p>
         <form method="post" action="{% url 'core:exchange_rates' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="rate_id" id="edit-rate-id">
             
             <div>
-                <label class="block text-sm font-medium text-text-secondary mb-2">Nouveau Taux</label>
+                <label class="block text-sm font-medium text-muted-fg mb-2">Nouveau Taux</label>
                 <input type="number" name="rate" id="edit-rate-value" step="0.000001" min="0.000001" class="input-dark w-full" required>
             </div>
             

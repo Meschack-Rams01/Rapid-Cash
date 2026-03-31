@@ -58,9 +58,9 @@ function openModal(title, content, actions = '') {
     container.innerHTML = `
         <div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeModal()">
             <div class="modal-content w-full max-w-lg animate-fade-in">
-                <div class="flex items-center justify-between p-5 border-b border-dark-border">
-                    <h3 class="text-lg font-bold text-text-main">${title}</h3>
-                    <button onclick="closeModal()" class="p-1.5 rounded-lg hover:bg-dark-surface2 transition-colors text-text-muted hover:text-text-main">
+                <div class="flex items-center justify-between p-5 border-b border-border">
+                    <h3 class="text-lg font-bold text-fg font-display tracking-tight">${title}</h3>
+                    <button onclick="closeModal()" class="p-1.5 hover:bg-muted transition-colors text-muted-fg hover:text-fg">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -150,16 +150,16 @@ function updateFeePreview(inputId, previewId) {
         preview.innerHTML = `
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
-                    <span class="text-text-muted">Montant:</span>
-                    <span class="font-mono text-text-main">$${amount.toFixed(2)}</span>
+                    <span class="text-muted-fg">Montant:</span>
+                    <span class="font-mono text-fg">$${amount.toFixed(2)}</span>
                 </div>
-                <div class="flex justify-between text-accent-success">
+                <div class="flex justify-between text-status-success">
                     <span>Frais:</span>
                     <span class="font-mono">+$${fee.toFixed(2)}</span>
                 </div>
-                <div class="flex justify-between font-bold text-lg pt-2 border-t border-dark-border">
+                <div class="flex justify-between font-bold text-lg pt-2 border-t border-border">
                     <span>Total:</span>
-                    <span class="font-mono text-accent-primary">$${total.toFixed(2)}</span>
+                    <span class="font-mono text-accent">$${total.toFixed(2)}</span>
                 </div>
             </div>
         `;

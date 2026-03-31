@@ -11,72 +11,72 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <a href="{% url 'report_daily' %}" class="card-dark p-5 card-dark-hover group">
             <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-accent-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10  bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
             </div>
-            <h3 class="font-semibold text-text-main">Journalier</h3>
-            <p class="text-xs text-text-muted mt-1">Résumé des opérations du jour</p>
+            <h3 class="font-semibold text-fg">Journalier</h3>
+            <p class="text-xs text-muted-fg mt-1">Résumé des opérations du jour</p>
         </a>
         
         <a href="{% url 'export_period_report_pdf' 'weekly' %}" class="card-dark p-5 card-dark-hover group">
             <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-accent-success/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-accent-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10  bg-status-success/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
                 </div>
             </div>
-            <h3 class="font-semibold text-text-main">Hebdomadaire</h3>
-            <p class="text-xs text-text-muted mt-1">Analyse sur 7 jours</p>
+            <h3 class="font-semibold text-fg">Hebdomadaire</h3>
+            <p class="text-xs text-muted-fg mt-1">Analyse sur 7 jours</p>
         </a>
         
         <a href="{% url 'export_period_report_pdf' 'monthly' %}" class="card-dark p-5 card-dark-hover group">
             <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-accent-warning/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-accent-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10  bg-status-warning/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-status-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
                     </svg>
                 </div>
             </div>
-            <h3 class="font-semibold text-text-main">Mensuel</h3>
-            <p class="text-xs text-text-muted mt-1">Statistiques mensuelles</p>
+            <h3 class="font-semibold text-fg">Mensuel</h3>
+            <p class="text-xs text-muted-fg mt-1">Statistiques mensuelles</p>
         </a>
         
         <a href="{% url 'export_period_report_pdf' 'quarterly' %}" class="card-dark p-5 card-dark-hover group">
             <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-accent-purple/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-accent-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10  bg-status-purple/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-status-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
                     </svg>
                 </div>
             </div>
-            <h3 class="font-semibold text-text-main">Trimestriel</h3>
-            <p class="text-xs text-text-muted mt-1">Analyse trimestrielle</p>
+            <h3 class="font-semibold text-fg">Trimestriel</h3>
+            <p class="text-xs text-muted-fg mt-1">Analyse trimestrielle</p>
         </a>
         
         <a href="{% url 'export_period_report_pdf' 'yearly' %}" class="card-dark p-5 card-dark-hover group">
             <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-accent-danger/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-accent-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10  bg-status-danger/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-status-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
             </div>
-            <h3 class="font-semibold text-text-main">Annuel</h3>
-            <p class="text-xs text-text-muted mt-1">Rapport annuel complet</p>
+            <h3 class="font-semibold text-fg">Annuel</h3>
+            <p class="text-xs text-muted-fg mt-1">Rapport annuel complet</p>
         </a>
     </div>
 
     <!-- Period Filter -->
     <div class="card-dark">
-        <div class="p-5 border-b border-dark-border">
+        <div class="p-5 border-b border-border">
             <form method="GET" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
-                    <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Période</label>
-                    <select name="period" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                    <label class="block text-xs font-medium text-muted-fg uppercase tracking-wide mb-2">Période</label>
+                    <select name="period" class="input-dark w-full px-4 py-2.5">
                         <option value="daily" {% if period == 'daily' %}selected{% endif %}>Aujourd'hui</option>
                         <option value="weekly" {% if period == 'weekly' %}selected{% endif %}>Cette semaine</option>
                         <option value="monthly" {% if period == 'monthly' or not period %}selected{% endif %}>Ce mois</option>
@@ -87,8 +87,8 @@
                 
                 {% if user.role == 'ADMIN' and agents %}
                 <div class="flex-1 min-w-[200px]">
-                    <label class="block text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Agent</label>
-                    <select name="agent" class="input-dark w-full px-4 py-2.5 rounded-lg">
+                    <label class="block text-xs font-medium text-muted-fg uppercase tracking-wide mb-2">Agent</label>
+                    <select name="agent" class="input-dark w-full px-4 py-2.5">
                         <option value="">Tous les agents</option>
                         {% for agent in agents %}
                         <option value="{{ agent.id }}" {% if selected_agent == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.username }}</option>
@@ -110,21 +110,21 @@
         {% if report_data %}
         <div class="p-5">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="p-4 rounded-xl bg-dark-surface2">
-                    <p class="text-text-muted text-xs uppercase">Volume Total</p>
-                    <p class="text-xl font-bold text-text-main mt-1 font-mono">${{ report_data.total_volume|default:"0.00" }}</p>
+                <div class="p-4  bg-muted">
+                    <p class="text-muted-fg text-xs uppercase">Volume Total</p>
+                    <p class="text-xl font-bold text-fg mt-1 font-mono">${{ report_data.total_volume|default:"0.00" }}</p>
                 </div>
-                <div class="p-4 rounded-xl bg-dark-surface2">
-                    <p class="text-text-muted text-xs uppercase">Frais Collectés</p>
-                    <p class="text-xl font-bold text-accent-success mt-1 font-mono">${{ report_data.total_fees|default:"0.00" }}</p>
+                <div class="p-4  bg-muted">
+                    <p class="text-muted-fg text-xs uppercase">Frais Collectés</p>
+                    <p class="text-xl font-bold text-status-success mt-1 font-mono">${{ report_data.total_fees|default:"0.00" }}</p>
                 </div>
-                <div class="p-4 rounded-xl bg-dark-surface2">
-                    <p class="text-text-muted text-xs uppercase">Dépenses</p>
-                    <p class="text-xl font-bold text-accent-danger mt-1 font-mono">${{ report_data.total_expenses|default:"0.00" }}</p>
+                <div class="p-4  bg-muted">
+                    <p class="text-muted-fg text-xs uppercase">Dépenses</p>
+                    <p class="text-xl font-bold text-status-danger mt-1 font-mono">${{ report_data.total_expenses|default:"0.00" }}</p>
                 </div>
-                <div class="p-4 rounded-xl bg-dark-surface2">
-                    <p class="text-text-muted text-xs uppercase">Bénéfice Net</p>
-                    <p class="text-xl font-bold text-accent-purple mt-1 font-mono">${{ report_data.net_profit|default:"0.00" }}</p>
+                <div class="p-4  bg-muted">
+                    <p class="text-muted-fg text-xs uppercase">Bénéfice Net</p>
+                    <p class="text-xl font-bold text-status-purple mt-1 font-mono">${{ report_data.net_profit|default:"0.00" }}</p>
                 </div>
             </div>
             
@@ -142,23 +142,23 @@
 
     <!-- Recent Reports -->
     <div class="card-dark">
-        <div class="flex items-center justify-between p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Historique des Rapports</h3>
+        <div class="flex items-center justify-between p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Historique des Rapports</h3>
         </div>
         <div class="p-5">
             {% if recent_reports %}
             <div class="space-y-3">
                 {% for report in recent_reports %}
-                <div class="flex items-center justify-between p-4 rounded-xl bg-dark-surface2 hover:bg-dark-surface3 transition-colors">
+                <div class="flex items-center justify-between p-4  bg-muted hover:bg-muted transition-colors">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 bg-accent/10 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="font-medium text-text-main">{{ report.title }}</p>
-                            <p class="text-xs text-text-muted">{{ report.date|date:"d/m/Y" }}</p>
+                            <p class="font-medium text-fg">{{ report.title }}</p>
+                            <p class="text-xs text-muted-fg">{{ report.date|date:"d/m/Y" }}</p>
                         </div>
                     </div>
                     <a href="{{ report.url }}" class="btn-secondary text-sm">Télécharger</a>
@@ -166,7 +166,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <p class="text-text-muted text-center py-8">Aucun rapport généré récemment</p>
+            <p class="text-muted-fg text-center py-8">Aucun rapport généré récemment</p>
             {% endif %}
         </div>
     </div>

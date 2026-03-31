@@ -7,18 +7,18 @@
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-text-main mb-2">💵 Tableau de Bord Paie</h1>
-        <p class="text-text-secondary">Gestion des salaires mensuels et paiements</p>
+        <h1 class="text-3xl font-bold text-fg mb-2">💵 Tableau de Bord Paie</h1>
+        <p class="text-muted-fg">Gestion des salaires mensuels et paiements</p>
     </div>
 
     <!-- Alertes -->
     {% if payment_warning %}
-    <div class="mb-6 p-4 rounded-lg bg-accent-warning/10 border border-accent-warning/20">
+    <div class="mb-6 p-4 bg-status-warning/10 border border-status-warning/20">
         <div class="flex items-center">
-            <svg class="w-5 h-5 text-accent-warning mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 text-status-warning mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
             </svg>
-            <span class="text-accent-warning font-medium">{{ payment_warning }}</span>
+            <span class="text-status-warning font-medium">{{ payment_warning }}</span>
         </div>
     </div>
     {% endif %}
@@ -27,10 +27,10 @@
     {% if messages %}
     <div class="mb-6">
         {% for message in messages %}
-        <div class="p-4 rounded-lg text-sm font-medium 
-            {% if message.tags == 'success' %}bg-accent-success/10 border border-accent-success/20 text-accent-success
-            {% elif message.tags == 'error' %}bg-accent-danger/10 border border-accent-danger/20 text-accent-danger
-            {% else %}bg-accent-warning/10 border border-accent-warning/20 text-accent-warning{% endif %}">
+        <div class="p-4 text-sm font-medium 
+            {% if message.tags == 'success' %}bg-status-success/10 border border-status-success/20 text-status-success
+            {% elif message.tags == 'error' %}bg-status-danger/10 border border-status-danger/20 text-status-danger
+            {% else %}bg-status-warning/10 border border-status-warning/20 text-status-warning{% endif %}">
             {{ message }}
         </div>
         {% endfor %}
@@ -40,78 +40,110 @@
     <!-- Statistiques principales -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <!-- Total des salaires -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
+        <div class="bg-card border border-border  p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-accent-primary/10 rounded-lg">
-                    <svg class="w-6 h-6 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="p-3 bg-accent/10">
+                    <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                 </div>
-                <span class="text-xs text-text-muted uppercase tracking-wide">Total Salaires</span>
+                <span class="text-xs text-muted-fg uppercase tracking-wide">Total Salaires</span>
             </div>
-            <div class="text-2xl font-bold text-text-main">${{ total_salaries|floatformat:2 }}</div>
-            <p class="text-sm text-text-secondary mt-1">Pour {{ period.month|stringformat:"02d" }}/{{ period.year }}</p>
+            <div class="text-2xl font-bold text-fg">${{ total_salaries|floatformat:2 }}</div>
+            <p class="text-sm text-muted-fg mt-1">Pour {{ period.month|stringformat:"02d" }}/{{ period.year }}</p>
         </div>
 
         <!-- Total payé -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
+        <div class="bg-card border border-border  p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-accent-success/10 rounded-lg">
-                    <svg class="w-6 h-6 text-accent-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="p-3 bg-status-success/10">
+                    <svg class="w-6 h-6 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
-                <span class="text-xs text-text-muted uppercase tracking-wide">Payé</span>
+                <span class="text-xs text-muted-fg uppercase tracking-wide">Payé</span>
             </div>
-            <div class="text-2xl font-bold text-text-main">${{ total_paid|floatformat:2 }}</div>
-            <p class="text-sm text-text-secondary mt-1">Montant déjà versé</p>
+            <div class="text-2xl font-bold text-fg">${{ total_paid|floatformat:2 }}</div>
+            <p class="text-sm text-muted-fg mt-1">Montant déjà versé</p>
         </div>
 
         <!-- Restant à payer -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
+        <div class="bg-card border border-border  p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-accent-warning/10 rounded-lg">
-                    <svg class="w-6 h-6 text-accent-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="p-3 bg-status-warning/10">
+                    <svg class="w-6 h-6 text-status-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
-                <span class="text-xs text-text-muted uppercase tracking-wide">À Payer</span>
+                <span class="text-xs text-muted-fg uppercase tracking-wide">À Payer</span>
             </div>
-            <div class="text-2xl font-bold text-text-main">${{ pending_payment|floatformat:2 }}</div>
-            <p class="text-sm text-text-secondary mt-1">Reste à payer</p>
+            <div class="text-2xl font-bold text-fg">${{ pending_payment|floatformat:2 }}</div>
+            <p class="text-sm text-muted-fg mt-1">Reste à payer</p>
         </div>
 
         <!-- Actions -->
-        <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
+        <div class="bg-card border border-border  p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-accent-purple/10 rounded-lg">
-                    <svg class="w-6 h-6 text-accent-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="p-3 bg-status-purple/10">
+                    <svg class="w-6 h-6 text-status-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                     </svg>
                 </div>
-                <span class="text-xs text-text-muted uppercase tracking-wide">Actions</span>
+                <span class="text-xs text-muted-fg uppercase tracking-wide">Actions</span>
             </div>
             <div class="space-y-2">
-                <a href="{% url 'core:calculate_salaries' %}" class="block w-full text-center px-3 py-2 bg-accent-primary hover:bg-accent-primary-hover text-white rounded-lg transition-colors text-sm font-medium">
+                <a href="{% url 'core:calculate_salaries' %}" class="block w-full text-center px-3 py-2 bg-accent hover:bg-accent-hover text-white transition-colors text-sm font-medium">
                     Calculer Salaires
                 </a>
-                <a href="{% url 'core:capital_management' %}" class="block w-full text-center px-3 py-2 bg-dark-surface3 hover:bg-dark-border text-text-secondary rounded-lg transition-colors text-sm font-medium">
-                    Gérer Capital
+                <a href="{% url 'dashboard' %}" class="block w-full text-center px-3 py-2 bg-muted hover:bg-border text-muted-fg transition-colors text-sm font-medium">
+                    Tableau de Bord
                 </a>
             </div>
         </div>
     </div>
 
+    <!-- Calculs financiers -->
+    <div class="bg-card border border-border  p-6 mb-8">
+        <h2 class="text-xl font-bold text-fg mb-6 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            Synthèse Financière de la Période
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="flex flex-col py-3 border-b md:border-b-0 md:border-r border-border">
+                <span class="text-muted-fg mb-1">Total des frais (Revenus)</span>
+                <span class="text-status-success font-medium text-lg">${{ period.total_fees|floatformat:2 }}</span>
+            </div>
+            
+            <div class="flex flex-col py-3 border-b md:border-b-0 md:border-r border-border">
+                <span class="text-muted-fg mb-1">Dépenses Opérationnelles</span>
+                <span class="text-status-danger font-medium text-lg">${{ period.total_expenses|floatformat:2 }}</span>
+            </div>
+            
+            <div class="flex flex-col py-3 border-b md:border-b-0 md:border-r border-border">
+                <span class="text-muted-fg mb-1">Montant Réservé ({{ period.reserve_percentage }}%)</span>
+                <span class="text-status-warning font-medium text-lg">${{ period.reserve_amount|floatformat:2 }}</span>
+            </div>
+            
+            <div class="flex flex-col py-3">
+                <span class="text-muted-fg font-medium mb-1">Bénéfice Net à Distribuer</span>
+                <span class="text-accent font-bold text-2xl">${{ period.net_profit|floatformat:2 }}</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Détails des salaires -->
-    <div class="bg-dark-surface1 border border-dark-border rounded-xl p-6">
+    <div class="bg-card border border-border  p-6">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-text-main flex items-center">
-                <svg class="w-5 h-5 mr-2 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <h2 class="text-xl font-bold text-fg flex items-center">
+                <svg class="w-5 h-5 mr-2 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7v-2a3 3 0 00-5.356-1.857M7 20v-2a3 3 0 015.356-1.857m0 0a5.002 5.002 0 019.288 1.857M17 16.143V7a2 2 0 00-2-2H7a2 2 0 00-2 2v9.143m0 0a5.002 5.002 0 019.288 0M9 9h6m-6 4h6"/>
                 </svg>
                 Salaires des Agents
             </h2>
-            <span class="text-sm text-text-muted">
+            <span class="text-sm text-muted-fg">
                 Période: {{ period.month|stringformat:"02d" }}/{{ period.year }}
             </span>
         </div>
@@ -120,55 +152,55 @@
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="border-b border-dark-border">
-                        <th class="text-left py-3 px-4 text-text-secondary font-medium">Agent</th>
-                        <th class="text-left py-3 px-4 text-text-secondary font-medium">%</th>
-                        <th class="text-right py-3 px-4 text-text-secondary font-medium">Salaire Base</th>
-                        <th class="text-right py-3 px-4 text-text-secondary font-medium">Bonus</th>
-                        <th class="text-right py-3 px-4 text-text-secondary font-medium">Total</th>
-                        <th class="text-right py-3 px-4 text-text-secondary font-medium">Payé</th>
-                        <th class="text-right py-3 px-4 text-text-secondary font-medium">Restant</th>
-                        <th class="text-center py-3 px-4 text-text-secondary font-medium">Statut</th>
-                        <th class="text-center py-3 px-4 text-text-secondary font-medium">Actions</th>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-3 px-4 text-muted-fg font-medium">Agent</th>
+                        <th class="text-left py-3 px-4 text-muted-fg font-medium">%</th>
+                        <th class="text-right py-3 px-4 text-muted-fg font-medium">Salaire Base</th>
+                        <th class="text-right py-3 px-4 text-muted-fg font-medium">Bonus</th>
+                        <th class="text-right py-3 px-4 text-muted-fg font-medium">Total</th>
+                        <th class="text-right py-3 px-4 text-muted-fg font-medium">Payé</th>
+                        <th class="text-right py-3 px-4 text-muted-fg font-medium">Restant</th>
+                        <th class="text-center py-3 px-4 text-muted-fg font-medium">Statut</th>
+                        <th class="text-center py-3 px-4 text-muted-fg font-medium">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for salary in salaries %}
-                    <tr class="border-b border-dark-border hover:bg-dark-surface2 transition-colors">
+                    <tr class="border-b border-border hover:bg-muted transition-colors">
                         <td class="py-3 px-4">
                             <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center mr-3">
-                                    <span class="text-xs font-medium text-accent-primary">{{ salary.agent.username.0|upper }}</span>
+                                <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center mr-3">
+                                    <span class="text-xs font-medium text-accent">{{ salary.agent.username.0|upper }}</span>
                                 </div>
-                                <span class="text-text-main font-medium">{{ salary.agent.username }}</span>
+                                <span class="text-fg font-medium">{{ salary.agent.username }}</span>
                             </div>
                         </td>
-                        <td class="py-3 px-4 text-text-secondary">{{ salary.commission_percentage }}%</td>
-                        <td class="py-3 px-4 text-right text-text-main">${{ salary.base_salary|floatformat:2 }}</td>
-                        <td class="py-3 px-4 text-right text-text-secondary">${{ salary.bonus_amount|floatformat:2 }}</td>
-                        <td class="py-3 px-4 text-right font-medium text-accent-primary">${{ salary.total_salary|floatformat:2 }}</td>
-                        <td class="py-3 px-4 text-right text-text-main">${{ salary.paid_amount|floatformat:2 }}</td>
-                        <td class="py-3 px-4 text-right {% if salary.get_remaining_amount > 0 %}text-accent-warning{% else %}text-accent-success{% endif %}">
+                        <td class="py-3 px-4 text-muted-fg">{{ salary.commission_percentage }}%</td>
+                        <td class="py-3 px-4 text-right text-fg">${{ salary.base_salary|floatformat:2 }}</td>
+                        <td class="py-3 px-4 text-right text-muted-fg">${{ salary.bonus_amount|floatformat:2 }}</td>
+                        <td class="py-3 px-4 text-right font-medium text-accent">${{ salary.total_salary|floatformat:2 }}</td>
+                        <td class="py-3 px-4 text-right text-fg">${{ salary.paid_amount|floatformat:2 }}</td>
+                        <td class="py-3 px-4 text-right {% if salary.get_remaining_amount > 0 %}text-status-warning{% else %}text-status-success{% endif %}">
                             ${{ salary.get_remaining_amount|floatformat:2 }}
                         </td>
                         <td class="py-3 px-4 text-center">
                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                {% if salary.status == 'PAID' %}bg-accent-success/10 text-accent-success
-                                {% elif salary.status == 'PARTIAL' %}bg-accent-warning/10 text-accent-warning
-                                {% else %}bg-accent-danger/10 text-accent-danger{% endif %}">
+                                {% if salary.status == 'PAID' %}bg-status-success/10 text-status-success
+                                {% elif salary.status == 'PARTIAL' %}bg-status-warning/10 text-status-warning
+                                {% else %}bg-status-danger/10 text-status-danger{% endif %}">
                                 {{ salary.get_status_display }}
                             </span>
                         </td>
                         <td class="py-3 px-4">
                             <div class="flex justify-center space-x-2">
                                 {% if salary.status != 'PAID' %}
-                                <a href="{% url 'core:pay_salary' salary.id %}" class="text-accent-success hover:text-accent-success-hover transition-colors" title="Payer">
+                                <a href="{% url 'core:pay_salary' salary.id %}" class="text-status-success hover:text-status-success-hover transition-colors" title="Payer">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </a>
                                 {% endif %}
-                                <a href="{% url 'core:add_bonus' salary.id %}" class="text-accent-purple hover:text-accent-purple-hover transition-colors" title="Ajouter Bonus">
+                                <a href="{% url 'core:add_bonus' salary.id %}" class="text-status-purple hover:text-status-purple-hover transition-colors" title="Ajouter Bonus">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                                     </svg>
@@ -182,14 +214,14 @@
         </div>
         {% else %}
         <div class="text-center py-12">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-dark-surface3 mb-4">
-                <svg class="w-8 h-8 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                <svg class="w-8 h-8 text-muted-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7v-2a3 3 0 00-5.356-1.857M7 20v-2a3 3 0 015.356-1.857m0 0a5.002 5.002 0 019.288 1.857M17 16.143V7a2 2 0 00-2-2H7a2 2 0 00-2 2v9.143m0 0a5.002 5.002 0 019.288 0M9 9h6m-6 4h6"/>
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-text-main mb-2">Aucun salaire trouvé</h3>
-            <p class="text-text-secondary mb-6">Les salaires n'ont pas encore été calculés pour cette période.</p>
-            <a href="{% url 'core:calculate_salaries' %}" class="inline-flex items-center px-6 py-3 bg-accent-primary hover:bg-accent-primary-hover text-white rounded-lg transition-colors font-medium">
+            <h3 class="text-lg font-medium text-fg mb-2">Aucun salaire trouvé</h3>
+            <p class="text-muted-fg mb-6">Les salaires n'ont pas encore été calculés pour cette période.</p>
+            <a href="{% url 'core:calculate_salaries' %}" class="inline-flex items-center px-6 py-3 bg-accent hover:bg-accent-hover text-white transition-colors font-medium">
                 <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                 </svg>
@@ -200,12 +232,9 @@
     </div>
 
     <!-- Navigation -->
-    <div class="mt-8 flex justify-between items-center">
-        <a href="{% url 'core:capital_management' %}" class="px-6 py-3 bg-dark-surface3 hover:bg-dark-border text-text-secondary rounded-lg transition-colors">
-            ← Gestion du Capital
-        </a>
-        <a href="{% url 'core:payroll_dashboard' %}" class="px-6 py-3 bg-dark-surface3 hover:bg-dark-border text-text-secondary rounded-lg transition-colors">
-            Retour au Dashboard
+    <div class="mt-8 flex justify-center items-center">
+        <a href="{% url 'dashboard' %}" class="px-6 py-3 bg-muted hover:bg-border text-muted-fg transition-colors">
+            ← Retour au Dashboard
         </a>
     </div>
 </div>

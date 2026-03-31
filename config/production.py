@@ -22,10 +22,27 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
+# Whitenoise for static files
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Database configuration for production
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
+
+# Redis Cache configuration (Fly.io Redis or Upstash)
+REDIS_URL = os.environ.get('REDIS_URL', os.environ.get('FLY_REDIS_CACHE_URL', 'redis://localhost:6379/1'))
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': REDIS_URL,
+    }
+}
+
+# Celery configuration for Fly.io
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', os.environ.get('FLY_REDIS_CACHE_URL', 'redis://localhost:6379/0'))
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', os.environ.get('FLY_REDIS_CACHE_URL', 'redis://localhost:6379/0'))
 
 # Logging configuration
 LOGGING = {

@@ -9,19 +9,19 @@
 <div class="max-w-4xl mx-auto space-y-6">
     <!-- Profile Header -->
     <div class="card-dark">
-        <div class="p-6 border-b border-dark-border">
+        <div class="p-6 border-b border-border">
             <div class="flex items-center gap-6">
                 <!-- Profile Picture -->
                 <div class="relative">
                     {% if user.profile_picture %}
                         <img src="{{ user.profile_picture.url }}" alt="Photo de profil" 
-                             class="w-24 h-24 rounded-full object-cover border-4 border-dark-border">
+                             class="w-24 h-24 rounded-full object-cover border-4 border-border">
                     {% else %}
-                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-accent-primary to-accent-purple flex items-center justify-center text-white font-bold text-2xl border-4 border-dark-border">
+                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-status-purple flex items-center justify-center text-white font-bold text-2xl border-4 border-border">
                             {{ user.username|make_list|first|upper }}
                         </div>
                     {% endif %}
-                    <label for="id_profile_picture" class="absolute bottom-0 right-0 w-8 h-8 bg-accent-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-accent-purple transition-colors">
+                    <label for="id_profile_picture" class="absolute bottom-0 right-0 w-8 h-8 bg-accent rounded-full flex items-center justify-center cursor-pointer hover:bg-status-purple transition-colors">
                         <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -31,21 +31,21 @@
                 
                 <!-- User Info -->
                 <div class="flex-1">
-                    <h2 class="text-2xl font-bold text-text-main">{{ user.get_full_name|default:user.username }}</h2>
-                    <p class="text-text-muted">{{ user.get_role_display }}</p>
-                    <p class="text-sm text-text-muted mt-1">{{ user.email }}</p>
+                    <h2 class="text-2xl font-bold text-fg">{{ user.get_full_name|default:user.username }}</h2>
+                    <p class="text-muted-fg">{{ user.get_role_display }}</p>
+                    <p class="text-sm text-muted-fg mt-1">{{ user.email }}</p>
                     {% if user.phone %}
-                    <p class="text-sm text-text-muted">{{ user.phone }}</p>
+                    <p class="text-sm text-muted-fg">{{ user.phone }}</p>
                     {% endif %}
                 </div>
                 
                 <!-- Stats -->
                 <div class="text-right">
-                    <div class="text-sm text-text-muted">Membre depuis</div>
-                    <div class="font-medium text-text-main">{{ user.date_joined|date:"d F Y" }}</div>
+                    <div class="text-sm text-muted-fg">Membre depuis</div>
+                    <div class="font-medium text-fg">{{ user.date_joined|date:"d F Y" }}</div>
                     {% if user.role == 'AGENT' %}
-                    <div class="text-sm text-text-muted mt-2">Commission</div>
-                    <div class="font-medium text-accent-success">{{ user.commission_rate }}%</div>
+                    <div class="text-sm text-muted-fg mt-2">Commission</div>
+                    <div class="font-medium text-status-success">{{ user.commission_rate }}%</div>
                     {% endif %}
                 </div>
             </div>
@@ -55,21 +55,21 @@
     <!-- Edit Profile Form -->
     <form method="POST" enctype="multipart/form-data" class="card-dark">
         {% csrf_token %}
-        <div class="p-6 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Informations Personnelles</h3>
-            <p class="text-sm text-text-muted mt-1">Mettez à jour vos informations personnelles</p>
+        <div class="p-6 border-b border-border">
+            <h3 class="font-bold text-fg">Informations Personnelles</h3>
+            <p class="text-sm text-muted-fg mt-1">Mettez à jour vos informations personnelles</p>
         </div>
         
         <div class="p-6 space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- First Name -->
                 <div>
-                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
+                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-fg mb-2">
                         {{ form.first_name.label }}
                     </label>
                     {{ form.first_name }}
                     {% if form.first_name.errors %}
-                    <div class="text-accent-danger text-sm mt-1">
+                    <div class="text-status-danger text-sm mt-1">
                         {{ form.first_name.errors.0 }}
                     </div>
                     {% endif %}
@@ -77,12 +77,12 @@
                 
                 <!-- Last Name -->
                 <div>
-                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
+                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-fg mb-2">
                         {{ form.last_name.label }}
                     </label>
                     {{ form.last_name }}
                     {% if form.last_name.errors %}
-                    <div class="text-accent-danger text-sm mt-1">
+                    <div class="text-status-danger text-sm mt-1">
                         {{ form.last_name.errors.0 }}
                     </div>
                     {% endif %}
@@ -90,12 +90,12 @@
                 
                 <!-- Email -->
                 <div>
-                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-fg mb-2">
                         {{ form.email.label }}
                     </label>
                     {{ form.email }}
                     {% if form.email.errors %}
-                    <div class="text-accent-danger text-sm mt-1">
+                    <div class="text-status-danger text-sm mt-1">
                         {{ form.email.errors.0 }}
                     </div>
                     {% endif %}
@@ -103,12 +103,12 @@
                 
                 <!-- Phone -->
                 <div>
-                    <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
+                    <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-fg mb-2">
                         {{ form.phone.label }}
                     </label>
                     {{ form.phone }}
                     {% if form.phone.errors %}
-                    <div class="text-accent-danger text-sm mt-1">
+                    <div class="text-status-danger text-sm mt-1">
                         {{ form.phone.errors.0 }}
                     </div>
                     {% endif %}
@@ -117,22 +117,22 @@
             
             <!-- Profile Picture -->
             <div>
-                <label for="{{ form.profile_picture.id_for_label }}" class="block text-sm font-medium text-text-main mb-2">
+                <label for="{{ form.profile_picture.id_for_label }}" class="block text-sm font-medium text-fg mb-2">
                     {{ form.profile_picture.label }}
                 </label>
                 <div class="flex items-center gap-4">
                     {{ form.profile_picture }}
-                    <span class="text-sm text-text-muted">Formats acceptés: JPG, PNG, GIF (max 5MB)</span>
+                    <span class="text-sm text-muted-fg">Formats acceptés: JPG, PNG, GIF (max 5MB)</span>
                 </div>
                 {% if form.profile_picture.errors %}
-                <div class="text-accent-danger text-sm mt-1">
+                <div class="text-status-danger text-sm mt-1">
                     {{ form.profile_picture.errors.0 }}
                 </div>
                 {% endif %}
             </div>
         </div>
         
-        <div class="p-6 border-t border-dark-border flex justify-end gap-3">
+        <div class="p-6 border-t border-border flex justify-end gap-3">
             <a href="{% url 'dashboard' %}" class="btn-secondary">Annuler</a>
             <button type="submit" class="btn-primary">
                 <svg class="w-4 h-4 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,15 +145,15 @@
     
     <!-- Security Section -->
     <div class="card-dark">
-        <div class="p-6 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Sécurité</h3>
-            <p class="text-sm text-text-muted mt-1">Gérez votre mot de passe</p>
+        <div class="p-6 border-b border-border">
+            <h3 class="font-bold text-fg">Sécurité</h3>
+            <p class="text-sm text-muted-fg mt-1">Gérez votre mot de passe</p>
         </div>
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-medium text-text-main">Mot de passe</p>
-                    <p class="text-sm text-text-muted">Dernière modification: Il y a {{ user.last_login|timesince }}</p>
+                    <p class="font-medium text-fg">Mot de passe</p>
+                    <p class="text-sm text-muted-fg">Dernière modification: Il y a {{ user.last_login|timesince }}</p>
                 </div>
                 <button class="btn-secondary text-sm">
                     <svg class="w-4 h-4 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">

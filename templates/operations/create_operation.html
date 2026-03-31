@@ -55,32 +55,32 @@
     <div class="card-dark">
         <div class="p-6 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-12 h-12  bg-accent/10 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-text-main">{{ agent_caisse.name }}</h3>
-                    <p class="text-sm text-text-muted">ID: #{{ agent_caisse.id }} | Agent: {{ agent_caisse.agent.username }}</p>
+                    <h3 class="text-lg font-bold text-fg">{{ agent_caisse.name }}</h3>
+                    <p class="text-sm text-muted-fg">ID: #{{ agent_caisse.id }} | Agent: {{ agent_caisse.agent.username }}</p>
                 </div>
             </div>
             <div class="text-right">
-                <p class="text-xs text-text-muted uppercase tracking-wider mb-1">Solde Actuel</p>
-                <p class="text-2xl font-bold text-accent-primary">{{ agent_caisse.balance|floatformat:2 }} {{ agent_caisse.currency.code }}</p>
+                <p class="text-xs text-muted-fg uppercase tracking-wider mb-1">Solde Actuel</p>
+                <p class="text-2xl font-bold text-accent">{{ agent_caisse.balance|floatformat:2 }} {{ agent_caisse.currency.code }}</p>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="card-dark border-accent-danger/30">
+    <div class="card-dark border-status-danger/30">
         <div class="p-8">
-            <div class="flex items-center gap-4 text-accent-danger">
+            <div class="flex items-center gap-4 text-status-danger">
                 <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
                 <div>
-                    <h3 class="text-lg font-bold text-text-main">Aucune Caisse Assignée</h3>
-                    <p class="text-sm text-text-muted">Veuillez contacter l'administrateur pour qu'une caisse vous soit assignée.</p>
+                    <h3 class="text-lg font-bold text-fg">Aucune Caisse Assignée</h3>
+                    <p class="text-sm text-muted-fg">Veuillez contacter l'administrateur pour qu'une caisse vous soit assignée.</p>
                 </div>
             </div>
         </div>
@@ -93,25 +93,25 @@
             <div class="flex items-center justify-between">
                 <div class="flex flex-col items-center cursor-pointer" @click="setStep(1)">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
-                         :class="step > 1 ? 'bg-accent-success text-white' : (step === 1 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         :class="step > 1 ? 'bg-status-success text-white' : (step === 1 ? 'bg-accent text-white scale-110' : 'bg-muted text-muted-fg')"
                          x-text="step > 1 ? '✓' : '1'"></div>
-                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 1 ? 'text-text-main' : 'text-text-muted'">Type</span>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 1 ? 'text-fg' : 'text-muted-fg'">Type</span>
                 </div>
-                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-500" :style="step > 1 ? 'width: 100%' : (step === 1 ? 'width: 50%' : 'width: 0%')"></div></div>
+                <div class="flex-1 h-1 bg-border mx-2 rounded"><div class="h-full bg-accent rounded transition-all duration-500" :style="step > 1 ? 'width: 100%' : (step === 1 ? 'width: 50%' : 'width: 0%')"></div></div>
                 
                 <div class="flex flex-col items-center" :class="opType ? 'cursor-pointer' : 'opacity-50'" @click="opType && setStep(2)">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
-                         :class="step > 2 ? 'bg-accent-success text-white' : (step === 2 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         :class="step > 2 ? 'bg-status-success text-white' : (step === 2 ? 'bg-accent text-white scale-110' : 'bg-muted text-muted-fg')"
                          x-text="step > 2 ? '✓' : '2'"></div>
-                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 2 ? 'text-text-main' : 'text-text-muted'">Détails</span>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 2 ? 'text-fg' : 'text-muted-fg'">Détails</span>
                 </div>
-                <div class="flex-1 h-1 bg-dark-border mx-2 rounded"><div class="h-full bg-accent-primary rounded transition-all duration-500" :style="step > 2 ? 'width: 100%' : (step === 2 ? 'width: 50%' : 'width: 0%')"></div></div>
+                <div class="flex-1 h-1 bg-border mx-2 rounded"><div class="h-full bg-accent rounded transition-all duration-500" :style="step > 2 ? 'width: 100%' : (step === 2 ? 'width: 50%' : 'width: 0%')"></div></div>
                 
                 <div class="flex flex-col items-center" :class="isAmountValid ? 'cursor-pointer' : 'opacity-50'" @click="isAmountValid && setStep(3)">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg transition-all duration-300"
-                         :class="step > 3 ? 'bg-accent-success text-white' : (step === 3 ? 'bg-accent-primary text-white scale-110' : 'bg-dark-surface3 text-text-muted')"
+                         :class="step > 3 ? 'bg-status-success text-white' : (step === 3 ? 'bg-accent text-white scale-110' : 'bg-muted text-muted-fg')"
                          x-text="step > 3 ? '✓' : '3'"></div>
-                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 3 ? 'text-text-main' : 'text-text-muted'">Confirme</span>
+                    <span class="text-xs font-medium mt-2 transition-colors duration-300" :class="step >= 3 ? 'text-fg' : 'text-muted-fg'">Confirme</span>
                 </div>
             </div>
         </div>
@@ -124,9 +124,9 @@
 
         <!-- Messages -->
         {% if messages %}
-        <div class="p-6 border-b border-dark-border">
+        <div class="p-6 border-b border-border">
             {% for message in messages %}
-            <div class="p-4 rounded-xl text-sm font-medium {% if message.tags == 'error' %}text-accent-danger bg-accent-danger/10 border border-accent-danger/20{% else %}text-accent-success bg-accent-success/10 border border-accent-success/20{% endif %}">
+            <div class="p-4  text-sm font-medium {% if message.tags == 'error' %}text-status-danger bg-status-danger/10 border border-status-danger/20{% else %}text-status-success bg-status-success/10 border border-status-success/20{% endif %}">
                 {{ message }}
             </div>
             {% endfor %}
@@ -137,27 +137,27 @@
             <!-- Step 1: Operation Type -->
             <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                 <div class="mb-8">
-                    <h3 class="text-xl font-bold text-text-main mb-2">Choisir le Type d'Opération</h3>
-                    <p class="text-text-muted">Quelle transaction souhaitez-vous effectuer aujourd'hui ?</p>
+                    <h3 class="text-xl font-bold text-fg mb-2">Choisir le Type d'Opération</h3>
+                    <p class="text-muted-fg">Quelle transaction souhaitez-vous effectuer aujourd'hui ?</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <label class="relative cursor-pointer group">
                         <input type="radio" name="type" value="TRANSFER" class="peer sr-only" x-model="opType" @change="setStep(2)">
-                        <div class="p-8 border-2 rounded-2xl transition-all duration-500 border-dark-border h-full flex flex-col items-center text-center
-                                    peer-checked:border-accent-primary peer-checked:bg-accent-primary/5 peer-checked:shadow-[0_0_20px_rgba(79,142,247,0.15)]
-                                    hover:border-accent-primary/40 group-hover:scale-[1.02] bg-dark-surface1">
-                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
+                        <div class="p-8 border-2  transition-all duration-500 border-border h-full flex flex-col items-center text-center
+                                    peer-checked:border-accent peer-checked:bg-accent/5 peer-checked:shadow-[0_0_20px_rgba(79,142,247,0.15)]
+                                    hover:border-accent/40 group-hover:scale-[1.02] bg-card">
+                            <div class="w-20 h-20  bg-gradient-to-br from-status-info to-status-info flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
                                 <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                                 </svg>
                             </div>
-                            <h4 class="text-xl font-bold text-text-main mb-2">Transfert</h4>
-                            <p class="text-sm text-text-muted leading-relaxed">Réception de fonds du client vers la caisse.</p>
+                            <h4 class="text-xl font-bold text-fg mb-2">Transfert</h4>
+                            <p class="text-sm text-muted-fg leading-relaxed">Réception de fonds du client vers la caisse.</p>
                             
                             <!-- Checkmark icon for selected state -->
                             <div class="absolute top-4 right-4 opacity-0 transition-opacity duration-300 peer-checked:opacity-100">
-                                <div class="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center">
+                                <div class="w-6 h-6 rounded-full bg-accent flex items-center justify-center">
                                     <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                                     </svg>
@@ -168,20 +168,20 @@
                     
                     <label class="relative cursor-pointer group">
                         <input type="radio" name="type" value="WITHDRAWAL" class="peer sr-only" x-model="opType" @change="setStep(2)">
-                        <div class="p-8 border-2 rounded-2xl transition-all duration-500 border-dark-border h-full flex flex-col items-center text-center
-                                    peer-checked:border-accent-success peer-checked:bg-accent-success/5 peer-checked:shadow-[0_0_20px_rgba(16,185,129,0.15)]
-                                    hover:border-accent-success/40 group-hover:scale-[1.02] bg-dark-surface1">
-                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
+                        <div class="p-8 border-2  transition-all duration-500 border-border h-full flex flex-col items-center text-center
+                                    peer-checked:border-status-success peer-checked:bg-status-success/5 peer-checked:shadow-[0_0_20px_rgba(16,185,129,0.15)]
+                                    hover:border-status-success/40 group-hover:scale-[1.02] bg-card">
+                            <div class="w-20 h-20  bg-gradient-to-br from-status-success to-status-success flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-lg">
                                 <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                                 </svg>
                             </div>
-                            <h4 class="text-xl font-bold text-text-main mb-2">Retrait</h4>
-                            <p class="text-sm text-text-muted leading-relaxed">Distribution de fonds de la caisse vers le client.</p>
+                            <h4 class="text-xl font-bold text-fg mb-2">Retrait</h4>
+                            <p class="text-sm text-muted-fg leading-relaxed">Distribution de fonds de la caisse vers le client.</p>
                             
                             <!-- Checkmark icon for selected state -->
                             <div class="absolute top-4 right-4 opacity-0 transition-opacity duration-300 peer-checked:opacity-100">
-                                <div class="w-6 h-6 rounded-full bg-accent-success flex items-center justify-center">
+                                <div class="w-6 h-6 rounded-full bg-status-success flex items-center justify-center">
                                     <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                                     </svg>
@@ -196,10 +196,10 @@
             <div x-show="step === 2" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-cloak>
                 <div class="mb-8 flex items-center justify-between">
                     <div>
-                        <h3 class="text-xl font-bold text-text-main mb-2">Montant et Dévises</h3>
-                        <p class="text-text-muted">Spécifiez le montant de la transaction.</p>
+                        <h3 class="text-xl font-bold text-fg mb-2">Montant et Dévises</h3>
+                        <p class="text-muted-fg">Spécifiez le montant de la transaction.</p>
                     </div>
-                    <button type="button" @click="setStep(1)" class="p-2 text-text-muted hover:text-accent-primary transition-colors">
+                    <button type="button" @click="setStep(1)" class="p-2 text-muted-fg hover:text-accent transition-colors">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/>
                         </svg>
@@ -208,9 +208,9 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div class="space-y-4">
-                        <label class="block text-sm font-semibold text-text-main">Montant de la transaction *</label>
+                        <label class="block text-sm font-semibold text-fg">Montant de la transaction *</label>
                         {{ form.amount_orig }}
-                        <div class="flex items-center gap-2 p-3 rounded-lg bg-dark-surface3/50 text-xs text-text-muted">
+                        <div class="flex items-center gap-2 p-3 bg-muted/50 text-xs text-muted-fg">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 01-18 0z"/>
                             </svg>
@@ -219,50 +219,50 @@
                     </div>
                     
                     <div class="space-y-4">
-                        <label class="block text-sm font-semibold text-text-main">Devise Utilisée *</label>
+                        <label class="block text-sm font-semibold text-fg">Devise Utilisée *</label>
                         {{ form.currency_orig }}
                     </div>
                 </div>
 
                 <!-- Live Calculation Card -->
-                <div class="p-6 rounded-2xl border-2 transition-all duration-300" 
-                     :class="!amount || amount <= 0 ? 'bg-dark-surface2 border-dark-border opacity-50' : (isAmountValid ? 'bg-accent-success/5 border-accent-success/20' : 'bg-accent-danger/5 border-accent-danger/20')">
+                <div class="p-6  border-2 transition-all duration-300" 
+                     :class="!amount || amount <= 0 ? 'bg-muted border-border opacity-50' : (isAmountValid ? 'bg-status-success/5 border-status-success/20' : 'bg-status-danger/5 border-status-danger/20')">
                     
                     <div class="space-y-4">
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-text-muted">Solde de la caisse :</span>
-                            <span class="font-bold text-text-main" x-text="`${caisseBalance.toFixed(2)} ${caisseCurrency}`"></span>
+                            <span class="text-muted-fg">Solde de la caisse :</span>
+                            <span class="font-bold text-fg" x-text="`${caisseBalance.toFixed(2)} ${caisseCurrency}`"></span>
                         </div>
                         
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-text-muted">Frais calculés :</span>
-                            <span class="font-bold text-accent-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
+                            <span class="text-muted-fg">Frais calculés :</span>
+                            <span class="font-bold text-status-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
                         </div>
 
-                        <div class="pt-4 border-t border-dark-border/10 flex items-center justify-between">
+                        <div class="pt-4 border-t border-border/10 flex items-center justify-between">
                             <div>
-                                <p class="text-xs text-text-muted uppercase tracking-wider mb-1" x-text="opType === 'TRANSFER' ? 'Total à encaisser' : 'Total à décaisser'"></p>
-                                <p class="text-2xl font-black" :class="opType === 'TRANSFER' ? 'text-accent-success' : 'text-accent-danger'" 
+                                <p class="text-xs text-muted-fg uppercase tracking-wider mb-1" x-text="opType === 'TRANSFER' ? 'Total à encaisser' : 'Total à décaisser'"></p>
+                                <p class="text-2xl font-black" :class="opType === 'TRANSFER' ? 'text-status-success' : 'text-status-danger'" 
                                    x-text="(parseFloat(amount)||0 + (opType === 'WITHDRAWAL' ? fee : 0)).toFixed(2) + ' ' + caisseCurrency"></p>
                             </div>
                             
                             <div class="text-right">
-                                <p class="text-xs text-text-muted uppercase mb-1">Impact sur Solde</p>
-                                <p class="text-lg font-bold" :class="isAmountValid ? 'text-text-main' : 'text-accent-danger'"
+                                <p class="text-xs text-muted-fg uppercase mb-1">Impact sur Solde</p>
+                                <p class="text-lg font-bold" :class="isAmountValid ? 'text-fg' : 'text-status-danger'"
                                    x-text="(caisseBalance + (opType === 'TRANSFER' ? (parseFloat(amount)||0 + fee) : -(parseFloat(amount)||0 + fee))).toFixed(2) + ' ' + caisseCurrency"></p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-4 border-t border-dark-border/10 flex items-center gap-2 text-sm" x-show="amount > 0">
+                    <div class="mt-4 pt-4 border-t border-border/10 flex items-center gap-2 text-sm" x-show="amount > 0">
                         <template x-if="isAmountValid">
-                            <div class="flex items-center gap-2 text-accent-success">
+                            <div class="flex items-center gap-2 text-status-success">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span>Solde suffisant pour l'opération.</span>
                             </div>
                         </template>
                         <template x-if="!isAmountValid">
-                            <div class="flex items-center gap-2 text-accent-danger">
+                            <div class="flex items-center gap-2 text-status-danger">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span>Fonds insuffisants dans la caisse.</span>
                             </div>
@@ -280,36 +280,36 @@
             <!-- Step 3: Confirmation -->
             <div x-show="step === 3" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-cloak>
                 <div class="mb-8">
-                    <h3 class="text-xl font-bold text-text-main mb-2">Finalisation & Résumé</h3>
-                    <p class="text-text-muted">Vérifiez les détails et ajoutez un commentaire si besoin.</p>
+                    <h3 class="text-xl font-bold text-fg mb-2">Finalisation & Résumé</h3>
+                    <p class="text-muted-fg">Vérifiez les détails et ajoutez un commentaire si besoin.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div class="space-y-6">
-                        <div class="p-6 rounded-2xl bg-dark-surface2 border border-dark-border space-y-4 shadow-xl">
+                        <div class="p-6  bg-muted border border-border space-y-4 shadow-xl">
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-text-muted">Type :</span>
+                                <span class="text-muted-fg">Type :</span>
                                 <span class="px-3 py-1 rounded-full text-xs font-bold" 
                                       :class="opType === 'TRANSFER' ? 'bg-blue-500/10 text-blue-500' : 'bg-green-500/10 text-green-500'" 
                                       x-text="opType === 'TRANSFER' ? 'TRANSFERT' : 'RETRAIT'"></span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-text-muted">Montant client :</span>
-                                <span class="font-bold text-text-main" x-text="`${amount} ${caisseCurrency}`"></span>
+                                <span class="text-muted-fg">Montant client :</span>
+                                <span class="font-bold text-fg" x-text="`${amount} ${caisseCurrency}`"></span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-text-muted">Frais :</span>
-                                <span class="font-bold text-accent-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
+                                <span class="text-muted-fg">Frais :</span>
+                                <span class="font-bold text-status-warning" x-text="`${fee.toFixed(2)} ${caisseCurrency}`"></span>
                             </div>
-                            <div class="pt-4 border-t border-dark-border flex justify-between items-center">
-                                <span class="font-bold text-text-main">TOTAL :</span>
-                                <span class="text-2xl font-black text-accent-primary" x-text="`${(parseFloat(amount)||0 + (opType === 'WITHDRAWAL' ? fee : 0)).toFixed(2)} ${caisseCurrency}`"></span>
+                            <div class="pt-4 border-t border-border flex justify-between items-center">
+                                <span class="font-bold text-fg">TOTAL :</span>
+                                <span class="text-2xl font-black text-accent" x-text="`${(parseFloat(amount)||0 + (opType === 'WITHDRAWAL' ? fee : 0)).toFixed(2)} ${caisseCurrency}`"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <label class="block text-sm font-semibold text-text-main">Commentaire / Observation</label>
+                        <label class="block text-sm font-semibold text-fg">Commentaire / Observation</label>
                         {{ form.observation }}
                     </div>
                 </div>
@@ -331,33 +331,22 @@
 </div>
 
 <style>
-/* Smooth transitions and custom input styling */
 [x-cloak] { display: none !important; }
 
 .input-dark {
     width: 100%;
-    padding: 0.875rem 1.25rem;
-    background: #1a1b2e;
-    border: 2px solid #252640;
-    border-radius: 1rem;
-    color: #e8eaf6;
+    padding: 0.875rem 1rem;
+    background: #1A1A1A;
+    border: 1px solid #262626;
+    border-radius: 0px;
+    color: #FAFAFA;
     font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: border-color 150ms ease;
 }
 
 .input-dark:focus {
     outline: none;
-    border-color: #4f8ef7;
-    background: #1f2038;
-    box-shadow: 0 0 0 4px rgba(79, 142, 247, 0.1);
-}
-
-.btn-primary {
-    @apply bg-accent-primary hover:bg-accent-primary/90 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-accent-primary/20 flex items-center justify-center;
-}
-
-.btn-secondary {
-    @apply bg-dark-surface3 hover:bg-dark-surface3/80 text-text-main font-bold py-3 px-6 rounded-xl transition-all duration-300 border border-dark-border flex items-center justify-center;
+    border-color: #FF3D00;
 }
 </style>
 {% endblock %}

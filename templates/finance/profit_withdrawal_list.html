@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Retraits de Bénéfices - Rapid Cash{% endblock %}
+
+{% block page_title %}Retraits de Bénéfices{% endblock %}
+{% block page_subtitle %}Historique des récupérations de profits par l'administration{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="card-dark mb-6">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Du</label>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="input-dark w-full">
+        </div>
+        <div>
+            <label class="text-muted-fg text-xs font-semibold mb-1 block">Au</label>
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="input-dark w-full">
+        </div>
+        <div>
+            <button type="submit" class="btn-secondary w-full">Filtrer</button>
+        </div>
+    </form>
+</div>
+
+<!-- Table -->
+<div class="card-dark">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="font-bold text-fg">
+            Historique des retraits
+            <span class="text-muted-fg font-normal">({{ withdrawals.count }} résultats)</span>
+        </h3>
+        {% if user.role == 'ADMIN' %}
+        <a href="{% url 'create_profit_withdrawal' %}" class="btn-primary text-sm">
+            <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Nouveau Retrait
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="overflow-x-auto">
+        {% if withdrawals %}
+        <table class="table-dark">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th class="text-right">Montant Retiré</th>
+                    <th>Note / Justificatif</th>
+                    <th>Administrateur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in withdrawals %}
+                <tr class="hover:bg-muted/50 transition-colors">
+                    <td class="font-mono text-muted-fg text-sm">
+                        {{ w.date_time|date:"d/m/Y H:i" }}
+                    </td>
+                    <td class="text-right text-fg">
+                        <span class="font-mono font-medium text-status-danger">
+                            -{{ w.amount|floatformat:2 }}
+                        </span>
+                        <span class="text-muted-fg text-xs ml-1">{{ w.currency.symbol|default:w.currency.code }}</span>
+                    </td>
+                    <td>
+                        <p class="font-medium text-fg">{{ w.note|default:"—" }}</p>
+                    </td>
+                    <td>
+                        <span class="text-muted-fg text-sm">{{ w.admin.username }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        {% include 'partials/_empty_state.html' with icon='cash' title='Aucun retrait' message='L\'historique des retraits de bénéfices apparaîtra ici.' action_url='create_profit_withdrawal' action_text='Nouveau Retrait' %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

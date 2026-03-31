@@ -5,19 +5,19 @@
 <div class="w-full">
     {% if show_label %}
     <div class="flex justify-between items-center mb-2">
-        <span class="text-xs font-medium text-text-muted">{{ label|default:"Progression" }}</span>
-        <span class="text-xs font-medium text-text-main">{{ value|default:0 }}%</span>
+        <span class="label">{{ label|default:"Progression" }}</span>
+        <span class="text-sm font-medium text-fg font-mono">{{ value|default:0 }}%</span>
     </div>
     {% endif %}
-    <div class="w-full h-2 bg-dark-surface2 rounded-full overflow-hidden">
+    <div class="w-full h-1 bg-muted overflow-hidden">
         {% widthratio value|default:0 max|default:100 100 as percent %}
-        <div class="h-full rounded-full transition-all duration-500 ease-out
-            {% if color == 'primary' %}bg-accent-primary{% endif %}
-            {% if color == 'success' %}bg-accent-success{% endif %}
-            {% if color == 'danger' %}bg-accent-danger{% endif %}
-            {% if color == 'warning' %}bg-accent-warning{% endif %}
-            {% if color == 'purple' %}bg-accent-purple{% endif %}
-            {% if not color %}bg-accent-primary{% endif %}"
+        <div class="h-full transition-all duration-500 ease-out
+            {% if color == 'primary' %}bg-accent{% endif %}
+            {% if color == 'success' %}bg-status-success{% endif %}
+            {% if color == 'danger' %}bg-status-danger{% endif %}
+            {% if color == 'warning' %}bg-status-warning{% endif %}
+            {% if color == 'purple' %}bg-status-purple{% endif %}
+            {% if not color %}bg-accent{% endif %}"
             style="width: {{ percent }}%">
         </div>
     </div>

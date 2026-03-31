@@ -10,24 +10,24 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Total Investisseurs</p>
-            <p class="text-2xl font-bold text-text-main mt-1">{{ investors|length }}</p>
+            <p class="text-muted-fg text-sm font-medium">Total Investisseurs</p>
+            <p class="text-2xl font-bold text-fg mt-1">{{ investors|length }}</p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Capital Total</p>
-            <p class="text-2xl font-bold text-accent-success mt-1 font-mono">
+            <p class="text-muted-fg text-sm font-medium">Capital Total</p>
+            <p class="text-2xl font-bold text-status-success mt-1 font-mono">
                 ${{ total_invested|default:"0.00" }}
             </p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">Retours Générés</p>
-            <p class="text-2xl font-bold text-accent-warning mt-1 font-mono">
+            <p class="text-muted-fg text-sm font-medium">Retours Générés</p>
+            <p class="text-2xl font-bold text-status-warning mt-1 font-mono">
                 ${{ total_returns|default:"0.00" }}
             </p>
         </div>
         <div class="card-dark p-5">
-            <p class="text-text-muted text-sm font-medium">En Attente</p>
-            <p class="text-2xl font-bold text-accent-danger mt-1 font-mono">
+            <p class="text-muted-fg text-sm font-medium">En Attente</p>
+            <p class="text-2xl font-bold text-status-danger mt-1 font-mono">
                 ${{ pending_payments|default:"0.00" }}
             </p>
         </div>
@@ -35,8 +35,8 @@
 
     <!-- Investors Table -->
     <div class="card-dark">
-        <div class="flex items-center justify-between p-5 border-b border-dark-border">
-            <h3 class="font-bold text-text-main">Liste des Investisseurs</h3>
+        <div class="flex items-center justify-between p-5 border-b border-border">
+            <h3 class="font-bold text-fg">Liste des Investisseurs</h3>
             {% if user.role == 'ADMIN' %}
             <button class="btn-primary text-sm" onclick="showCreateInvestorModal()">
                 <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,31 +64,31 @@
                 <tbody>
                     {% for investor in investors %}
                     {% with contract=investor.contract %}
-                    <tr class="hover:bg-dark-surface2/50 transition-colors">
+                    <tr class="hover:bg-muted/50 transition-colors">
                         <td>
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-accent-success/20 flex items-center justify-center text-accent-success font-semibold">
+                                <div class="w-10 h-10 rounded-full bg-status-success/20 flex items-center justify-center text-status-success font-semibold">
                                     {{ investor.username|first|upper }}
                                 </div>
                                 <div>
-                                    <p class="font-medium text-text-main">{{ investor.username }}</p>
-                                    <p class="text-xs text-text-muted">{{ investor.email }}</p>
+                                    <p class="font-medium text-fg">{{ investor.username }}</p>
+                                    <p class="text-xs text-muted-fg">{{ investor.email }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="text-text-secondary text-sm font-mono">
+                        <td class="text-muted-fg text-sm font-mono">
                             {% if contract %}#{{ contract.id }}{% else %}—{% endif %}
                         </td>
                         <td class="text-right">
                             {% if contract %}
-                            <span class="font-mono font-medium text-text-main">
+                            <span class="font-mono font-medium text-fg">
                                 ${{ contract.amount_engaged|floatformat:2 }}
                             </span>
                             {% else %}—{% endif %}
                         </td>
                         <td class="text-right">
                             {% if contract %}
-                            <span class="font-mono text-accent-success">
+                            <span class="font-mono text-status-success">
                                 $0.00
                             </span>
                             {% else %}—{% endif %}
@@ -100,10 +100,10 @@
                         </td>
                         <td class="w-32">
                             {% if contract %}
-                            <div class="w-full h-2 bg-dark-surface2 rounded-full overflow-hidden">
-                                <div class="h-full bg-accent-success rounded-full" style="width: 0%"></div>
+                            <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
+                                <div class="h-full bg-status-success rounded-full" style="width: 0%"></div>
                             </div>
-                            <p class="text-xs text-text-muted mt-1">0%</p>
+                            <p class="text-xs text-muted-fg mt-1">0%</p>
                             {% else %}—{% endif %}
                         </td>
                         <td>
@@ -139,30 +139,30 @@ function showCreateInvestorModal() {
             <div class="space-y-4">
                 <!-- User Information -->
                 <div>
-                    <h4 class="text-lg font-semibold text-text-main mb-4">Informations Utilisateur</h4>
+                    <h4 class="text-lg font-semibold text-fg mb-4">Informations Utilisateur</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Nom d'utilisateur *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Nom d'utilisateur *</label>
                             <input type="text" name="username" required class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Email *</label>
                             <input type="email" name="email" required class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Mot de passe *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Mot de passe *</label>
                             <input type="password" name="password" required class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Téléphone</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Téléphone</label>
                             <input type="text" name="phone" class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Prénom</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Prénom</label>
                             <input type="text" name="first_name" class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Nom</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Nom</label>
                             <input type="text" name="last_name" class="input-dark w-full">
                         </div>
                     </div>
@@ -170,14 +170,14 @@ function showCreateInvestorModal() {
                 
                 <!-- Contract Information -->
                 <div>
-                    <h4 class="text-lg font-semibold text-text-main mb-4">Informations du Contrat</h4>
+                    <h4 class="text-lg font-semibold text-fg mb-4">Informations du Contrat</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Montant investi *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Montant investi *</label>
                             <input type="number" name="amount_engaged" step="0.01" required class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Devise *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Devise *</label>
                             <select name="currency" required class="input-dark w-full">
                                 <option value="">Sélectionner...</option>
                                 {% for currency in currencies %}
@@ -186,18 +186,18 @@ function showCreateInvestorModal() {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Durée (mois)</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Durée (mois)</label>
                             <input type="number" name="duration_months" class="input-dark w-full">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Retour attendu (%) *</label>
+                            <label class="block text-sm font-medium text-fg mb-2">Retour attendu (%) *</label>
                             <input type="number" name="expected_return_percent" step="0.01" required class="input-dark w-full">
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-dark-border">
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
                 <button type="button" onclick="closeModal()" class="btn-secondary">Annuler</button>
                 <button type="submit" class="btn-primary">Créer l'Investisseur</button>
             </div>

@@ -8,9 +8,9 @@
 {% block content %}
 <div class="max-w-2xl mx-auto">
     <div class="card-dark">
-        <div class="p-6 border-b border-dark-border">
+        <div class="p-6 border-b border-border">
             <div class="flex items-center justify-between">
-                <h3 class="text-xl font-bold text-text-main">Informations de l'Associé</h3>
+                <h3 class="text-xl font-bold text-fg">Informations de l'Associé</h3>
                 <a href="{% url 'core:associates_list' %}" class="btn-secondary text-sm">
                     <svg class="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -25,53 +25,53 @@
             
             <!-- User Information -->
             <div>
-                <h4 class="text-lg font-semibold text-text-main mb-4">Informations Utilisateur</h4>
+                <h4 class="text-lg font-semibold text-fg mb-4">Informations Utilisateur</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Nom d'utilisateur *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Nom d'utilisateur *</label>
                         {{ form.username }}
                         {% if form.username.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.username.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.username.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Email *</label>
                         {{ form.email }}
                         {% if form.email.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.email.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.email.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Mot de passe *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Mot de passe *</label>
                         {{ form.password }}
                         {% if form.password.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.password.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.password.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Téléphone</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Téléphone</label>
                         {{ form.phone }}
                         {% if form.phone.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.phone.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.phone.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Prénom</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Prénom</label>
                         {{ form.first_name }}
                         {% if form.first_name.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.first_name.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Nom</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Nom</label>
                         {{ form.last_name }}
                         {% if form.last_name.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.last_name.errors.0 }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -79,44 +79,44 @@
             
             <!-- Contract Information -->
             <div>
-                <h4 class="text-lg font-semibold text-text-main mb-4">Informations du Contrat</h4>
+                <h4 class="text-lg font-semibold text-fg mb-4">Informations du Contrat</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Montant engagé *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Montant engagé *</label>
                         {{ form.amount_engaged }}
                         {% if form.amount_engaged.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.amount_engaged.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.amount_engaged.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Devise *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Devise *</label>
                         {{ form.currency }}
                         {% if form.currency.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.currency.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.currency.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Durée (mois)</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Durée (mois)</label>
                         {{ form.duration_months }}
                         {% if form.duration_months.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.duration_months.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.duration_months.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-text-main mb-2">Retour attendu (%) *</label>
+                        <label class="block text-sm font-medium text-fg mb-2">Retour attendu (%) *</label>
                         {{ form.expected_return_percent }}
                         {% if form.expected_return_percent.errors %}
-                        <p class="text-accent-danger text-sm mt-1">{{ form.expected_return_percent.errors.0 }}</p>
+                        <p class="text-status-danger text-sm mt-1">{{ form.expected_return_percent.errors.0 }}</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
             
             <!-- Actions -->
-            <div class="flex justify-end gap-3 pt-4 border-t border-dark-border">
+            <div class="flex justify-end gap-3 pt-4 border-t border-border">
                 <a href="{% url 'core:associates_list' %}" class="btn-secondary">
                     Annuler
                 </a>

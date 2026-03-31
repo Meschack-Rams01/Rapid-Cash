@@ -5,20 +5,20 @@
 {% block content %}
 <div class="mb-8 flex items-center justify-between">
     <div>
-        <h1 class="text-3xl font-bold text-text-main tracking-tight">Éditer un Agent</h1>
-        <p class="text-text-secondary mt-1">Modifier les informations et la commission de <span class="text-white">{{ agent.username }}</span>.</p>
+        <h1 class="text-3xl font-bold text-fg tracking-tight">Éditer un Agent</h1>
+        <p class="text-muted-fg mt-1">Modifier les informations et la commission de <span class="text-white">{{ agent.username }}</span>.</p>
     </div>
-    <a href="{% url 'core:agents_list' %}" class="px-4 py-2 border border-dark-border rounded-lg text-text-secondary hover:text-white hover:border-text-secondary transition-colors text-sm font-medium">
+    <a href="{% url 'core:agents_list' %}" class="px-4 py-2 border border-border text-muted-fg hover:text-white hover:border-text-secondary transition-colors text-sm font-medium">
         Retour à la liste
     </a>
 </div>
 
-<div class="max-w-2xl bg-dark-surface rounded-xl border border-dark-border p-6 shadow-sm">
+<div class="max-w-2xl bg-card  border border-border p-6 shadow-sm">
     <form method="post" class="space-y-6">
         {% csrf_token %}
         
         {% if form.errors %}
-        <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-lg text-sm mb-6">
+        <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-4 text-sm mb-6">
             <ul class="list-disc list-inside">
                 {% for field in form %}
                     {% for error in field.errors %}
@@ -34,36 +34,36 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.first_name.label }}</label>
+                <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-muted-fg mb-2">{{ form.first_name.label }}</label>
                 {{ form.first_name }}
             </div>
             
             <div>
-                <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.last_name.label }}</label>
+                <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-muted-fg mb-2">{{ form.last_name.label }}</label>
                 {{ form.last_name }}
             </div>
             
             <div>
-                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.email.label }}</label>
+                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-muted-fg mb-2">{{ form.email.label }}</label>
                 {{ form.email }}
             </div>
             
             <div>
-                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.phone.label }}</label>
+                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-muted-fg mb-2">{{ form.phone.label }}</label>
                 {{ form.phone }}
             </div>
         </div>
 
-        <div class="border-t border-dark-border pt-6 mt-6">
-            <h3 class="text-lg font-medium text-text-main mb-4">Paramètres du compte</h3>
+        <div class="border-t border-border pt-6 mt-6">
+            <h3 class="text-lg font-medium text-fg mb-4">Paramètres du compte</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="{{ form.commission_rate.id_for_label }}" class="block text-sm font-medium text-text-secondary mb-2">{{ form.commission_rate.label }}</label>
+                    <label for="{{ form.commission_rate.id_for_label }}" class="block text-sm font-medium text-muted-fg mb-2">{{ form.commission_rate.label }}</label>
                     <div class="relative">
                         {{ form.commission_rate }}
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <span class="text-text-muted sm:text-sm">%</span>
+                            <span class="text-muted-fg sm:text-sm">%</span>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                 <div class="flex items-center h-full pt-6 md:pt-0">
                     <div class="flex items-center">
                         {{ form.is_active }}
-                        <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm font-medium text-text-main">
+                        <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm font-medium text-fg">
                             {{ form.is_active.label }}
                         </label>
                     </div>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="flex justify-end pt-4">
-            <button type="submit" class="px-6 py-2.5 bg-accent-primary hover:bg-accent-primary-hover text-white rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(79,142,247,0.3)]">
+            <button type="submit" class="px-6 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors shadow-[0_0_15px_rgba(79,142,247,0.3)]">
                 Enregistrer les modifications
             </button>
         </div>

@@ -10,15 +10,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
 
     <!-- Tailwind CSS (local build) -->
     <link rel="stylesheet" href="{% load static %}{% static 'css/enhanced.css' %}">
     <style>
         body {
-            background-color: #030407;
-            color: #e8eaf6;
+            background-color: #0A0A0A;
+            color: #FAFAFA;
             font-family: 'Inter', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -31,53 +31,51 @@
             overflow: hidden;
         }
 
-        /* Animated Background Gradients */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
-
+        /* Noise texture */
         body::before {
-            background: radial-gradient(ellipse at 20% 20%, rgba(37, 99, 235, 0.12) 0%, transparent 40%);
-            animation: pulseBg 8s ease-in-out infinite alternate;
-        }
-
-        body::after {
-            background: radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
-            animation: pulseBg 12s ease-in-out infinite alternate-reverse;
-        }
-
-        @keyframes pulseBg {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
-            100% { transform: scale(1.1) translate(-2%, 2%); opacity: 1; }
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
         }
 
         .login-card {
-            background: rgba(15, 17, 26, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 1.5rem;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+            background: #0F0F0F;
+            border: 1px solid #262626;
+            border-radius: 0px;
             width: 100%;
             padding: 2.5rem;
             box-sizing: border-box;
             position: relative;
         }
 
+        /* Accent bar on login card */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 4rem;
+            background-color: #FF3D00;
+        }
+
         .form-label {
             display: block;
             font-size: 0.75rem;
-            font-weight: 600;
-            color: #94a3b8;
+            font-weight: 500;
+            color: #737373;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-family: 'Inter', system-ui, sans-serif;
-            transition: color 0.3s ease;
+            letter-spacing: 0.1em;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            transition: color 150ms ease;
         }
 
         .form-label-row {
@@ -94,14 +92,27 @@
         .forgot-link {
             font-size: 0.8125rem;
             font-weight: 600;
-            color: #3b82f6;
+            color: #FF3D00;
             text-decoration: none;
-            transition: color 0.2s;
-            font-family: 'Inter', system-ui, sans-serif;
+            transition: all 150ms ease;
+            position: relative;
         }
 
-        .forgot-link:hover {
-            color: #60a5fa;
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FF3D00;
+            transform: scaleX(1);
+            transform-origin: left;
+            transition: transform 150ms cubic-bezier(0.25, 0, 0, 1);
+        }
+
+        .forgot-link:hover::after {
+            transform: scaleX(1.1);
         }
 
         .input-group {
@@ -114,7 +125,7 @@
         .input-icon {
             position: absolute;
             left: 1.25rem;
-            color: #526075;
+            color: #737373;
             pointer-events: none;
             z-index: 10;
             width: 1.25rem;
@@ -122,59 +133,44 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: color 150ms ease;
         }
         
         .input-icon svg {
             width: 1.25rem;
             height: 1.25rem;
-            stroke-width: 2;
+            stroke-width: 1.5;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
         .input-dark {
             width: 100%;
-            height: 3.25rem;
+            height: 3.5rem;
             padding-left: 3.25rem;
             padding-right: 1.25rem;
-            background: #0b0d14;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 0.75rem;
-            color: #f8fafc;
-            font-size: 0.9375rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            background: #1A1A1A;
+            border: 1px solid #262626;
+            border-radius: 0px;
+            color: #FAFAFA;
+            font-size: 1rem;
+            transition: border-color 150ms ease;
             box-sizing: border-box;
             font-family: 'Inter', system-ui, sans-serif;
         }
 
         .input-dark:focus {
             outline: none;
-            background: #0f121b;
-            border-color: #3b82f6;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(59, 130, 246, 0.2);
-            transform: translateY(-1px);
+            border-color: #FF3D00;
         }
 
-        /* Focus states interactions */
         .input-dark:focus + .input-icon, 
         .input-group:focus-within .input-icon {
-            color: #3b82f6;
-            transform: scale(1.1);
-        }
-
-        .input-dark:focus {
-            /* Keep label color native logic simple by moving upward if you want */
-        }
-
-        .input-group:focus-within ~ .form-label-row .form-label, 
-        .input-group:focus-within label {
-             /* Hard to target sibling before it, so let CSS alone or reorder DOM, keeping simple */
+            color: #FF3D00;
         }
 
         .input-dark::placeholder {
-            color: #475569;
+            color: #737373;
             font-weight: 400;
             letter-spacing: normal;
         }
@@ -191,132 +187,106 @@
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus, 
         input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 50px #0b0d14 inset !important;
-            -webkit-text-fill-color: #f8fafc !important;
+            -webkit-box-shadow: 0 0 0 50px #1A1A1A inset !important;
+            -webkit-text-fill-color: #FAFAFA !important;
             transition: background-color 5000s ease-in-out 0s;
-            caret-color: #f8fafc;
+            caret-color: #FAFAFA;
         }
 
         .btn-login {
             width: 100%;
-            height: 3.25rem;
-            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-            border: 1px solid #1d4ed8;
-            border-radius: 0.75rem;
-            color: #ffffff;
-            font-size: 0.9375rem;
+            height: 3.5rem;
+            background: #FF3D00;
+            border: none;
+            border-radius: 0px;
+            color: #0A0A0A;
+            font-size: 0.875rem;
             font-weight: 600;
-            letter-spacing: 0.025em;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
+            transition: all 150ms cubic-bezier(0.25, 0, 0, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 2rem;
             cursor: pointer;
-            font-family: inherit;
             position: relative;
             overflow: hidden;
         }
 
-        .btn-login::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         .btn-login:hover {
-            background: linear-gradient(180deg, #4facfe 0%, #2563eb 100%);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-login:hover::after {
-            left: 200%;
+            background: #E63600;
         }
 
         .btn-login:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: all 0.1s;
+            transform: translateY(1px);
+            transition: all 100ms;
         }
 
-        /* Logo & Headers */
+        .btn-login:focus-visible {
+            outline: 2px solid #FF3D00;
+            outline-offset: 2px;
+        }
+
+        /* Brand & Headers */
         .logo-container {
             width: 3.5rem;
             height: 3.5rem;
-            border-radius: 1rem;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: #FF3D00;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem auto;
             position: relative;
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5);
-            border: 1px solid rgba(147, 197, 253, 0.2);
-            animation: float 6s ease-in-out infinite, pulseGlow 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4), 0 0 15px rgba(37, 99, 235, 0.1); }
-            100% { box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.6), 0 0 35px rgba(59, 130, 246, 0.4); }
         }
         
         .logo-icon {
             width: 1.8rem;
             height: 1.8rem;
-            color: #ffffff;
+            color: #0A0A0A;
             stroke-linecap: round;
             stroke-linejoin: round;
             stroke-width: 2.5;
         }
 
         .brand-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.025em;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FAFAFA;
+            letter-spacing: -0.06em;
             margin-bottom: 0.25rem;
             margin-top: 0;
-            line-height: 1.2;
+            line-height: 1;
+            font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
         }
 
         .brand-subtitle {
             font-size: 0.75rem;
-            font-weight: 600;
-            color: #94a3b8;
+            font-weight: 500;
+            color: #737373;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             margin: 0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
         }
 
         .card-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #FAFAFA;
             text-align: center;
             margin-top: 0;
             margin-bottom: 2rem;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.04em;
+            font-family: 'Inter Tight', 'Inter', system-ui, sans-serif;
         }
 
         /* Staggered form animations */
         .fade-in-up {
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInUp 0.5s cubic-bezier(0.25, 0, 0, 1) forwards;
         }
 
         @keyframes fadeInUp {
@@ -355,18 +325,18 @@
             {% if messages %}
             <div class="mb-6 space-y-2 fade-in-up delay-3">
                 {% for message in messages %}
-                <div class="p-3.5 rounded-xl border flex items-start gap-3 text-sm font-medium
+                <div class="p-3.5 border flex items-start gap-3 text-sm font-medium
                     {% if 'success' in message.tags %}
-                    bg-emerald-500/10 border-emerald-500/20 text-emerald-400
+                    bg-status-success/10 border-status-success/20 text-status-success
                     {% elif 'warning' in message.tags %}
-                    bg-amber-500/10 border-amber-500/20 text-amber-400
+                    bg-status-warning/10 border-status-warning/20 text-status-warning
                     {% else %}
-                    bg-rose-500/10 border-rose-500/20 text-rose-400
+                    bg-status-danger/10 border-status-danger/20 text-status-danger
                     {% endif %}">
                     {% if 'success' in message.tags %}
-                    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     {% else %}
-                    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     {% endif %}
                     <p class="mt-0.5">{{ message|safe }}</p>
                 </div>
@@ -375,8 +345,8 @@
             {% endif %}
 
             {% if error %}
-            <div class="mb-6 p-3.5 rounded-xl border flex items-start gap-3 text-sm font-medium bg-rose-500/10 border-rose-500/20 text-rose-400 fade-in-up delay-3">
-                <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div class="mb-6 p-3.5 border flex items-start gap-3 text-sm font-medium bg-status-danger/10 border-status-danger/20 text-status-danger fade-in-up delay-3">
+                <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 <p class="mt-0.5">{{ error|safe }}</p>
             </div>
             {% endif %}
@@ -426,7 +396,7 @@
         </div>
 
         <!-- Footer -->
-        <p class="text-center text-slate-500 font-medium text-xs mt-8 fade-in-up delay-6" style="font-family: 'Inter', sans-serif;">
+        <p class="text-center text-muted-fg font-medium text-xs mt-8 tracking-wider uppercase fade-in-up delay-6" style="font-family: 'JetBrains Mono', monospace;">
             &copy; 2026 Rapid Cash
         </p>
     </div>

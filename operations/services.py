@@ -80,14 +80,15 @@ class OperationService:
         if caisse.currency != currency_orig:
             raise ValidationError(f"Currency mismatch. Caisse {caisse.name} uses {caisse.currency.code}, but you selected {currency_orig.code}")
         
-        # Check available balance
+        # Calcul du montant requis théorique (informationnel)
         required_amount = amount_orig
         if op_type == 'WITHDRAWAL':
             # For withdrawal, we need the amount + fee
             required_amount = amount_orig + (fee / exchange_rate)
         
-        if caisse.balance < required_amount:
-            raise ValidationError(f"Fonds insuffisants dans la caisse. Disponible: {caisse.balance} {caisse.currency.code}, Requis: {required_amount} {caisse.currency.code}")
+        # Le blocage a été retiré. Les agents peuvent toujours opérer.
+        # if caisse.balance < required_amount:
+        #     raise ValidationError(f"Fonds insuffisants...")
         
         # Create operation with PENDING status first
         operation = Operation.objects.create(

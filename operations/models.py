@@ -88,3 +88,22 @@ class Operation(models.Model):
 
     def __str__(self):
         return f"{self.transaction_number} - {self.type} - {self.amount_orig} {self.currency_orig.code}"
+
+class FondAllocation(models.Model):
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='allocations_donnees', verbose_name="Administrateur")
+    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='allocations_recues', verbose_name="Agent", limit_choices_to={'role': 'AGENT'})
+    amount = models.DecimalField("Montant", max_digits=20, decimal_places=2)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, verbose_name="Devise")
+    date_time = models.DateTimeField("Date & Heure", auto_now_add=True)
+    note = models.TextField("Note", blank=True, help_text="Exemple : Fonds de démarrage Lundi")
+
+    class Meta:
+        verbose_name = "Allocation de fonds (Agent)"
+        verbose_name_plural = "Allocations de fonds (Agents)"
+        indexes = [
+            models.Index(fields=['agent']),
+            models.Index(fields=['date_time']),
+        ]
+
+    def __str__(self):
+        return f"Allocation: {self.amount} {self.currency.code} attribué à {self.agent.username}"
